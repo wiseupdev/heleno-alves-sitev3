@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Login — Cliente | Heleno Alves</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link 
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&family=Tenor+Sans&display=swap" 
+    rel="stylesheet"
+  >
+
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="stylesheet" href="../assets/css/usuario-login.css">
+</head>
+
+<body data-user="login">
+  <div class="grain"></div>
+
+  <main class="client-login-page">
+    <section class="client-login-visual">
+      <a href="../index.html" class="client-logo">
+        <strong>Heleno Alves</strong>
+        <span>Corretor de Alto Luxo</span>
+      </a>
+
+      <div class="visual-content">
+        <p class="eyebrow">Área do cliente</p>
+
+        <h1>Sua curadoria privada de imóveis premium.</h1>
+
+        <p>
+          Acesse sua conta para visualizar imóveis favoritos, salvar preferências
+          e receber uma seleção personalizada em Balneário Camboriú e Praia Brava.
+        </p>
+
+        <div class="visual-metrics">
+          <div>
+            <b>01</b>
+            <span>Favoritos salvos</span>
+          </div>
+
+          <div>
+            <b>02</b>
+            <span>Preferências de busca</span>
+          </div>
+
+          <div>
+            <b>03</b>
+            <span>Curadoria exclusiva</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="client-login-panel">
+      <div class="client-login-card">
+        <p class="eyebrow">Cliente</p>
+
+        <h2>Entrar</h2>
+
+        <p class="login-sub">
+          Entre para acompanhar seus imóveis favoritos e suas preferências.
+        </p>
+
+        <form id="userLoginForm" class="login-form">
+          <div class="field-group">
+            <label for="userEmail">E-mail</label>
+            <input 
+              id="userEmail" 
+              class="input" 
+              type="email" 
+              placeholder="seuemail@email.com"
+              autocomplete="email"
+            >
+          </div>
+
+          <div class="field-group">
+            <label for="userPassword">Senha</label>
+            <input 
+              id="userPassword" 
+              class="input" 
+              type="password" 
+              placeholder="Digite sua senha"
+              autocomplete="current-password"
+            >
+          </div>
+
+          <div class="login-feedback" id="loginFeedback"></div>
+
+          <button class="btn gold" type="submit">
+            Entrar na área do cliente
+          </button>
+
+          <a class="btn" href="cadastro.html">
+            Criar cadastro
+          </a>
+
+          <a class="back-link" href="../index.html">
+            Voltar ao site
+          </a>
+        </form>
+
+        <div class="login-note">
+          <strong>Protótipo:</strong>
+          <span>use qualquer e-mail válido e senha com no mínimo 4 caracteres.</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../assets/js/usuario-login.js"></script>
+</body>
+</html>

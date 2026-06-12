@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Cadastrar imóvel — Heleno Alves</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Montserrat:wght@300;400;500;600&family=Tenor+Sans&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../assets/css/styles.css" />
+  <link rel="stylesheet" href="../assets/css/admin.css" />
+  <link rel="stylesheet" href="../assets/css/admin-imovel-form.css" />
+</head>
+
+<body>
+  <div class="grain"></div>
+
+  <div class="admin-page">
+    <aside class="admin-sidebar">
+      <a href="../index.html" class="admin-logo">
+        <strong>Heleno Alves</strong>
+        <span>Painel Admin</span>
+      </a>
+
+      <nav class="admin-nav">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="imoveis.html">Imóveis</a>
+        <a href="imovel-form.html" class="active">Cadastrar imóvel</a>
+        <a href="leads.html">Leads</a>
+        <a href="analytics.html">Analytics</a>
+        <a href="../index.html">Ver site</a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <p>Cadastro de imóveis</p>
+        <strong>Upload de mídias</strong>
+      </div>
+    </aside>
+
+    <main class="admin-main">
+      <div class="admin-top">
+        <div class="admin-title">
+          <small>Cadastro de imóvel</small>
+          <h1>Novo imóvel</h1>
+          <p>Cadastre informações, localização, fotos, vídeos e características livres do imóvel.</p>
+        </div>
+
+        <div class="hero-actions">
+          <button class="btn" type="button" onclick="clearForm()">Limpar</button>
+          <button class="btn gold" type="button" onclick="saveProperty()">Salvar imóvel</button>
+        </div>
+      </div>
+
+      <div class="form-layout">
+        <section class="form-panel">
+          <h2 class="panel-title">Informações do imóvel</h2>
+          <p class="panel-sub">
+            As características podem ser selecionadas ou criadas livremente. As mídias podem ser carregadas direto do computador.
+          </p>
+
+          <form class="form-grid" onsubmit="event.preventDefault(); saveProperty();">
+            <div class="field-group">
+              <label class="field-label">Nome do imóvel</label>
+              <input id="title" class="input" placeholder="Ex: Vitra by Pininfarina">
+            </div>
+
+            <div class="field-group">
+              <label class="field-label">Região</label>
+              <select id="region" class="select">
+                <option>Balneário Camboriú</option>
+                <option>Praia Brava</option>
+              </select>
+            </div>
+
+            <div class="field-group">
+              <label class="field-label">Área / bairro</label>
+              <input id="district" class="input" placeholder="Ex: Barra Sul, Brava Norte">
+            </div>
+
+            <div class="field-group">
+              <label class="field-label">Tipo</label>
+              <select id="type" class="select">
+                <option>Apartamento</option>
+                <option>Cobertura</option>
+                <option>Casa</option>
+                <option>Lançamento</option>
+                <option>Terreno</option>
+                <option>Empreendimento</option>
+              </select>
+            </div>
+
+            <div class="field-group">
+              <label class="field-label">Status</label>
+              <select id="status" class="select">
+                <option>Ativo</option>
+                <option>Exclusivo</option>
+                <option>Pronto</option>
+                <option>Em obra</option>
+                <option>Lançamento</option>
+                <option>Reservado</option>
+                <option>Vendido</option>
+                <option>Oculto</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="price">Preço do imóvel <span class="required">*</span></label>
+              <input 
+                id="price" 
+                class="input" 
+                type="text" 
+                placeholder="Ex: R$ 7.800.000" 
+                required
+              >
+            </div>
+
+            <div class="field-group">
+              <label class="field-label">Metragem</label>
+              <input id="area" class="input" placeholder="Ex: 320 m²">
+            </div>
+
+            <div class="field-group">
+              <label class="field-label">Suítes</label>
+              <input id="suites" class="input" placeholder="Ex: 4">
+            </div>
+
+            <div class="field-group">
+              <label class="field-label">Vagas</label>
+              <input id="parking" class="input" placeholder="Ex: 4">
+            </div>
+
+            <div class="field-group">
+              <label class="field-label">Tag principal</label>
+              <input id="tag" class="input" placeholder="Ex: Frente mar">
+            </div>
+
+            <div class="field-group full">
+              <label class="field-label">Descrição completa</label>
+              <textarea id="description" class="textarea" placeholder="Descreva o imóvel, diferenciais, localização e experiência."></textarea>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <div class="field-group full">
+              <label class="field-label">Características / diferenciais</label>
+
+              <div class="feature-tools">
+                <div class="feature-bank" id="featureBank"></div>
+
+                <div class="custom-feature-row">
+                  <input id="customFeature" class="input" placeholder="Adicionar característica personalizada. Ex: Vista definitiva">
+                  <button class="btn" type="button" onclick="addCustomFeature()">Adicionar</button>
+                </div>
+
+                <div class="selected-features" id="selectedFeatures">
+                  <span style="color:rgba(255,255,255,.35);font-size:13px">Nenhuma característica selecionada.</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <div class="field-group full">
+              <label class="field-label">Fotos do imóvel</label>
+
+              <div class="upload-box" id="photoDropzone" onclick="document.getElementById('photoUpload').click()">
+                <div>
+                  <strong>Selecionar fotos</strong>
+                  <span>Arraste ou selecione imagens do computador. JPG, PNG ou WEBP.</span>
+                </div>
+              </div>
+
+              <input id="photoUpload" type="file" accept="image/*" multiple hidden>
+
+              <div class="media-preview-grid" id="photoPreview"></div>
+            </div>
+
+            <div class="field-group full">
+              <label class="field-label">Vídeos do imóvel</label>
+
+              <div class="upload-box" id="videoDropzone" onclick="document.getElementById('videoUpload').click()">
+                <div>
+                  <strong>Selecionar vídeos</strong>
+                  <span>Envie vídeos do imóvel, tour interno, drone ou material comercial.</span>
+                </div>
+              </div>
+
+              <input id="videoUpload" type="file" accept="video/*" multiple hidden>
+
+              <div class="media-preview-grid video-grid" id="videoPreview"></div>
+            </div>
+
+            <div class="field-group full">
+              <label class="field-label">Tour 360 / link externo opcional</label>
+              <input id="tourUrl" class="input" placeholder="Cole aqui link de tour 360, Matterport, YouTube ou Google Drive, se houver">
+            </div>
+
+            <div class="section-divider"></div>
+
+            <div class="field-group">
+              <label class="field-label">Latitude</label>
+              <input id="lat" class="input" placeholder="-26.9929">
+            </div>
+
+            <div class="field-group">
+              <label class="field-label">Longitude</label>
+              <input id="lng" class="input" placeholder="-48.6352">
+            </div>
+
+            <div class="section-divider"></div>
+
+            <button class="btn gold full" type="submit">Salvar imóvel</button>
+          </form>
+        </section>
+
+        <aside class="preview-panel">
+          <h2 class="panel-title">Prévia do imóvel</h2>
+          <p class="panel-sub">Veja como os dados principais aparecerão na página de detalhes.</p>
+
+          <div class="preview-card">
+            <div class="preview-image">
+              <img id="previewImage" src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1200&q=84&auto=format&fit=crop" alt="">
+              <span class="tag" id="previewTag">Destaque</span>
+            </div>
+
+            <div class="preview-body">
+              <h2 id="previewTitle">Nome do imóvel</h2>
+              <p class="preview-location" id="previewLocation">Região · Área</p>
+              <p class="preview-desc" id="previewDesc">A descrição do imóvel aparecerá aqui.</p>
+
+              <div class="preview-specs">
+                <div class="preview-spec">
+                  <small>Área</small>
+                  <b id="previewArea">-</b>
+                </div>
+
+                <div class="preview-spec">
+                  <small>Suítes</small>
+                  <b id="previewSuites">-</b>
+                </div>
+
+                <div class="preview-spec">
+                  <small>Vagas</small>
+                  <b id="previewParking">-</b>
+                </div>
+
+                <div class="preview-spec">
+                  <small>Status</small>
+                  <b id="previewStatus">-</b>
+                </div>
+              </div>
+
+              <div class="preview-features" id="previewFeatures"></div>
+
+              <div class="preview-price" id="previewPrice">Sob consulta</div>
+
+              <a class="btn gold" href="#">Tenho interesse</a>
+            </div>
+          </div>
+
+        </aside>
+      </div>
+    </main>
+  </div>
+
+  <script src="../assets/js/admin-imovel-form.js"></script>
+</body>
+</html>

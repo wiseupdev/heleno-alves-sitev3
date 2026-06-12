@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Favoritos — Heleno Alves</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link 
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&family=Tenor+Sans&display=swap" 
+    rel="stylesheet"
+  >
+
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="stylesheet" href="../assets/css/usuario-favoritos.css">
+</head>
+
+<body data-user="favorites">
+  <div class="grain"></div>
+
+  <div class="user-page">
+    <aside class="user-sidebar">
+      <a href="../index.html" class="user-logo">
+        <strong>Heleno Alves</strong>
+        <span>Área do cliente</span>
+      </a>
+
+      <nav class="user-nav">
+        <a href="minha-conta.html">Dashboard</a>
+        <a href="favoritos.html" class="active">Favoritos</a>
+        <a href="preferencias.html">Preferências</a>
+        <a href="../imoveis.html">Ver imóveis</a>
+        <a href="../index.html">Voltar ao site</a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <p>Imóveis salvos</p>
+        <strong id="favoriteCountSidebar">0 favoritos</strong>
+      </div>
+    </aside>
+
+    <main class="user-main">
+      <div class="user-top">
+        <div class="user-title">
+          <small>Favoritos</small>
+          <h1>Imóveis salvos</h1>
+          <p>
+            Aqui ficam os imóveis que o cliente salvou para analisar depois ou solicitar atendimento.
+          </p>
+        </div>
+
+        <div class="user-actions">
+          <a class="btn gold" href="../imoveis.html">Explorar imóveis</a>
+          <a class="btn" href="preferencias.html">Editar preferências</a>
+        </div>
+      </div>
+
+      <section class="favorites-panel">
+        <div class="panel-head">
+          <div>
+            <h2>Favoritos do cliente</h2>
+            <p id="resultText">Carregando favoritos...</p>
+          </div>
+        </div>
+
+        <div id="favoritesGrid" class="favorites-grid"></div>
+
+        <div class="empty-state" id="emptyState">
+          <h3>Nenhum imóvel favoritado ainda.</h3>
+          <p>Explore o portfólio e salve imóveis para acompanhar nesta área.</p>
+          <a class="btn gold" href="../imoveis.html">Ver imóveis</a>
+        </div>
+
+        <div class="pagination">
+          <button class="btn small" id="prevPage" type="button">Anterior</button>
+          <span id="pageInfo">Página 1 de 1</span>
+          <button class="btn small" id="nextPage" type="button">Próxima</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/usuario-favoritos.js"></script>
+</body>
+</html>

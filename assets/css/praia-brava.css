@@ -1,0 +1,541 @@
+body[data-page="brava"] {
+  background: #000;
+  color: #fff;
+  overflow-x: hidden;
+}
+
+.brava-hero {
+  min-height: 100svh;
+  position: relative;
+  display: grid;
+  grid-template-columns: 1.1fr .9fr;
+  align-items: end;
+  gap: 48px;
+  padding: 150px clamp(22px, 6vw, 96px) 86px;
+  overflow: hidden;
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.94), rgba(0,0,0,.56), rgba(0,0,0,.18)),
+    url("https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1900&q=84&auto=format&fit=crop") center/cover;
+}
+
+.brava-hero::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 230px;
+  background: linear-gradient(to top, #000, transparent);
+}
+
+.brava-hero-content,
+.brava-hero-card {
+  position: relative;
+  z-index: 2;
+}
+
+.brava-hero h1 {
+  font-family: var(--serif);
+  font-size: clamp(52px, 8vw, 104px);
+  font-weight: 300;
+  line-height: .96;
+  max-width: 980px;
+}
+
+.brava-hero .lead {
+  max-width: 760px;
+  color: rgba(255,255,255,.72);
+  font-size: 15px;
+  font-weight: 300;
+  letter-spacing: .04em;
+  margin: 30px 0 42px;
+}
+
+.brava-hero-card {
+  align-self: center;
+  justify-self: end;
+  width: min(430px, 100%);
+  padding: 30px;
+  background: rgba(20,20,18,.62);
+  border: 1px solid rgba(233,197,103,.18);
+  backdrop-filter: blur(18px);
+}
+
+.brava-hero-card span {
+  font-family: var(--sans);
+  font-size: 8px;
+  letter-spacing: .25em;
+  text-transform: uppercase;
+  color: var(--gold-mid);
+}
+
+.brava-hero-card p {
+  font-family: var(--serif);
+  font-size: 27px;
+  line-height: 1.24;
+  color: rgba(255,255,255,.88);
+  margin-top: 16px;
+}
+
+.brava-intro,
+.brava-value-zones,
+.brava-profile,
+.brava-final-cta {
+  padding: 110px clamp(22px, 6vw, 96px);
+}
+
+.brava-numbers,
+.brava-lifestyle,
+.brava-drivers {
+  padding: 105px clamp(22px, 6vw, 96px);
+}
+
+.intro-grid,
+.number-grid,
+.profile-grid,
+.driver-grid {
+  display: grid;
+  gap: 14px;
+}
+
+.intro-grid {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.number-grid,
+.driver-grid {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.profile-grid {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.intro-card,
+.number-card,
+.profile-card,
+.driver-card {
+  border: 1px solid rgba(255,255,255,.08);
+  background: rgba(255,255,255,.025);
+  padding: 28px;
+  transition: .35s;
+}
+
+.intro-card:hover,
+.number-card:hover,
+.profile-card:hover,
+.driver-card:hover {
+  border-color: rgba(233,197,103,.3);
+  transform: translateY(-4px);
+}
+
+.intro-card span,
+.profile-card span {
+  font-family: var(--sans);
+  font-size: 8px;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--gold-mid);
+}
+
+.intro-card h3,
+.profile-card h3,
+.driver-card h3 {
+  font-family: var(--serif);
+  font-size: 34px;
+  font-weight: 300;
+  line-height: 1.05;
+  margin: 18px 0 12px;
+}
+
+.intro-card p,
+.profile-card p,
+.driver-card p {
+  color: rgba(255,255,255,.58);
+  font-size: 13px;
+  font-weight: 300;
+}
+
+.number-card {
+  min-height: 190px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.number-card strong {
+  font-family: var(--serif);
+  font-size: clamp(38px, 4vw, 58px);
+  font-weight: 300;
+  line-height: .95;
+  color: var(--gold-light);
+}
+
+.number-card span {
+  font-family: var(--sans);
+  font-size: 9px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.48);
+  line-height: 1.7;
+}
+
+.brava-value-zones {
+  display: grid;
+  grid-template-columns: .78fr 1.22fr;
+  gap: 54px;
+  align-items: start;
+}
+
+.value-copy {
+  position: sticky;
+  top: 110px;
+}
+
+.value-chart-card {
+  border: 1px solid rgba(255,255,255,.08);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
+  padding: 30px;
+  overflow: hidden;
+}
+
+.value-chart-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 18px;
+  margin-bottom: 32px;
+}
+
+.chart-kicker {
+  display: inline-block;
+  font-family: var(--sans);
+  font-size: 8px;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--gold-mid);
+  margin-bottom: 10px;
+}
+
+.value-chart-head h3 {
+  font-family: var(--serif);
+  font-size: 38px;
+  font-weight: 300;
+  line-height: 1.05;
+}
+
+.chart-badge {
+  min-width: 190px;
+  padding: 14px 16px;
+  border: 1px solid rgba(233,197,103,.2);
+  background: rgba(233,197,103,.05);
+}
+
+.chart-badge strong {
+  display: block;
+  font-family: var(--serif);
+  font-size: 24px;
+  font-weight: 300;
+  color: var(--gold-light);
+}
+
+.chart-badge span {
+  display: block;
+  margin-top: 6px;
+  font-family: var(--sans);
+  font-size: 8px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.42);
+}
+
+.value-bars {
+  display: grid;
+  gap: 24px;
+}
+
+.value-bar-item {
+  padding: 20px;
+  border: 1px solid rgba(255,255,255,.075);
+  background: rgba(255,255,255,.018);
+}
+
+.value-bar-label {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: baseline;
+  margin-bottom: 12px;
+}
+
+.value-bar-label span {
+  font-family: var(--sans);
+  font-size: 9px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--gold-mid);
+}
+
+.value-bar-label strong {
+  font-family: var(--serif);
+  font-size: 27px;
+  font-weight: 300;
+  color: rgba(255,255,255,.92);
+  text-align: right;
+}
+
+.value-bar-track {
+  height: 8px;
+  background: rgba(255,255,255,.09);
+  overflow: hidden;
+  position: relative;
+}
+
+.value-bar {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, var(--gold-dark), var(--gold-mid), var(--gold-light));
+  transition: width 1.4s ease;
+}
+
+.value-chart-card.is-visible .value-bar {
+  width: var(--bar);
+}
+
+.value-bar-item p {
+  margin-top: 12px;
+  color: rgba(255,255,255,.52);
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.brava-lifestyle {
+  display: grid;
+  grid-template-columns: 1.05fr .95fr;
+  gap: 64px;
+  align-items: center;
+}
+
+.lifestyle-image {
+  position: relative;
+  min-height: 600px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.08);
+}
+
+.lifestyle-image::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,.52), transparent);
+}
+
+.lifestyle-image img {
+  width: 100%;
+  height: 100%;
+  min-height: 600px;
+  object-fit: cover;
+  filter: brightness(.82);
+  transition: .8s;
+}
+
+.lifestyle-image:hover img {
+  transform: scale(1.05);
+  filter: brightness(.68);
+}
+
+.lifestyle-content p {
+  color: rgba(255,255,255,.62);
+  font-size: 14px;
+  font-weight: 300;
+  margin: 22px 0;
+}
+
+.lifestyle-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-top: 34px;
+}
+
+.lifestyle-point {
+  border: 1px solid rgba(255,255,255,.08);
+  background: rgba(255,255,255,.025);
+  padding: 22px;
+}
+
+.lifestyle-point b {
+  display: block;
+  font-family: var(--serif);
+  font-size: 32px;
+  font-weight: 300;
+  color: var(--gold-light);
+  margin-bottom: 10px;
+}
+
+.lifestyle-point span {
+  display: block;
+  font-family: var(--sans);
+  font-size: 8px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.42);
+  line-height: 1.7;
+}
+
+.brava-final-cta {
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.brava-final-cta::before {
+  content: "BRAVA";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--serif);
+  font-size: 16vw;
+  color: rgba(255,255,255,.035);
+  line-height: 1;
+  pointer-events: none;
+}
+
+.brava-final-cta > * {
+  position: relative;
+  z-index: 2;
+}
+
+.brava-final-cta .section-title {
+  max-width: 1040px;
+  margin: 0 auto;
+}
+
+.brava-final-cta .section-sub {
+  margin: 20px auto 38px;
+}
+
+.brava-final-cta .hero-actions {
+  justify-content: center;
+}
+
+.reveal-item {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity .7s ease, transform .7s ease;
+}
+
+.reveal-item.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.number-card strong {
+  opacity: .45;
+  transform: translateY(10px);
+  transition: .7s ease;
+}
+
+.number-card strong.number-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (max-width: 1180px) {
+  .brava-hero {
+    grid-template-columns: 1fr;
+    align-items: end;
+  }
+
+  .brava-hero-card {
+    justify-self: start;
+  }
+
+  .intro-grid,
+  .number-grid,
+  .profile-grid,
+  .driver-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .brava-value-zones,
+  .brava-lifestyle {
+    grid-template-columns: 1fr;
+  }
+
+  .value-copy {
+    position: static;
+  }
+
+  .value-chart-head {
+    flex-direction: column;
+  }
+
+  .lifestyle-image,
+  .lifestyle-image img {
+    min-height: 440px;
+  }
+}
+
+@media (max-width: 720px) {
+  .brava-hero {
+    min-height: 92svh;
+    padding: 126px 22px 64px;
+  }
+
+  .brava-hero-card {
+    display: none;
+  }
+
+  .brava-hero .hero-actions .btn,
+  .brava-final-cta .hero-actions .btn {
+    width: 100%;
+  }
+
+  .brava-intro,
+  .brava-value-zones,
+  .brava-profile,
+  .brava-final-cta,
+  .brava-numbers,
+  .brava-lifestyle,
+  .brava-drivers {
+    padding: 76px 22px;
+  }
+
+  .intro-grid,
+  .number-grid,
+  .profile-grid,
+  .driver-grid,
+  .lifestyle-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .value-chart-card {
+    padding: 20px;
+  }
+
+  .value-chart-head h3 {
+    font-size: 30px;
+  }
+
+  .value-bar-label {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .value-bar-label strong {
+    text-align: left;
+    font-size: 25px;
+  }
+
+  .chart-badge {
+    width: 100%;
+  }
+
+  .lifestyle-image,
+  .lifestyle-image img {
+    min-height: 340px;
+  }
+}

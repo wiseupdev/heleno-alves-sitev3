@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Minha Conta — Heleno Alves</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link 
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&family=Tenor+Sans&display=swap" 
+    rel="stylesheet"
+  >
+
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="stylesheet" href="../assets/css/usuario-minha-conta.css">
+</head>
+
+<body data-user="account">
+  <div class="grain"></div>
+
+  <div class="user-page">
+    <aside class="user-sidebar">
+      <a href="../index.html" class="user-logo">
+        <strong>Heleno Alves</strong>
+        <span>Área do cliente</span>
+      </a>
+
+      <nav class="user-nav">
+        <a href="minha-conta.html" class="active">Dashboard</a>
+        <a href="favoritos.html">Favoritos</a>
+        <a href="preferencias.html">Preferências</a>
+        <a href="../imoveis.html">Ver imóveis</a>
+        <a href="../index.html">Voltar ao site</a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <p>Cliente</p>
+        <strong id="sidebarUserName">Visitante</strong>
+      </div>
+    </aside>
+
+    <main class="user-main">
+      <div class="user-top">
+        <div class="user-title">
+          <small>Minha conta</small>
+          <h1>Bem-vindo</h1>
+          <p id="welcomeText">
+            Acompanhe seus favoritos, preferências e imóveis vistos recentemente.
+          </p>
+        </div>
+
+        <div class="user-actions">
+          <a class="btn gold" href="favoritos.html">Ver favoritos</a>
+          <a class="btn" href="preferencias.html">Editar preferências</a>
+          <button class="btn" id="logoutBtn" type="button">Sair</button>
+        </div>
+      </div>
+
+      <section class="kpi-grid">
+        <div class="kpi-card">
+          <span>Favoritos</span>
+          <strong id="favoriteCount">0</strong>
+          <small>Imóveis salvos</small>
+        </div>
+
+        <div class="kpi-card">
+          <span>Região preferida</span>
+          <strong id="preferredRegion">-</strong>
+          <small>Baseada no seu perfil</small>
+        </div>
+
+        <div class="kpi-card">
+          <span>Suítes desejadas</span>
+          <strong id="preferredSuites">-</strong>
+          <small>Preferência de busca</small>
+        </div>
+
+        <div class="kpi-card">
+          <span>Atendimento</span>
+          <strong>VIP</strong>
+          <small>Curadoria personalizada</small>
+        </div>
+      </section>
+
+      <section class="account-grid">
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <h2>Dados do cliente</h2>
+              <p>Informações salvas temporariamente no navegador.</p>
+            </div>
+          </div>
+
+          <div class="profile-list">
+            <div class="profile-row">
+              <span>Nome</span>
+              <strong id="profileName">Não informado</strong>
+            </div>
+
+            <div class="profile-row">
+              <span>E-mail</span>
+              <strong id="profileEmail">Não informado</strong>
+            </div>
+
+            <div class="profile-row">
+              <span>WhatsApp</span>
+              <strong id="profileWhatsapp">Não informado</strong>
+            </div>
+
+            <div class="profile-row">
+              <span>Último acesso</span>
+              <strong id="profileLastLogin">-</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <h2>Atalhos</h2>
+              <p>Acesso rápido às principais áreas.</p>
+            </div>
+          </div>
+
+          <div class="shortcut-list">
+            <a href="favoritos.html" class="shortcut">
+              <b>Favoritos</b>
+              <span>Ver imóveis salvos →</span>
+            </a>
+
+            <a href="preferencias.html" class="shortcut">
+              <b>Preferências</b>
+              <span>Ajustar curadoria →</span>
+            </a>
+
+            <a href="../imoveis.html" class="shortcut">
+              <b>Portfólio</b>
+              <span>Explorar imóveis →</span>
+            </a>
+
+            <a href="https://wa.me/5585988085349" target="_blank" class="shortcut">
+              <b>Atendimento</b>
+              <span>Falar no WhatsApp →</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>Resumo de preferências</h2>
+            <p>Esses dados serão usados futuramente para personalizar a seleção de imóveis.</p>
+          </div>
+        </div>
+
+        <div class="preferences-preview" id="preferencesPreview"></div>
+      </section>
+    </main>
+  </div>
+
+  <script src="../assets/js/usuario-minha-conta.js"></script>
+</body>
+</html>

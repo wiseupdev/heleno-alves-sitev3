@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Dashboard Admin — Heleno Alves</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link 
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Montserrat:wght@300;400;500;600&family=Tenor+Sans&display=swap" 
+    rel="stylesheet"
+  >
+
+  <link rel="stylesheet" href="../assets/css/styles.css" />
+  <link rel="stylesheet" href="../assets/css/admin-dashboard.css" />
+</head>
+
+<body>
+  <div class="grain"></div>
+
+  <div class="admin-page">
+    <aside class="admin-sidebar">
+      <a href="../index.html" class="admin-logo">
+        <strong>Heleno Alves</strong>
+        <span>Painel Admin</span>
+      </a>
+
+      <nav class="admin-nav">
+        <a href="dashboard.html" class="active">Dashboard</a>
+        <a href="imoveis.html">Imóveis</a>
+        <a href="imovel-form.html">Cadastrar imóvel</a>
+        <a href="leads.html">Leads</a>
+        <a href="analytics.html">Analytics</a>
+        <a href="../index.html">Ver site</a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <p>Última atualização</p>
+        <strong id="lastUpdate">Agora</strong>
+      </div>
+    </aside>
+
+    <main class="admin-main">
+      <div class="admin-top">
+        <div class="admin-title">
+          <small>Gestão comercial</small>
+          <h1>Dashboard</h1>
+          <p>
+            Resumo dos imóveis, leads, favoritos, cliques e origem dos acessos.
+          </p>
+        </div>
+
+        <div class="admin-actions">
+          <a class="btn gold" href="imovel-form.html">Cadastrar imóvel</a>
+          <a class="btn" href="leads.html">Ver leads</a>
+        </div>
+      </div>
+
+      <section class="kpi-grid">
+        <div class="kpi-card">
+          <div>
+            <span>Imóveis ativos</span>
+            <strong id="totalProperties">0</strong>
+          </div>
+          <small>Portfólio publicado</small>
+        </div>
+
+        <div class="kpi-card">
+          <div>
+            <span>Leads recebidos</span>
+            <strong id="totalLeads">0</strong>
+          </div>
+          <small>Contatos captados</small>
+        </div>
+
+        <div class="kpi-card">
+          <div>
+            <span>Cliques WhatsApp</span>
+            <strong id="totalClicks">0</strong>
+          </div>
+          <small>Intenção direta</small>
+        </div>
+
+        <div class="kpi-card">
+          <div>
+            <span>Favoritos</span>
+            <strong id="totalFavorites">0</strong>
+          </div>
+          <small>Imóveis salvos</small>
+        </div>
+      </section>
+
+      <section class="dashboard-grid">
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <h2 class="panel-title">Funil de navegação</h2>
+              <p class="panel-sub">Etapas principais da jornada do visitante.</p>
+            </div>
+          </div>
+
+          <div class="funnel-list" id="funnelRows"></div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <h2 class="panel-title">Origem dos acessos</h2>
+              <p class="panel-sub">Canais que mais geram tráfego.</p>
+            </div>
+          </div>
+
+          <div class="source-list" id="sourceRows"></div>
+        </div>
+      </section>
+
+      <section class="dashboard-grid">
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <h2 class="panel-title">Leads recentes</h2>
+              <p class="panel-sub">Contatos que exigem atenção comercial.</p>
+            </div>
+
+            <a class="btn small" href="leads.html">Ver todos</a>
+          </div>
+
+          <div class="table-scroll">
+            <table class="clean-table">
+              <thead>
+                <tr>
+                  <th>Cliente</th>
+                  <th>Interesse</th>
+                  <th>Origem</th>
+                  <th>Status</th>
+                  <th>Ação</th>
+                </tr>
+              </thead>
+
+              <tbody id="leadRows"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <h2 class="panel-title">Imóveis em destaque</h2>
+              <p class="panel-sub">Maior interesse no momento.</p>
+            </div>
+
+            <a class="btn small" href="imoveis.html">Gerenciar</a>
+          </div>
+
+          <div class="table-scroll">
+            <table class="clean-table">
+              <thead>
+                <tr>
+                  <th>Imóvel</th>
+                  <th>Views</th>
+                  <th>Favoritos</th>
+                </tr>
+              </thead>
+
+              <tbody id="topProperties"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/admin-dashboard.js"></script>
+</body>
+</html>

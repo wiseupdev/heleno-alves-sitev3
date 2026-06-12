@@ -1,0 +1,349 @@
+body[data-page="contato"] {
+  background: #000;
+  color: #fff;
+  overflow-x: hidden;
+}
+
+.contact-hero {
+  min-height: 100svh;
+  position: relative;
+  display: grid;
+  grid-template-columns: 1.1fr .9fr;
+  align-items: end;
+  gap: 48px;
+  padding: 150px clamp(22px, 6vw, 96px) 86px;
+  overflow: hidden;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(0,0,0,.96) 0%,
+      rgba(0,0,0,.76) 42%,
+      rgba(0,0,0,.26) 100%
+    ),
+    url("https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=1900&q=84&auto=format&fit=crop") center/cover;
+}
+
+.contact-hero::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 230px;
+  background: linear-gradient(to top, #000, transparent);
+}
+
+.contact-hero-content,
+.contact-hero-card {
+  position: relative;
+  z-index: 2;
+}
+
+.contact-hero h1 {
+  font-family: var(--serif);
+  font-size: clamp(52px, 8vw, 106px);
+  font-weight: 300;
+  line-height: .96;
+  max-width: 980px;
+}
+
+.contact-hero .lead {
+  max-width: 760px;
+  color: rgba(255,255,255,.72);
+  font-size: 15px;
+  font-weight: 300;
+  letter-spacing: .04em;
+  margin: 30px 0 42px;
+}
+
+.contact-hero-card {
+  align-self: center;
+  justify-self: end;
+  width: min(430px, 100%);
+  padding: 30px;
+  background: rgba(20,20,18,.62);
+  border: 1px solid rgba(233,197,103,.18);
+  backdrop-filter: blur(18px);
+}
+
+.contact-hero-card span {
+  font-family: var(--sans);
+  font-size: 8px;
+  letter-spacing: .25em;
+  text-transform: uppercase;
+  color: var(--gold-mid);
+}
+
+.contact-hero-card p {
+  font-family: var(--serif);
+  font-size: 27px;
+  line-height: 1.24;
+  color: rgba(255,255,255,.88);
+  margin-top: 16px;
+}
+
+.contact-main,
+.contact-final-cta {
+  padding: 110px clamp(22px, 6vw, 96px);
+}
+
+.contact-channels {
+  padding: 105px clamp(22px, 6vw, 96px);
+}
+
+.contact-layout {
+  display: grid;
+  grid-template-columns: .82fr 1.18fr;
+  gap: 54px;
+  align-items: start;
+}
+
+.contact-copy {
+  position: sticky;
+  top: 110px;
+}
+
+.contact-info-grid {
+  display: grid;
+  gap: 14px;
+  margin-top: 34px;
+}
+
+.contact-info-card,
+.channel-card {
+  border: 1px solid rgba(255,255,255,.08);
+  background: rgba(255,255,255,.025);
+  padding: 26px;
+  transition: .35s;
+}
+
+.contact-info-card:hover,
+.channel-card:hover {
+  border-color: rgba(233,197,103,.3);
+  transform: translateY(-4px);
+}
+
+.contact-info-card span,
+.channel-card span {
+  font-family: var(--sans);
+  font-size: 8px;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--gold-mid);
+}
+
+.contact-info-card h3,
+.channel-card h3 {
+  font-family: var(--serif);
+  font-size: 32px;
+  font-weight: 300;
+  line-height: 1.05;
+  margin: 16px 0 10px;
+}
+
+.contact-info-card p,
+.channel-card p {
+  color: rgba(255,255,255,.58);
+  font-size: 13px;
+  font-weight: 300;
+  line-height: 1.75;
+}
+
+.contact-form {
+  border: 1px solid rgba(255,255,255,.08);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.015));
+  padding: 34px;
+}
+
+.form-head {
+  margin-bottom: 28px;
+}
+
+.form-head h2 {
+  font-family: var(--serif);
+  font-size: clamp(42px, 5vw, 64px);
+  font-weight: 300;
+  line-height: 1;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.form-group {
+  display: grid;
+  gap: 8px;
+}
+
+.form-group.full {
+  grid-column: 1 / -1;
+}
+
+.form-group label {
+  font-family: var(--sans);
+  font-size: 8px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--gold-mid);
+}
+
+.input {
+  width: 100%;
+  min-height: 58px;
+  background: rgba(255,255,255,.035);
+  border: 1px solid rgba(255,255,255,.1);
+  color: #fff;
+  padding: 0 16px;
+  outline: none;
+  transition: .25s;
+  font-family: var(--body);
+}
+
+textarea.input {
+  padding: 16px;
+  resize: vertical;
+  min-height: 140px;
+}
+
+.input:focus {
+  border-color: var(--gold-mid);
+  background: rgba(233,197,103,.035);
+}
+
+.input::placeholder {
+  color: rgba(255,255,255,.34);
+}
+
+.input option {
+  background: #141412;
+  color: #fff;
+}
+
+.form-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 24px;
+}
+
+.form-feedback {
+  min-height: 22px;
+  margin-top: 18px;
+  color: var(--gold-light);
+  font-size: 13px;
+}
+
+.channel-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.channel-card {
+  min-height: 230px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.contact-final-cta {
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.contact-final-cta::before {
+  content: "CONTATO";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--serif);
+  font-size: 15vw;
+  color: rgba(255,255,255,.035);
+  line-height: 1;
+  pointer-events: none;
+}
+
+.contact-final-cta > * {
+  position: relative;
+  z-index: 2;
+}
+
+.contact-final-cta .section-title {
+  max-width: 1040px;
+  margin: 0 auto;
+}
+
+.contact-final-cta .section-sub {
+  margin: 20px auto 38px;
+}
+
+.contact-final-cta .hero-actions {
+  justify-content: center;
+}
+
+.reveal-item {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity .7s ease, transform .7s ease;
+}
+
+.reveal-item.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (max-width: 1180px) {
+  .contact-hero,
+  .contact-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .contact-hero-card {
+    justify-self: start;
+  }
+
+  .contact-copy {
+    position: static;
+  }
+
+  .channel-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .contact-hero {
+    min-height: 92svh;
+    padding: 126px 22px 64px;
+  }
+
+  .contact-hero-card {
+    display: none;
+  }
+
+  .contact-main,
+  .contact-channels,
+  .contact-final-cta {
+    padding: 76px 22px;
+  }
+
+  .contact-form {
+    padding: 22px;
+  }
+
+  .form-grid,
+  .channel-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-actions .btn,
+  .contact-hero .hero-actions .btn,
+  .contact-final-cta .hero-actions .btn {
+    width: 100%;
+  }
+}

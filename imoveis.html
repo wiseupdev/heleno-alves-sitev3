@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+  <meta name="robots" content="index, follow">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Imóveis — Heleno Alves</title>
+  <!-- Performance: preconnect e preload de fontes críticas -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://res.cloudinary.com" crossorigin>
+  <link rel="preconnect" href="https://dwvimagesv1.b-cdn.net" crossorigin>
+  <meta name="theme-color" content="#000000">
+  <meta property="og:title" content="Imóveis de Alto Padrão — Heleno Alves">
+  <meta property="og:description" content="Portfólio completo de imóveis de alto luxo em Balneário Camboriú e Praia Brava. Filtre por região, tipo, valor e características.">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:url" content="https://helenoalves.com.br/imoveis.html">
+  <meta property="og:site_name" content="Heleno Alves — Corretor de Alto Luxo">
+  <link rel="canonical" href="https://helenoalves.com.br/imoveis.html">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&family=Tenor+Sans&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="stylesheet" href="assets/css/imoveis.css">
+  <link rel="stylesheet" href="assets/css/lead-popup.css">
+</head>
+<body data-page="imoveis">
+  <div class="grain"></div>
+  <header class="site-header">
+    <a href="index.html" class="logo logo-img">
+      <img src="assets/images/logo/ICON (1).png" alt="Heleno Alves" class="logo-icon" width="36" height="44">
+      <div class="logo-text">
+        <strong>Heleno Alves</strong>
+        <span>Corretor de Alto Luxo</span>
+      </div>
+    </a>
+    <nav class="site-nav">
+      <a href="balneario-camboriu.html" data-i18n="nav_balneario">Balneário</a>
+      <a href="praia-brava.html" data-i18n="nav_brava">Praia Brava</a>
+      <a href="imoveis.html" data-i18n="nav_imoveis">Imóveis</a>
+      <a href="sobre.html" data-i18n="nav_sobre">Sobre</a>
+      <a href="contato.html" data-i18n="nav_contato">Contato</a>
+      <a href="usuario/login.html" data-i18n="nav_cliente">Área do cliente</a>
+    </nav>
+    <a class="btn gold desktop-cta" data-wa="https://wa.me/5585988085349" href="https://wa.me/5585988085349" target="_blank">
+      <span data-i18n="nav_cta">Falar com Heleno</span>
+    </a>
+    <button class="menu" onclick="toggleMenu()" aria-label="Abrir menu"><span></span></button>
+  </header>
+  <div id="mobilePanel" class="mobile-panel">
+    <a onclick="toggleMenu()" href="balneario-camboriu.html"><span data-i18n="nav_balneario">Balneário</span> <span>→</span></a>
+    <a onclick="toggleMenu()" href="praia-brava.html"><span data-i18n="nav_brava">Praia Brava</span> <span>→</span></a>
+    <a onclick="toggleMenu()" href="imoveis.html"><span data-i18n="nav_imoveis">Imóveis</span> <span>→</span></a>
+    <a onclick="toggleMenu()" href="sobre.html"><span data-i18n="nav_sobre">Sobre</span> <span>→</span></a>
+    <a onclick="toggleMenu()" href="contato.html"><span data-i18n="nav_contato">Contato</span> <span>→</span></a>
+    <a onclick="toggleMenu()" href="usuario/login.html"><span data-i18n="nav_cliente">Área do cliente</span> <span>→</span></a>
+  </div>
+  <main>
+    <section class="page-hero">
+      <div>
+        <p class="eyebrow" data-i18n="imoveis_eyebrow">Portfólio</p>
+        <h1 data-i18n="imoveis_h1">Imóveis selecionados</h1>
+        <p class="lead" data-i18n="imoveis_lead">Navegue por uma curadoria de imóveis de alto luxo em Balneário Camboriú e Praia Brava.</p>
+      </div>
+    </section>
+    <section class="portfolio-section">
+      <div class="catalog-layout">
+        <aside class="catalog-sidebar">
+          <div class="sidebar-card">
+            <div class="sidebar-head">
+              <p class="eyebrow" data-i18n="filter_eyebrow">Busca premium</p>
+              <h2 data-i18n="filter_h2">Filtrar imóveis</h2>
+              <p data-i18n="filter_sub">Refine sua busca por região, tipo, valor, suítes e vagas.</p>
+            </div>
+            <div class="filters filters-vertical">
+              <div class="filter-group">
+                <label for="regionFilter" data-i18n="filter_region">Região</label>
+                <select id="regionFilter" class="field">
+                  <option value="" data-i18n="filter_all_regions">Todas as regiões</option>
+                  <option value="Balneário Camboriú">Balneário Camboriú</option>
+                  <option value="Praia Brava">Praia Brava</option>
+                </select>
+              </div>
+              <div class="filter-group">
+                <label for="typeFilter" data-i18n="filter_type">Tipo de imóvel</label>
+                <select id="typeFilter" class="field">
+                  <option value="" data-i18n="filter_all_types">Todos os tipos</option>
+                  <option value="Na Planta">Na Planta</option>
+                  <option value="Pronto">Pronto</option>
+                  <option value="Locação">Locação</option>
+                </select>
+              </div>
+              <div class="filter-group price-range-group">
+                <label for="priceRange" data-i18n="filter_price">Faixa de valor</label>
+                <div class="price-field">
+                  <div class="price-field-top">
+                    <span data-i18n="filter_max">Valor máximo</span>
+                    <strong id="priceRangeLabel">Até R$ 30M</strong>
+                  </div>
+                  <input id="priceRange" type="range" min="0" max="30000000" step="500000" value="30000000">
+                  <div class="price-scale">
+                    <span>R$ 0</span>
+                    <span>R$ 30M+</span>
+                  </div>
+                </div>
+              </div>
+              <div class="filter-group">
+                <label for="suitesFilter" data-i18n="filter_suites">Suítes</label>
+                <select id="suitesFilter" class="field">
+                  <option value="" data-i18n="filter_all">Todas</option>
+                  <option value="1">1+</option>
+                  <option value="2">2+</option>
+                  <option value="3">3+</option>
+                  <option value="4">4+</option>
+                  <option value="5">5+</option>
+                </select>
+              </div>
+              <div class="filter-group">
+                <label for="parkingFilter" data-i18n="filter_parking">Vagas</label>
+                <select id="parkingFilter" class="field">
+                  <option value="" data-i18n="filter_all">Todas</option>
+                  <option value="1">1+</option>
+                  <option value="2">2+</option>
+                  <option value="3">3+</option>
+                  <option value="4">4+</option>
+                  <option value="5">5+</option>
+                </select>
+              </div>
+              <button class="btn sidebar-clear" id="clearFilters" type="button" data-i18n="filter_clear">Limpar filtros</button>
+            </div>
+          </div>
+        </aside>
+        <div class="catalog-content">
+          <div class="catalog-topbar">
+            <div class="catalog-search">
+              <label for="searchInput" data-i18n="search_label">Buscar imóvel</label>
+              <input id="searchInput" class="field" type="search" placeholder="Buscar por nome, bairro, região ou característica">
+            </div>
+            <div class="catalog-meta">
+              <span id="resultCount" data-i18n="loading">Carregando imóveis...</span>
+            </div>
+          </div>
+          <div class="section-head">
+            <div>
+              <p class="eyebrow" data-i18n="imoveis_eyebrow">Portfólio</p>
+              <h2 class="section-title" data-i18n="portfolio_expanding">Portfólio em expansão</h2>
+            </div>
+            <p class="section-sub" data-i18n="portfolio_sub">Uma seleção curada de imóveis de alto padrão em Balneário Camboriú e Praia Brava.</p>
+          </div>
+          <div id="propertyGrid" class="portfolio-grid"></div>
+          <div class="empty-state" id="emptyState">
+            <h3 data-i18n="empty_title">Nenhum imóvel encontrado.</h3>
+            <p data-i18n="empty_sub">Altere os filtros ou explore todo o portfólio disponível.</p>
+            <button class="btn gold" id="emptyClearFilters" type="button" data-i18n="filter_clear">Limpar filtros</button>
+          </div>
+          <div class="pagination">
+            <button class="btn small" id="prevPage" type="button" data-i18n="page_prev">Anterior</button>
+            <span id="pageInfo">Página 1 de 1</span>
+            <button class="btn small" id="nextPage" type="button" data-i18n="page_next">Próxima</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <div class="lgpd-banner" id="lgpdBanner" hidden>
+    <div>
+      <strong data-i18n="lgpd_title">Privacidade e cookies</strong>
+      <p>Utilizamos cookies essenciais e dados enviados em formulários para melhorar sua experiência, responder solicitações e realizar atendimento imobiliário personalizado.</p>
+    </div>
+    <div class="lgpd-actions">
+      <a href="politica-privacidade.html" data-i18n="lgpd_policy">Ver política</a>
+      <button type="button" id="acceptLgpd" data-i18n="lgpd_accept">Aceitar</button>
+    </div>
+  </div>
+  <a class="wa-float" data-wa="https://wa.me/5585988085349" href="https://wa.me/5585988085349" target="_blank" aria-label="WhatsApp">WA</a>
+  <footer class="site-footer">
+    <div class="footer-main">
+      <div>
+        <a class="footer-brand" href="index.html"><img src="assets/images/logo/LOGO H - BRANCA (1).png" alt="Heleno Alves" class="footer-logo" width="220" height="60" loading="lazy"></a>
+        <p data-i18n="footer_desc">Curadoria imobiliária de alto luxo em Balneário Camboriú e Praia Brava.</p>
+      </div>
+      <div class="footer-col">
+        <h4 data-i18n="footer_nav">Navegação</h4>
+        <a href="imoveis.html" data-i18n="nav_imoveis">Imóveis</a>
+        <a href="balneario-camboriu.html">Balneário Camboriú</a>
+        <a href="praia-brava.html" data-i18n="nav_brava">Praia Brava</a>
+        <a href="sobre.html" data-i18n="nav_sobre">Sobre</a>
+        <a href="contato.html" data-i18n="nav_contato">Contato</a>
+      </div>
+      <div class="footer-col">
+        <h4 data-i18n="footer_contact">Atendimento</h4>
+        <a href="https://wa.me/5585988085349" target="_blank">WhatsApp</a>
+        <a href="mailto:contato@helenoalves.com.br">contato@helenoalves.com.br</a>
+        <a href="usuario/login.html" data-i18n="nav_cliente">Área do cliente</a>
+      </div>
+      <div class="footer-col">
+        <h4 data-i18n="footer_legal">Legal</h4>
+        <a href="politica-privacidade.html">Política de Privacidade</a>
+        <a href="termos-uso.html">Termos de Uso</a>
+        <a href="admin/login.html">Acesso restrito</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span data-i18n="footer_copy">© 2026 Heleno Alves. Todos os direitos reservados.</span>
+      <span data-i18n="footer_dev">Site desenvolvido para curadoria imobiliária premium.</span>
+    </div>
+  </footer>
+  <script src="assets/js/i18n.js"></script>
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/app.js"></script>
+  <script src="assets/js/imoveis.js"></script>
+  <script src="assets/js/lgpd.js"></script>
+  <script src="assets/js/lead-popup.js"></script>
+</body>
+</html>

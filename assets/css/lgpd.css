@@ -1,0 +1,148 @@
+.lgpd-banner {
+  position: fixed;
+  left: 24px;
+  right: 24px;
+  bottom: 24px;
+  z-index: 1200;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 22px;
+  align-items: center;
+  padding: 20px;
+  background: rgba(8,8,7,.96);
+  border: 1px solid rgba(233,197,103,.24);
+  box-shadow: 0 24px 80px rgba(0,0,0,.46);
+  backdrop-filter: blur(18px);
+}
+
+.lgpd-banner[hidden] {
+  display: none;
+}
+
+.lgpd-banner strong {
+  display: block;
+  font-family: var(--serif);
+  font-size: 24px;
+  font-weight: 300;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+.lgpd-banner p {
+  color: rgba(255,255,255,.58);
+  font-size: 12px;
+  line-height: 1.6;
+  max-width: 760px;
+}
+
+.lgpd-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.lgpd-actions a,
+.lgpd-actions button {
+  height: 42px;
+  padding: 0 16px;
+  border: 1px solid rgba(233,197,103,.34);
+  background: transparent;
+  color: #fff;
+  font-family: var(--sans);
+  font-size: 9px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: .25s ease;
+}
+
+.lgpd-actions a:hover {
+  color: var(--gold-light);
+  border-color: var(--gold-mid);
+}
+
+.lgpd-actions button {
+  background: var(--gold-mid);
+  color: #000;
+  border-color: var(--gold-mid);
+}
+
+.lgpd-actions button:hover {
+  background: var(--gold-dark);
+  color: #fff;
+  border-color: var(--gold-dark);
+}
+
+.privacy-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 16px 0 22px;
+  color: rgba(255,255,255,.58);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.privacy-check input {
+  margin-top: 4px;
+  accent-color: var(--gold-mid);
+}
+
+.privacy-check a {
+  color: var(--gold-light);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (max-width: 720px) {
+  .lgpd-banner {
+    left: 14px;
+    right: 14px;
+    bottom: 14px;
+    grid-template-columns: 1fr;
+  }
+
+  .lgpd-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .lgpd-actions a,
+  .lgpd-actions button {
+    width: 100%;
+  }
+}
+.lgpd-banner {
+  left: auto;
+  right: 24px;
+  bottom: 24px;
+  width: min(520px, calc(100% - 48px));
+  grid-template-columns: 1fr;
+  transform: translateY(18px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .35s ease, transform .35s ease;
+}
+
+.lgpd-banner.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.lgpd-actions {
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 720px) {
+  .lgpd-banner {
+    left: 14px;
+    right: 14px;
+    bottom: 14px;
+    width: auto;
+  }
+}

@@ -1,0 +1,184 @@
+[
+  {
+    "id": 1,
+    "title": "Vitra by Pininfarina",
+    "slug": "vitra-by-pininfarina",
+    "region": "Balneário Camboriú",
+    "regionSlug": "balneario-camboriu",
+    "area": "Frente Mar",
+    "district": "Barra Sul",
+    "type": "Apartamento",
+    "status": "Exclusivo",
+    "price": "Sob consulta",
+    "privateArea": "320 m²",
+    "suites": 4,
+    "parking": 4,
+    "tag": "Frente Mar",
+    "cover": "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1200&q=84&auto=format&fit=crop",
+    "gallery": [
+      "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1400&q=84&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=1400&q=84&auto=format&fit=crop"
+    ],
+    "video": "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=1400&q=84&auto=format&fit=crop",
+    "desc": "Empreendimento de assinatura internacional com vista permanente para o Atlântico e leitura arquitetônica icônica.",
+    "features": [
+      "Frente mar",
+      "Alto andar",
+      "Arquitetura assinada",
+      "Lazer premium"
+    ],
+    "lat": -26.9929,
+    "lng": -48.6352
+  },
+  {
+    "id": 2,
+    "title": "One Tower Residence",
+    "slug": "one-tower-residence",
+    "region": "Balneário Camboriú",
+    "regionSlug": "balneario-camboriu",
+    "area": "Coberturas",
+    "district": "Centro",
+    "type": "Cobertura",
+    "status": "Pronto",
+    "price": "R$ 12.500.000",
+    "privateArea": "540 m²",
+    "suites": 5,
+    "parking": 5,
+    "tag": "Cobertura",
+    "cover": "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=1200&q=84&auto=format&fit=crop",
+    "gallery": [
+      "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=1400&q=84&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=1400&q=84&auto=format&fit=crop"
+    ],
+    "video": "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=1400&q=84&auto=format&fit=crop",
+    "desc": "Cobertura com terraço privativo, amplitude visual e experiência urbana acima da orla.",
+    "features": [
+      "Cobertura",
+      "Triplex",
+      "Terraço",
+      "Vista panorâmica"
+    ],
+    "lat": -26.987,
+    "lng": -48.6332
+  },
+  {
+    "id": 3,
+    "title": "Skyline Private",
+    "slug": "skyline-private",
+    "region": "Balneário Camboriú",
+    "regionSlug": "balneario-camboriu",
+    "area": "Lançamentos",
+    "district": "Barra Norte",
+    "type": "Lançamento",
+    "status": "Em obra",
+    "price": "R$ 4.200.000",
+    "privateArea": "188 m²",
+    "suites": 3,
+    "parking": 3,
+    "tag": "Lançamento",
+    "cover": "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=1200&q=84&auto=format&fit=crop",
+    "gallery": [
+      "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=1400&q=84&auto=format&fit=crop"
+    ],
+    "video": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1400&q=84&auto=format&fit=crop",
+    "desc": "Lançamento premium com plantas generosas, lazer vertical e posicionamento estratégico.",
+    "features": [
+      "Lançamento",
+      "Lazer vertical",
+      "Alto andar",
+      "Vista aberta"
+    ],
+    "lat": -26.9734,
+    "lng": -48.6291
+  },
+  {
+    "id": 4,
+    "title": "Brava Ocean House",
+    "slug": "brava-ocean-house",
+    "region": "Praia Brava",
+    "regionSlug": "praia-brava",
+    "area": "Vista Mar",
+    "district": "Brava Norte",
+    "type": "Apartamento",
+    "status": "Exclusivo",
+    "price": "R$ 6.900.000",
+    "privateArea": "240 m²",
+    "suites": 4,
+    "parking": 3,
+    "tag": "Vista Mar",
+    "cover": "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1200&q=84&auto=format&fit=crop",
+    "gallery": [
+      "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1400&q=84&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=1400&q=84&auto=format&fit=crop"
+    ],
+    "video": "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=1400&q=84&auto=format&fit=crop",
+    "desc": "Arquitetura boutique com vista mar, atmosfera reservada e conexão direta com o lifestyle da Brava.",
+    "features": [
+      "Vista mar",
+      "Boutique",
+      "Brava Norte",
+      "Arquitetura autoral"
+    ],
+    "lat": -26.9258,
+    "lng": -48.627
+  },
+  {
+    "id": 5,
+    "title": "Brava Front Sea",
+    "slug": "brava-front-sea",
+    "region": "Praia Brava",
+    "regionSlug": "praia-brava",
+    "area": "Frente Mar",
+    "district": "Orla",
+    "type": "Apartamento",
+    "status": "Exclusivo",
+    "price": "Sob consulta",
+    "privateArea": "290 m²",
+    "suites": 4,
+    "parking": 4,
+    "tag": "Frente Mar",
+    "cover": "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=1200&q=84&auto=format&fit=crop",
+    "gallery": [
+      "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=1400&q=84&auto=format&fit=crop"
+    ],
+    "video": "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=1400&q=84&auto=format&fit=crop",
+    "desc": "Unidade frente mar para exclusividade, silêncio visual e experiência pé na areia.",
+    "features": [
+      "Frente mar",
+      "Pé na areia",
+      "Privacidade"
+    ],
+    "lat": -26.9308,
+    "lng": -48.6261
+  },
+  {
+    "id": 6,
+    "title": "Casa Reserva Brava",
+    "slug": "casa-reserva-brava",
+    "region": "Praia Brava",
+    "regionSlug": "praia-brava",
+    "area": "Casas",
+    "district": "Condomínio",
+    "type": "Casa",
+    "status": "Pronto",
+    "price": "R$ 9.400.000",
+    "privateArea": "420 m²",
+    "suites": 5,
+    "parking": 4,
+    "tag": "Casa",
+    "cover": "https://images.unsplash.com/photo-1600607688969-a5bfcd646154?w=1200&q=84&auto=format&fit=crop",
+    "gallery": [
+      "https://images.unsplash.com/photo-1600607688969-a5bfcd646154?w=1400&q=84&auto=format&fit=crop"
+    ],
+    "video": "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=1400&q=84&auto=format&fit=crop",
+    "desc": "Casa em condomínio para privacidade, natureza e conforto de alto padrão.",
+    "features": [
+      "Casa",
+      "Condomínio",
+      "Piscina",
+      "Privacidade"
+    ],
+    "lat": -26.9279,
+    "lng": -48.6376
+  }
+]

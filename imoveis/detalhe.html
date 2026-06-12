@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detalhe do imóvel — Heleno Alves</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&family=Tenor+Sans&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="stylesheet" href="../assets/css/property-detail.css">
+  <link rel="stylesheet" href="../assets/css/lead-popup.css">
+</head>
+<body data-page="detail">
+  <div class="grain"></div>
+  <header class="site-header">
+    <a href="../index.html" class="logo logo-img">
+      <img src="../assets/images/logo/ICON (1).png" alt="Heleno Alves" class="logo-icon" width="36" height="44">
+      <div class="logo-text">
+        <strong>Heleno Alves</strong>
+        <span>Corretor de Alto Luxo</span>
+      </div>
+    </a>
+    <nav class="site-nav">
+      <a href="../balneario-camboriu.html" data-i18n="nav_balneario">Balneário</a>
+      <a href="../praia-brava.html" data-i18n="nav_brava">Praia Brava</a>
+      <a href="../imoveis.html" data-i18n="nav_imoveis">Imóveis</a>
+      <a href="../sobre.html" data-i18n="nav_sobre">Sobre</a>
+      <a href="../contato.html" data-i18n="nav_contato">Contato</a>
+      <a href="../usuario/login.html" data-i18n="nav_cliente">Área do cliente</a>
+    </nav>
+    <a class="btn gold desktop-cta" data-wa="https://wa.me/5585988085349" href="https://wa.me/5585988085349" target="_blank">
+      <span data-i18n="nav_cta">Falar com Heleno</span>
+    </a>
+    <button class="menu" onclick="toggleMenu()" aria-label="Abrir menu"><span></span></button>
+  </header>
+  <div id="mobilePanel" class="mobile-panel">
+    <a onclick="toggleMenu()" href="../balneario-camboriu.html">Balneário <span>→</span></a>
+    <a onclick="toggleMenu()" href="../praia-brava.html">Praia Brava <span>→</span></a>
+    <a onclick="toggleMenu()" href="../imoveis.html">Imóveis <span>→</span></a>
+    <a onclick="toggleMenu()" href="../sobre.html">Sobre <span>→</span></a>
+    <a onclick="toggleMenu()" href="../contato.html">Contato <span>→</span></a>
+    <a onclick="toggleMenu()" href="../usuario/login.html">Área do cliente <span>→</span></a>
+  </div>
+  <main>
+    <section class="detail-hero" id="detailHero">
+      <div class="detail-hero-content">
+        <p class="eyebrow" data-i18n="detail_eyebrow">Detalhes do imóvel</p>
+        <h1 id="detailTitle"></h1>
+        <p class="lead" id="detailLoc"></p>
+        <div class="hero-actions">
+          <a class="btn gold" id="heroWaDetail" target="_blank" data-i18n="detail_interest">Tenho interesse</a>
+          <a class="btn" href="../imoveis.html" data-i18n="detail_back">Voltar ao portfólio</a>
+        </div>
+      </div>
+    </section>
+    <section class="detail-section">
+      <div class="detail-layout">
+        <div class="detail-main">
+          <div id="detailGallery" class="detail-gallery"></div>
+          <section class="visual-section" id="visualSection">
+            <div class="visual-head">
+              <p class="eyebrow" data-i18n="detail_visual_eyebrow">Experiência visual</p>
+              <h2 class="section-title" data-i18n="detail_photos_title">Fotos, mapa e entorno</h2>
+              <p class="section-sub" data-i18n="detail_photos_sub">Os recursos visuais aparecem apenas quando estiverem disponíveis no cadastro do imóvel.</p>
+            </div>
+            <div class="media-tabs" id="mediaTabs"></div>
+            <div class="media-stage" id="mediaStage">
+              <div class="media-frame" data-frame="map">
+                <iframe id="mapFrame" loading="lazy" allowfullscreen></iframe>
+              </div>
+              <div class="media-frame" data-frame="street">
+                <iframe id="streetFrame" loading="lazy" allowfullscreen></iframe>
+              </div>
+              <div class="media-frame video-frame" data-frame="video" id="videoFrame"></div>
+              <div class="media-frame" data-frame="tour">
+                <iframe id="tourFrame" loading="lazy" allowfullscreen></iframe>
+              </div>
+            </div>
+          </section>
+        </div>
+        <aside class="detail-panel">
+          <button id="favoriteDetail" class="favorite-detail" type="button">♡</button>
+          <p class="eyebrow" data-i18n="detail_ficha">Ficha do imóvel</p>
+          <h2 id="detailTitleSide"></h2>
+          <p id="detailDesc" class="section-sub"></p>
+          <div id="detailSpecs" class="detail-specs"></div>
+          <div id="detailFeatures" class="detail-features"></div>
+          <div id="detailPrice" class="detail-price"></div>
+          <div class="detail-actions">
+            <a id="waDetail" class="btn gold" target="_blank" data-i18n="detail_interest">Tenho interesse</a>
+            <a class="btn" href="../imoveis.html" data-i18n="detail_others">Ver outros imóveis</a>
+          </div>
+        </aside>
+      </div>
+    </section>
+    <section class="similar-section dark-panel" id="similarSection">
+      <div class="carousel-head">
+        <div>
+          <p class="eyebrow" data-i18n="detail_similar">Semelhantes</p>
+          <h2 class="section-title" data-i18n="detail_similar_title">Imóveis que combinam com esta busca</h2>
+        </div>
+        <div class="arrows">
+          <button class="arrow" type="button" data-slide="similarCarousel" data-dir="-1">←</button>
+          <button class="arrow" type="button" data-slide="similarCarousel" data-dir="1">→</button>
+        </div>
+      </div>
+      <div id="similarCarousel" class="similar-carousel"></div>
+    </section>
+  </main>
+  <div class="lgpd-banner" id="lgpdBanner" hidden>
+    <div>
+      <strong data-i18n="lgpd_title">Privacidade e cookies</strong>
+      <p>Utilizamos cookies essenciais e dados enviados em formulários para melhorar sua experiência, responder solicitações e realizar atendimento imobiliário personalizado.</p>
+    </div>
+    <div class="lgpd-actions">
+      <a href="../politica-privacidade.html" data-i18n="lgpd_policy">Ver política</a>
+      <button type="button" id="acceptLgpd" data-i18n="lgpd_accept">Aceitar</button>
+    </div>
+  </div>
+  <a class="wa-float" data-wa="https://wa.me/5585988085349" href="https://wa.me/5585988085349" target="_blank" aria-label="WhatsApp">WA</a>
+  <footer class="site-footer">
+    <div class="footer-main">
+      <div>
+        <a class="footer-brand" href="../index.html"><img src="../assets/images/logo/LOGO H - BRANCA (1).png" alt="Heleno Alves" class="footer-logo" width="220" height="60" loading="lazy"></a>
+        <p data-i18n="footer_desc">Curadoria imobiliária de alto luxo em Balneário Camboriú e Praia Brava.</p>
+      </div>
+      <div class="footer-col">
+        <h4 data-i18n="footer_nav">Navegação</h4>
+        <a href="../imoveis.html" data-i18n="nav_imoveis">Imóveis</a>
+        <a href="../balneario-camboriu.html">Balneário Camboriú</a>
+        <a href="../praia-brava.html" data-i18n="nav_brava">Praia Brava</a>
+        <a href="../sobre.html" data-i18n="nav_sobre">Sobre</a>
+        <a href="../contato.html" data-i18n="nav_contato">Contato</a>
+      </div>
+      <div class="footer-col">
+        <h4 data-i18n="footer_contact">Atendimento</h4>
+        <a href="https://wa.me/5585988085349" target="_blank">WhatsApp</a>
+        <a href="mailto:contato@helenoalves.com.br">contato@helenoalves.com.br</a>
+        <a href="../usuario/login.html" data-i18n="nav_cliente">Área do cliente</a>
+      </div>
+      <div class="footer-col">
+        <h4 data-i18n="footer_legal">Legal</h4>
+        <a href="../politica-privacidade.html">Política de Privacidade</a>
+        <a href="../termos-uso.html">Termos de Uso</a>
+        <a href="../admin/login.html">Acesso restrito</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span data-i18n="footer_copy">© 2026 Heleno Alves. Todos os direitos reservados.</span>
+      <span data-i18n="footer_dev">Site desenvolvido para curadoria imobiliária premium.</span>
+    </div>
+  </footer>
+  <script src="../assets/js/i18n.js"></script>
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/property-detail.js"></script>
+  <script src="../assets/js/lgpd.js"></script>
+  <script src="../assets/js/lead-popup.js"></script>
+</body>
+</html>

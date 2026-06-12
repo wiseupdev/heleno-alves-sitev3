@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Admin Imóveis — Heleno Alves</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&family=Tenor+Sans&display=swap"
+    rel="stylesheet"
+  >
+
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="stylesheet" href="../assets/css/admin-imoveis.css">
+</head>
+
+<body data-admin="properties">
+  <div class="grain"></div>
+
+  <div class="admin-page">
+    <aside class="admin-sidebar">
+      <a href="../index.html" class="admin-logo">
+        <strong>Heleno Alves</strong>
+        <span>Painel Admin</span>
+      </a>
+
+      <nav class="admin-nav">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="imoveis.html" class="active">Imóveis</a>
+        <a href="imovel-form.html">Cadastrar imóvel</a>
+        <a href="leads.html">Leads</a>
+        <a href="analytics.html">Analytics</a>
+        <a href="../index.html">Ver site</a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <p>Gestão de portfólio</p>
+        <strong id="propertyCount">0 imóveis</strong>
+      </div>
+    </aside>
+
+    <main class="admin-main">
+      <div class="admin-top">
+        <div class="admin-title">
+          <small>Imóveis</small>
+          <h1>Cadastro de imóveis</h1>
+          <p>
+            Gerencie o portfólio publicado, filtre por região/status e acompanhe os imóveis disponíveis no site.
+          </p>
+        </div>
+
+        <div class="admin-actions">
+          <a class="btn gold" href="imovel-form.html">Novo imóvel</a>
+          <a class="btn" href="../imoveis.html" target="_blank">Ver no site</a>
+        </div>
+      </div>
+
+      <section class="toolbar">
+        <div class="search-box">
+          <label for="searchInput">Buscar imóvel</label>
+          <input id="searchInput" type="search" placeholder="Digite nome, bairro, tipo ou valor">
+        </div>
+
+        <div class="filter-box">
+          <label for="regionFilter">Região</label>
+          <select id="regionFilter">
+            <option value="Todos">Todas</option>
+            <option value="Balneário Camboriú">Balneário Camboriú</option>
+            <option value="BC">BC</option>
+            <option value="Praia Brava">Praia Brava</option>
+          </select>
+        </div>
+
+        <div class="filter-box">
+          <label for="statusFilter">Status</label>
+          <select id="statusFilter">
+            <option value="Todos">Todos</option>
+            <option value="Ativo">Ativo</option>
+            <option value="Exclusivo">Exclusivo</option>
+            <option value="Pronto">Pronto</option>
+            <option value="Em obra">Em obra</option>
+            <option value="Lançamento">Lançamento</option>
+            <option value="Oculto">Oculto</option>
+            <option value="Vendido">Vendido</option>
+          </select>
+        </div>
+
+        <button class="btn" id="clearFilters" type="button">Limpar filtros</button>
+      </section>
+
+      <section class="properties-panel">
+        <div class="panel-head">
+          <div>
+            <h2>Portfólio cadastrado</h2>
+            <p id="resultText">Carregando imóveis...</p>
+          </div>
+        </div>
+
+        <div class="table-scroll">
+          <table class="properties-table">
+            <thead>
+              <tr>
+                <th>Imóvel</th>
+                <th>Região</th>
+                <th>Área</th>
+                <th>Status</th>
+                <th>Valor</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+
+            <tbody id="adminPropertyRows"></tbody>
+          </table>
+        </div>
+
+        <div class="empty-state" id="emptyState">
+          Nenhum imóvel encontrado para os filtros selecionados.
+        </div>
+
+        <div class="pagination">
+          <button class="btn small" id="prevPage" type="button">Anterior</button>
+          <span id="pageInfo">Página 1 de 1</span>
+          <button class="btn small" id="nextPage" type="button">Próxima</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/admin-imoveis.js"></script>
+</body>
+</html>

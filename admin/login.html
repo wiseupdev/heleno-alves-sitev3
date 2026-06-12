@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Admin Login — Heleno Alves</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link 
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&family=Tenor+Sans&display=swap" 
+    rel="stylesheet"
+  >
+
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="stylesheet" href="../assets/css/admin-login.css">
+</head>
+
+<body data-admin="login">
+  <div class="grain"></div>
+
+  <main class="login-page">
+    <section class="login-visual">
+      <a href="../index.html" class="admin-logo">
+        <strong>Heleno Alves</strong>
+        <span>Corretor de Alto Luxo</span>
+      </a>
+
+      <div class="visual-content">
+        <p class="eyebrow">Painel interno</p>
+
+        <h1>
+          Gestão premium para imóveis de alto padrão.
+        </h1>
+
+        <p>
+          Acesse o painel administrativo para gerenciar imóveis, leads, métricas e conteúdos do site.
+        </p>
+
+        <div class="visual-metrics">
+          <div>
+            <b>BC</b>
+            <span>Balneário Camboriú</span>
+          </div>
+
+          <div>
+            <b>PB</b>
+            <span>Praia Brava</span>
+          </div>
+
+          <div>
+            <b>HA</b>
+            <span>Curadoria premium</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="login-panel">
+      <div class="login-card">
+        <p class="eyebrow">Admin</p>
+
+        <h2>Acesso interno</h2>
+
+        <p class="login-sub">
+          Entre com suas credenciais para acessar o painel administrativo.
+        </p>
+
+        <form id="adminLoginForm" class="login-form">
+          <div class="field-group">
+            <label for="adminEmail">E-mail</label>
+            <input 
+              id="adminEmail" 
+              class="input" 
+              type="email" 
+              placeholder="admin@helenoalves.com.br"
+              autocomplete="email"
+            >
+          </div>
+
+          <div class="field-group">
+            <label for="adminPassword">Senha</label>
+            <input 
+              id="adminPassword" 
+              class="input" 
+              type="password" 
+              placeholder="Digite sua senha"
+              autocomplete="current-password"
+            >
+          </div>
+
+          <div class="login-feedback" id="loginFeedback"></div>
+
+          <button class="btn gold" type="submit">
+            Entrar no painel
+          </button>
+
+          <a class="btn" href="../index.html">
+            Voltar ao site
+          </a>
+        </form>
+
+        <div class="login-note">
+          <strong>Protótipo:</strong>
+          <span>use qualquer e-mail válido e senha com no mínimo 4 caracteres.</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../assets/js/admin-login.js"></script>
+</body>
+</html>

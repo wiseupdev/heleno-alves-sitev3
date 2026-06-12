@@ -1,0 +1,133 @@
+.admin-page {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  background:
+    radial-gradient(circle at 80% 0%, rgba(233,197,103,.08), transparent 34%),
+    #000;
+}
+
+.admin-sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  padding: 32px 24px;
+  background: rgba(5,5,5,.96);
+  border-right: 1px solid rgba(255,255,255,.08);
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-logo {
+  margin-bottom: 42px;
+}
+
+.admin-logo strong {
+  display: block;
+  font-family: var(--serif);
+  font-size: 24px;
+  font-weight: 300;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+}
+
+.admin-logo span {
+  display: block;
+  margin-top: 4px;
+  font-family: var(--sans);
+  font-size: 8px;
+  letter-spacing: .32em;
+  text-transform: uppercase;
+  color: var(--gold-mid);
+}
+
+.admin-nav {
+  display: grid;
+  gap: 10px;
+}
+
+.admin-nav a {
+  padding: 14px 15px;
+  border: 1px solid rgba(255,255,255,.08);
+  color: rgba(255,255,255,.68);
+  font-size: 13px;
+  transition: .25s;
+}
+
+.admin-nav a:hover,
+.admin-nav a.active {
+  border-color: rgba(233,197,103,.5);
+  color: var(--gold-light);
+  background: rgba(233,197,103,.055);
+}
+
+.sidebar-footer {
+  margin-top: auto;
+  padding-top: 22px;
+  border-top: 1px solid rgba(255,255,255,.08);
+  color: rgba(255,255,255,.42);
+  font-size: 12px;
+}
+
+.admin-main {
+  width: min(100%, 1420px);
+  margin: 0 auto;
+  padding: 42px clamp(28px, 4vw, 64px) 70px;
+}
+
+.admin-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.admin-title small {
+  display: block;
+  margin-bottom: 10px;
+  font-family: var(--sans);
+  font-size: 9px;
+  letter-spacing: .3em;
+  color: var(--gold-mid);
+  text-transform: uppercase;
+}
+
+.admin-title h1 {
+  font-family: var(--serif);
+  font-size: clamp(46px, 5vw, 76px);
+  font-weight: 300;
+  line-height: 1;
+}
+
+.admin-title p {
+  max-width: 620px;
+  margin-top: 14px;
+  color: rgba(255,255,255,.58);
+  font-size: 14px;
+}
+
+@media (max-width: 1180px) {
+  .admin-page {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-sidebar {
+    position: static;
+    height: auto;
+  }
+
+  .admin-nav {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 720px) {
+  .admin-main {
+    padding: 28px 18px 60px;
+  }
+
+  .admin-nav {
+    grid-template-columns: 1fr;
+  }
+}

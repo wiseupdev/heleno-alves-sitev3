@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Leads Admin — Heleno Alves</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&family=Tenor+Sans&display=swap"
+    rel="stylesheet"
+  >
+
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="stylesheet" href="../assets/css/admin-leads.css">
+</head>
+
+<body data-admin="leads">
+  <div class="grain"></div>
+
+  <div class="admin-page">
+    <aside class="admin-sidebar">
+      <a href="../index.html" class="admin-logo">
+        <strong>Heleno Alves</strong>
+        <span>Painel Admin</span>
+      </a>
+
+      <nav class="admin-nav">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="imoveis.html">Imóveis</a>
+        <a href="imovel-form.html">Cadastrar imóvel</a>
+        <a href="leads.html" class="active">Leads</a>
+        <a href="analytics.html">Analytics</a>
+        <a href="../index.html">Ver site</a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <p>Atendimentos</p>
+        <strong id="leadCount">0 leads</strong>
+      </div>
+    </aside>
+
+    <main class="admin-main">
+      <div class="admin-top">
+        <div class="admin-title">
+          <small>Leads</small>
+          <h1>Atendimentos e interesses</h1>
+          <p>
+            Gerencie os contatos recebidos, acompanhe o status comercial e acione o cliente diretamente pelo WhatsApp.
+          </p>
+        </div>
+
+        <div class="admin-actions">
+          <a class="btn gold" href="imovel-form.html">Cadastrar imóvel</a>
+          <a class="btn" href="dashboard.html">Voltar ao dashboard</a>
+        </div>
+      </div>
+
+      <section class="kpi-grid">
+        <div class="kpi-card">
+          <span>Total de leads</span>
+          <strong id="kpiTotal">0</strong>
+        </div>
+
+        <div class="kpi-card">
+          <span>Novos</span>
+          <strong id="kpiNew">0</strong>
+        </div>
+
+        <div class="kpi-card">
+          <span>Em atendimento</span>
+          <strong id="kpiProgress">0</strong>
+        </div>
+
+        <div class="kpi-card">
+          <span>Agendaram visita</span>
+          <strong id="kpiVisit">0</strong>
+        </div>
+      </section>
+
+      <section class="toolbar">
+        <div class="search-box">
+          <label for="searchInput">Buscar lead</label>
+          <input id="searchInput" type="search" placeholder="Digite nome, telefone, imóvel ou origem">
+        </div>
+
+        <div class="filter-box">
+          <label for="statusFilter">Status</label>
+          <select id="statusFilter">
+            <option value="Todos">Todos</option>
+            <option value="Novo">Novo</option>
+            <option value="Em atendimento">Em atendimento</option>
+            <option value="Agendou visita">Agendou visita</option>
+            <option value="Concluído">Concluído</option>
+            <option value="Arquivado">Arquivado</option>
+          </select>
+        </div>
+
+        <div class="filter-box">
+          <label for="sourceFilter">Origem</label>
+          <select id="sourceFilter">
+            <option value="Todos">Todas</option>
+            <option value="Instagram Ads">Instagram Ads</option>
+            <option value="Google">Google</option>
+            <option value="Direto">Direto</option>
+            <option value="WhatsApp">WhatsApp</option>
+            <option value="Site">Site</option>
+          </select>
+        </div>
+
+        <button class="btn" id="clearFilters" type="button">Limpar filtros</button>
+      </section>
+
+      <section class="leads-panel">
+        <div class="panel-head">
+          <div>
+            <h2>Lista de leads</h2>
+            <p id="resultText">Carregando leads...</p>
+          </div>
+        </div>
+
+        <div class="table-scroll">
+          <table class="leads-table">
+            <thead>
+              <tr>
+                <th>Cliente</th>
+                <th>Telefone</th>
+                <th>Imóvel</th>
+                <th>Origem</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+
+            <tbody id="leadRows"></tbody>
+          </table>
+        </div>
+
+        <div class="empty-state" id="emptyState">
+          Nenhum lead encontrado para os filtros selecionados.
+        </div>
+
+        <div class="pagination">
+          <button class="btn small" id="prevPage" type="button">Anterior</button>
+          <span id="pageInfo">Página 1 de 1</span>
+          <button class="btn small" id="nextPage" type="button">Próxima</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="../assets/js/admin-leads.js"></script>
+</body>
+</html>
