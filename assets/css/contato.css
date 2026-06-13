@@ -347,3 +347,61 @@ textarea.input {
     width: 100%;
   }
 }
+
+/* ─── LGPD e confidencialidade no form ─────────────────────────── */
+.lgpd-group {
+  margin-top: 8px;
+}
+
+.lgpd-label {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  cursor: pointer;
+  font-size: 12px;
+  color: rgba(255,255,255,.55);
+  line-height: 1.55;
+}
+
+.lgpd-label input[type="checkbox"] {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  accent-color: var(--gold-mid);
+  cursor: pointer;
+}
+
+.form-confidential {
+  font-size: 11px;
+  color: rgba(255,255,255,.35);
+  margin-top: 10px;
+  line-height: 1.6;
+  font-style: italic;
+}
+
+.form-feedback.success {
+  color: #6ecb6e;
+  font-family: var(--sans);
+  font-size: 12px;
+  letter-spacing: .08em;
+  margin-top: 12px;
+}
+
+.form-feedback.error {
+  color: #e06c6c;
+  font-family: var(--sans);
+  font-size: 12px;
+  letter-spacing: .08em;
+  margin-top: 12px;
+}
+
+/* Mobile contato */
+@media (max-width: 767px) {
+  .lgpd-label {
+    font-size: 11px;
+  }
+  .form-confidential {
+    font-size: 10px;
+  }
+}

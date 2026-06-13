@@ -467,3 +467,91 @@ body[data-page="detail"] {
     padding-bottom: 90px;
   }
 }
+
+
+/* ─── Ficha Técnica ─────────────────────────────────────────────── */
+.detail-tech-sheet {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255,255,255,.08);
+}
+
+.detail-sheet-title {
+  font-family: var(--sans);
+  font-size: 9px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--gold-mid);
+  margin-bottom: 14px;
+}
+
+.detail-sheet-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.06);
+}
+
+.detail-sheet-item {
+  background: rgba(255,255,255,.02);
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.detail-sheet-label {
+  font-family: var(--sans);
+  font-size: 8px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.38);
+}
+
+.detail-sheet-value {
+  font-family: var(--serif);
+  font-size: 18px;
+  font-weight: 300;
+  color: #fff;
+}
+
+/* ─── Diferenciais ──────────────────────────────────────────────── */
+.detail-differentials {
+  margin-top: 24px;
+}
+
+.diff-section {
+  margin-bottom: 18px;
+}
+
+.diff-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.feature-chip {
+  border: 1px solid rgba(233,197,103,.25);
+  color: var(--gold-light);
+  padding: 7px 12px;
+  font-size: 11px;
+  font-family: var(--sans);
+  letter-spacing: .06em;
+  white-space: nowrap;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .detail-sheet-grid {
+    grid-template-columns: 1fr;
+  }
+  .feature-chip {
+    font-size: 10px;
+    padding: 6px 10px;
+  }
+}

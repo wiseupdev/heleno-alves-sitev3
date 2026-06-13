@@ -339,6 +339,98 @@
     }
   }
 
+  function getLang() {
+    return (typeof HA_I18N !== 'undefined') ? HA_I18N.getLang() : 'pt';
+  }
+
+  function tField(key, fallback) {
+    return (typeof HA_I18N !== 'undefined') ? HA_I18N.t(key) : fallback;
+  }
+
+  function renderTechnicalSheet(item) {
+    const lang = getLang();
+    const container = $('detailTechSheet');
+    if (!container) return;
+
+    const fields = [
+      { key: 'detail_field_type',     label: { pt:'Tipo', en:'Type', es:'Tipo', fr:'Type' },
+        value: item.type ? (typeof HA_FEATURES !== 'undefined' ? HA_FEATURES.translate(item.type, lang) : item.type) : null },
+      { key: 'detail_field_status',   label: { pt:'Status', en:'Status', es:'Estado', fr:'Statut' },
+        value: item.status ? (typeof HA_FEATURES !== 'undefined' ? HA_FEATURES.translate(item.status, lang) : item.status) : null },
+      { key: 'detail_field_region',   label: { pt:'Região', en:'Region', es:'Región', fr:'Région' },
+        value: item.region || null },
+      { key: 'detail_field_district', label: { pt:'Bairro', en:'Neighborhood', es:'Barrio', fr:'Quartier' },
+        value: item.district || null },
+      { key: 'detail_field_city',     label: { pt:'Cidade', en:'City', es:'Ciudad', fr:'Ville' },
+        value: item.city || null },
+      { key: 'detail_field_area',     label: { pt:'Área privativa', en:'Private area', es:'Área privada', fr:'Surface privative' },
+        value: item.privateArea || item.areaPrivativa || null },
+      { key: 'detail_field_total',    label: { pt:'Área total', en:'Total area', es:'Área total', fr:'Surface totale' },
+        value: item.totalArea || item.areaTotal || null },
+      { key: 'detail_field_suites',   label: { pt:'Suítes', en:'Suites', es:'Suites', fr:'Suites' },
+        value: item.suites > 0 ? String(item.suites) : null },
+      { key: 'detail_field_bedrooms', label: { pt:'Dormitórios', en:'Bedrooms', es:'Dormitorios', fr:'Chambres' },
+        value: item.bedrooms > 0 ? String(item.bedrooms) : null },
+      { key: 'detail_field_bathrooms',label: { pt:'Banheiros', en:'Bathrooms', es:'Baños', fr:'Salles de bain' },
+        value: item.bathrooms > 0 ? String(item.bathrooms) : null },
+      { key: 'detail_field_parking',  label: { pt:'Vagas', en:'Parking spaces', es:'Plazas', fr:'Places de parking' },
+        value: item.parking > 0 ? String(item.parking) : null },
+      { key: 'detail_field_code',     label: { pt:'Referência', en:'Reference', es:'Referencia', fr:'Référence' },
+        value: item.code || item.ref || item.id ? `#${item.code || item.ref || item.id}` : null },
+      { key: 'detail_field_condo',    label: { pt:'Condomínio', en:'HOA fee', es:'Condominio', fr:'Charges' },
+        value: item.condo || item.condominio || null },
+      { key: 'detail_field_iptu',     label: { pt:'IPTU', en:'Property tax', es:'Impuesto predial', fr:'Taxe foncière' },
+        value: item.iptu || null },
+    ];
+
+    const rows = fields.filter(f => f.value);
+    if (!rows.length) { container.style.display = 'none'; return; }
+
+    container.innerHTML = `
+      <h3 class="detail-sheet-title">${lang === 'pt' ? 'Ficha técnica' : lang === 'en' ? 'Property details' : lang === 'es' ? 'Ficha técnica' : 'Détails du bien'}</h3>
+      <div class="detail-sheet-grid">
+        ${rows.map(f => `
+          <div class="detail-sheet-item">
+            <span class="detail-sheet-label">${f.label[lang] || f.label.pt}</span>
+            <strong class="detail-sheet-value">${escapeText(f.value)}</strong>
+          </div>`).join('')}
+      </div>`;
+  }
+
+  function renderDifferentials(item) {
+    const lang = getLang();
+    const container = $('detailDifferentials');
+    if (!container) return;
+
+    // Diferenciais do imóvel
+    const immDiff = Array.isArray(item.differentials) ? item.differentials :
+                    Array.isArray(item.diferenciais) ? item.diferenciais : [];
+    // Diferenciais do condomínio
+    const condDiff = Array.isArray(item.condoDifferentials) ? item.condoDifferentials :
+                     Array.isArray(item.diferenciais_condo) ? item.diferenciais_condo : [];
+
+    if (!immDiff.length && !condDiff.length) { container.style.display = 'none'; return; }
+
+    let html = '';
+    if (immDiff.length) {
+      const label = lang === 'pt' ? 'Diferenciais do imóvel' : lang === 'en' ? 'Property highlights' : lang === 'es' ? 'Diferenciales del inmueble' : 'Atouts du bien';
+      html += `<div class="diff-section"><h3 class="detail-sheet-title">${label}</h3>
+        <div class="diff-chips">${immDiff.map(d => {
+          const t = (typeof HA_FEATURES !== 'undefined') ? HA_FEATURES.translate(d, lang) : d;
+          return `<span class="feature-chip" data-feature-raw="${escapeText(d)}">${escapeText(t)}</span>`;
+        }).join('')}</div></div>`;
+    }
+    if (condDiff.length) {
+      const label = lang === 'pt' ? 'Diferenciais do condomínio' : lang === 'en' ? 'Building amenities' : lang === 'es' ? 'Amenidades del condominio' : 'Services de la résidence';
+      html += `<div class="diff-section"><h3 class="detail-sheet-title">${label}</h3>
+        <div class="diff-chips">${condDiff.map(d => {
+          const t = (typeof HA_FEATURES !== 'undefined') ? HA_FEATURES.translate(d, lang) : d;
+          return `<span class="feature-chip" data-feature-raw="${escapeText(d)}">${escapeText(t)}</span>`;
+        }).join('')}</div></div>`;
+    }
+    container.innerHTML = html;
+  }
+
   function renderPanel(item) {
     if ($('detailTitleSide')) $('detailTitleSide').textContent = item.title || 'Ficha';
     if ($('detailDesc')) $('detailDesc').textContent = getDescription(item);
@@ -346,6 +438,9 @@
     if (!hasValue(getDescription(item))) {
       hideElement($('detailDesc'));
     }
+
+    renderTechnicalSheet(item);
+    renderDifferentials(item);
 
     const specs = getSpecs(item);
     const specsContainer = $('detailSpecs');
@@ -648,4 +743,9 @@ window.addEventListener('ha:langchange', function () {
     el.textContent = (typeof HA_FEATURES !== 'undefined')
       ? HA_FEATURES.translate(raw, lang) : raw;
   });
-});
+  // Re-renderiza ficha técnica e diferenciais
+  if (typeof currentProperty !== 'undefined' && currentProperty) {
+    if (typeof renderTechnicalSheet === 'function') renderTechnicalSheet(currentProperty);
+    if (typeof renderDifferentials === 'function') renderDifferentials(currentProperty);
+  }
+}); 

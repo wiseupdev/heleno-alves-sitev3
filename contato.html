@@ -180,9 +180,15 @@
               <textarea id="leadMessage" class="input" rows="5" placeholder="Conte o que você procura: localização, vista, suítes, vagas, estilo do imóvel ou qualquer preferência importante."></textarea>
             </div>
           </div>
+          <div class="form-group full lgpd-group">
+            <label class="lgpd-label">
+              <input type="checkbox" id="lgpdConsent" required>
+              <span data-i18n="form_lgpd_consent">Autorizo o uso das minhas informações para atendimento imobiliário personalizado, conforme a LGPD.</span>
+            </label>
+            <p class="form-confidential" data-i18n="form_confidential">As informações enviadas serão utilizadas exclusivamente para compreender seu perfil e conduzir um atendimento imobiliário personalizado e confidencial.</p>
+          </div>
           <div class="form-actions">
-            <button class="btn gold" type="submit" data-i18n="form_submit">Enviar e falar no WhatsApp</button>
-            <button class="btn" id="saveLeadOnly" type="button" data-i18n="contato_save_btn">Enviar informações para Heleno</button>
+            <button class="btn gold" type="submit" id="formSubmitBtn" data-i18n="form_submit">Enviar e falar no WhatsApp</button>
           </div>
           <p class="form-feedback" id="formFeedback"></p>
         </form>

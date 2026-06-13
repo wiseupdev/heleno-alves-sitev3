@@ -121,6 +121,21 @@
   function handleSubmit(event) {
     event.preventDefault();
 
+    // Verificar LGPD
+    const lgpdCheck = document.getElementById('lgpdConsent');
+    if (lgpdCheck && !lgpdCheck.checked) {
+      const lang = (typeof HA_I18N !== 'undefined') ? HA_I18N.getLang() : 'pt';
+      const msgs = {
+        pt: 'Autorize o uso das informações para continuar.',
+        en: 'Please accept the privacy policy to continue.',
+        es: 'Autorice el uso de la información para continuar.',
+        fr: 'Veuillez accepter la politique de confidentialité pour continuer.',
+      };
+      setFeedback(msgs[lang] || msgs.pt, 'error');
+      lgpdCheck.focus();
+      return;
+    }
+
     const lead = getLeadData();
     const error = validateLead(lead);
 
@@ -129,17 +144,29 @@
       return;
     }
 
+    // Loading state
+    const btn = document.getElementById('formSubmitBtn');
+    if (btn) { btn.disabled = true; btn.textContent = '...'; }
+
     saveLead(lead);
+
+    const lang = (typeof HA_I18N !== 'undefined') ? HA_I18N.getLang() : 'pt';
+    const successMsgs = {
+      pt: 'Informações enviadas. Abrindo WhatsApp...',
+      en: 'Information sent. Opening WhatsApp...',
+      es: 'Información enviada. Abriendo WhatsApp...',
+      fr: 'Informations envoyées. Ouverture de WhatsApp...',
+    };
+    setFeedback(successMsgs[lang] || successMsgs.pt, 'success');
 
     const message = buildWhatsappMessage(lead);
     const url = `https://wa.me/${whatsappNumber}?text=${message}`;
 
-    setFeedback('Lead salvo. Abrindo WhatsApp para envio da mensagem...', 'success');
-
     setTimeout(() => {
       window.open(url, '_blank');
       resetForm();
-    }, 450);
+      if (btn) { btn.disabled = false; btn.textContent = btn.dataset.originalText || 'Enviar'; }
+    }, 600);
   }
 
   function handleSaveOnly() {
