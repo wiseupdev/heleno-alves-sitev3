@@ -48,6 +48,12 @@
       'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=900&q=82&auto=format&fit=crop';
   }
 
+  function tFeat(value) {
+    return (typeof HA_FEATURES !== 'undefined' && typeof HA_I18N !== 'undefined')
+      ? HA_FEATURES.translate(value, HA_I18N.getLang())
+      : value;
+  }
+
   function getLoc(item) {
     return item.loc ||
       [item.district, item.region].filter(Boolean).join(' · ') ||
@@ -66,6 +72,7 @@
       item.suites  > 0 ? `${item.suites} ${tS}`  : '',
       item.parking > 0 ? `${item.parking} ${tV}` : '',
     ].filter(Boolean);
+    // Nota: features traduzíveis vão em property-detail; nos cards mantemos specs técnicos
   }
 
   function getDetailUrl(item) {
@@ -174,7 +181,84 @@
     renderProperties();
   });
 
+
+
+  /* ─── Drawer de filtros mobile ─────────────────────────────────── */
+  function initMobileFilters() {
+    const sidebar = document.querySelector('.catalog-sidebar');
+    const topbar  = document.querySelector('.catalog-topbar');
+    if (!sidebar || !topbar) return;
+
+    // Cria botão trigger
+    const trigger = document.createElement('button');
+    trigger.type = 'button';
+    trigger.className = 'mobile-filter-trigger';
+    trigger.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M7 12h10M10 18h4"/></svg><span>' + t('filters_apply','Filtrar imóveis') + '</span>';
+    topbar.parentNode.insertBefore(trigger, topbar);
+
+    // Cria overlay + drawer
+    const overlay = document.createElement('div');
+    overlay.className = 'filter-drawer-overlay';
+    overlay.innerHTML = '<div class="filter-drawer">' +
+      '<div class="filter-drawer-head"><h3>' + t('filter_h2','Filtrar imóveis') + '</h3>' +
+      '<button class="filter-drawer-close" type="button" aria-label="Fechar">×</button></div>' +
+      '<div class="filter-drawer-body"></div>' +
+      '<div class="filter-drawer-actions">' +
+        '<button class="btn filter-drawer-clear" type="button">' + t('filters_clear','Limpar') + '</button>' +
+        '<button class="btn gold filter-drawer-apply" type="button">' + t('filters_apply','Aplicar') + '</button>' +
+      '</div></div>';
+    document.body.appendChild(overlay);
+
+    const body  = overlay.querySelector('.filter-drawer-body');
+    const drawer = overlay.querySelector('.filter-drawer');
+
+    // Clona o conteúdo dos filtros para o drawer
+    const filtersEl = sidebar.querySelector('.filters');
+    let originalParent = null;
+    let placeholder = null;
+
+    function openDrawer() {
+      // Move (não clona) os filtros para preservar os listeners
+      if (filtersEl && !placeholder) {
+        placeholder = document.createComment('filters-placeholder');
+        originalParent = filtersEl.parentNode;
+        originalParent.insertBefore(placeholder, filtersEl);
+        body.appendChild(filtersEl);
+      }
+      overlay.classList.add('is-open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeDrawer() {
+      overlay.classList.remove('is-open');
+      document.body.style.overflow = '';
+      // Devolve os filtros ao lugar original
+      if (placeholder && filtersEl) {
+        placeholder.parentNode.insertBefore(filtersEl, placeholder);
+        placeholder.remove();
+        placeholder = null;
+      }
+    }
+
+    trigger.addEventListener('click', openDrawer);
+    overlay.querySelector('.filter-drawer-close').addEventListener('click', closeDrawer);
+    overlay.querySelector('.filter-drawer-apply').addEventListener('click', () => {
+      applyFilters();
+      closeDrawer();
+    });
+    overlay.querySelector('.filter-drawer-clear').addEventListener('click', () => {
+      (typeof clearFilters === 'function' ? clearFilters() : (document.getElementById('clearFilters') && document.getElementById('clearFilters').click()));
+    });
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) closeDrawer();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && overlay.classList.contains('is-open')) closeDrawer();
+    });
+  }
+
   document.addEventListener('DOMContentLoaded', () => {
+    initMobileFilters();
     const sel = $('sortSelect');
     if (sel) sel.addEventListener('change', () => {
       applySort();
@@ -331,7 +415,7 @@
     return `<article class="property-card">
       <div class="property-image">
         <img loading="lazy" src="${esc(getImage(item))}" alt="${esc(item.title)}" width="600" height="400">
-        <span class="property-tag">${esc(item.tag || 'Destaque')}</span>
+        <span class="property-tag">${esc(tFeat(item.tag) || 'Destaque')}</span>
         <button class="favorite-btn ${isFav(item) ? 'active' : ''}" type="button"
           data-action="favorite" data-id="${item.id}" aria-label="Favoritar">
           ${isFav(item) ? '★' : '☆'}

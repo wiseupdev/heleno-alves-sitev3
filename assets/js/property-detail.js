@@ -291,10 +291,52 @@
     }
 
     container.innerHTML = images.slice(0, 5).map((image, index) => `
-      <div class="gallery-item">
+      <div class="gallery-item gallery-clickable" data-gallery-idx="${index}">
         <img loading="lazy" src="${image}" alt="${escapeText(item.title || 'Imóvel')} ${index + 1}">
       </div>
     `).join('');
+
+    // Abre galeria fullscreen ao clicar
+    const allImages = images;
+    container.querySelectorAll('[data-gallery-idx]').forEach((el) => {
+      el.addEventListener('click', () => {
+        const idx = parseInt(el.dataset.galleryIdx, 10) || 0;
+        if (typeof HA_GALLERY !== 'undefined') HA_GALLERY.open(allImages, idx);
+      });
+    });
+
+    // Botão "Ver galeria completa" se houver mais de 5 fotos
+    if (images.length > 1) {
+      let btn = document.getElementById('viewFullGallery');
+      if (!btn) {
+        btn = document.createElement('button');
+        btn.id = 'viewFullGallery';
+        btn.type = 'button';
+        btn.className = 'btn view-gallery-btn';
+        container.parentNode.appendChild(btn);
+      }
+      const lang = (typeof HA_I18N !== 'undefined') ? HA_I18N.getLang() : 'pt';
+      const labels = {
+        pt: 'Ver galeria completa (' + images.length + ')',
+        en: 'View full gallery (' + images.length + ')',
+        es: 'Ver galería completa (' + images.length + ')',
+        fr: 'Voir toute la galerie (' + images.length + ')',
+      };
+      btn.textContent = labels[lang] || labels.pt;
+      btn.onclick = () => {
+        if (typeof HA_GALLERY !== 'undefined') HA_GALLERY.open(allImages, 0);
+      };
+    }
+
+    // Hero também abre galeria
+    const hero = $('detailHero');
+    if (hero) {
+      hero.classList.add('gallery-clickable');
+      hero.style.cursor = 'zoom-in';
+      hero.addEventListener('click', () => {
+        if (typeof HA_GALLERY !== 'undefined') HA_GALLERY.open(allImages, 0);
+      });
+    }
   }
 
   function renderPanel(item) {
@@ -328,9 +370,12 @@
       if (!features.length) {
         hideElement(featuresContainer);
       } else {
-        featuresContainer.innerHTML = features.map((feature) => `
-          <span class="feature-chip">${escapeText(feature)}</span>
-        `).join('');
+        const flang = (typeof HA_I18N !== 'undefined') ? HA_I18N.getLang() : 'pt';
+        featuresContainer.innerHTML = features.map((feature) => {
+          const label = (typeof HA_FEATURES !== 'undefined')
+            ? HA_FEATURES.translate(feature, flang) : feature;
+          return `<span class="feature-chip" data-feature-raw="${escapeText(feature)}">${escapeText(label)}</span>`;
+        }).join('');
       }
     }
 
@@ -361,6 +406,10 @@
     if ($('heroWaDetail')) {
       $('heroWaDetail').removeAttribute('href');
       $('heroWaDetail').onclick = openWa;
+    }
+    if ($('stickyWaDetail')) {
+      $('stickyWaDetail').removeAttribute('href');
+      $('stickyWaDetail').onclick = openWa;
     }
   }
 
@@ -590,3 +639,13 @@
   // O link do WhatsApp é gerado dinamicamente no onclick
   // portanto não precisa de listener de mudança de idioma
 })();
+
+/* ─── Re-traduz features ao trocar idioma ──────────────────────── */
+window.addEventListener('ha:langchange', function () {
+  const lang = (typeof HA_I18N !== 'undefined') ? HA_I18N.getLang() : 'pt';
+  document.querySelectorAll('[data-feature-raw]').forEach(function (el) {
+    const raw = el.dataset.featureRaw;
+    el.textContent = (typeof HA_FEATURES !== 'undefined')
+      ? HA_FEATURES.translate(raw, lang) : raw;
+  });
+});

@@ -445,3 +445,25 @@ body[data-page="detail"] {
     height: 240px;
   }
 }
+
+/* Botão ver galeria completa */
+.view-gallery-btn {
+  margin-top: 14px;
+  width: 100%;
+}
+
+/* CTA fixo mobile no detalhe */
+@media (max-width: 767px) {
+  .mobile-sticky-cta {
+    display: flex !important;
+  }
+  .detail-side-sticky,
+  .detail-panel-side {
+    position: static !important;
+  }
+  /* Espaço para o CTA fixo não cobrir conteúdo */
+  body[data-page="detail"] main,
+  body[data-page="detalhe"] main {
+    padding-bottom: 90px;
+  }
+}
