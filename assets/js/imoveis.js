@@ -174,6 +174,15 @@
     renderProperties();
   });
 
+  document.addEventListener('DOMContentLoaded', () => {
+    const sel = $('sortSelect');
+    if (sel) sel.addEventListener('change', () => {
+      applySort();
+      currentPage = 1;
+      renderProperties();
+    });
+  });
+
   /* ─── Carregamento ─────────────────────────────────────────────── */
   function normalizeList(data) {
     return (Array.isArray(data) ? data : []).map((item, i) => {
@@ -196,13 +205,38 @@
     });
   }
 
+  function showSkeleton() {
+    const grid = $('propertyGrid');
+    if (!grid) return;
+    grid.classList.add('is-loading');
+    grid.innerHTML = Array(9).fill('').map(() => `
+      <div class="skeleton-card">
+        <div class="skeleton skeleton-img"></div>
+        <div class="skeleton-body">
+          <div class="skeleton skeleton-line wide"></div>
+          <div class="skeleton skeleton-line mid"></div>
+          <div class="skeleton skeleton-line short"></div>
+          <div class="skeleton skeleton-line full" style="margin-top:8px;height:38px"></div>
+        </div>
+      </div>`).join('');
+  }
+
+  function hideSkeleton() {
+    const grid = $('propertyGrid');
+    if (!grid) return;
+    grid.classList.remove('is-loading');
+  }
+
   async function loadProperties() {
+    showSkeleton();
     try {
       const data = await HA_API.fetchProperties();
       properties = normalizeList(data);
     } catch (err) {
       console.error('[HA] imoveis.js — falha na API:', err);
       properties = [];
+    } finally {
+      hideSkeleton();
     }
   }
 
@@ -249,8 +283,47 @@
       itemMatches(item, search, regionNorm, type, maxP, suites, parking)
     );
 
+    applySort();
     currentPage = 1;
     renderProperties();
+  }
+
+  /* ─── Ordenação ────────────────────────────────────────────────── */
+  function areaNum(item) {
+    const raw = String(item.area || item.size || '').replace(/[^\d.,]/g, '').replace(/\./g, '').replace(',', '.');
+    const n = parseFloat(raw);
+    return Number.isFinite(n) ? n : 0;
+  }
+
+  function applySort() {
+    const sel = $('sortSelect');
+    const mode = sel ? sel.value : 'featured';
+
+    const byPrice = (a, b) => (b._priceNum || 0) - (a._priceNum || 0);
+
+    switch (mode) {
+      case 'price_desc':
+        filteredProperties.sort(byPrice);
+        break;
+      case 'price_asc':
+        filteredProperties.sort((a, b) => byPrice(b, a));
+        break;
+      case 'area_desc':
+        filteredProperties.sort((a, b) => areaNum(b) - areaNum(a));
+        break;
+      case 'recent':
+        filteredProperties.sort((a, b) => (b.id || 0) - (a.id || 0));
+        break;
+      case 'featured':
+      default:
+        // Destaques primeiro (tag), depois preço desc
+        filteredProperties.sort((a, b) => {
+          const fa = a.tag ? 1 : 0;
+          const fb = b.tag ? 1 : 0;
+          if (fb !== fa) return fb - fa;
+          return byPrice(a, b);
+        });
+    }
   }
 
   /* ─── Render ───────────────────────────────────────────────────── */
@@ -298,7 +371,9 @@
     if (currentPage < 1) currentPage = 1;
 
     if (count) {
-      const lbl = t('result_count','imóvel(is) encontrado(s)');
+      const lbl = total === 1
+        ? t('results_count_one', 'imóvel encontrado')
+        : t('results_count', 'imóveis encontrados');
       count.textContent = `${total} ${lbl}`;
     }
 

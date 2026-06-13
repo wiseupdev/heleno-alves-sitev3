@@ -133,3 +133,217 @@
     height: 36px;
   }
 }
+
+/* ─── Screen reader only ───────────────────────────────────────── */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ═══ REFINAMENTOS PREMIUM ══════════════════════════════════════ */
+
+/* ─── WhatsApp float premium ────────────────────────────────────── */
+.wa-float {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(20, 20, 18, .92);
+  border: 1px solid rgba(233, 197, 103, .35);
+  color: var(--gold-light, #e9c567);
+  backdrop-filter: blur(8px);
+  transition: transform .3s, border-color .3s, background .3s;
+  position: fixed;
+  right: 26px;
+  bottom: 26px;
+  z-index: 950;
+}
+
+.wa-float:hover {
+  transform: translateY(-3px);
+  border-color: rgba(233, 197, 103, .8);
+  background: rgba(28, 28, 24, .98);
+}
+
+.wa-tooltip {
+  position: absolute;
+  right: calc(100% + 12px);
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(14, 14, 12, .96);
+  border: 1px solid rgba(233, 197, 103, .25);
+  color: #fff;
+  font-family: var(--sans);
+  font-size: 10px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  padding: 9px 14px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .25s;
+}
+
+.wa-float:hover .wa-tooltip,
+.wa-float:focus-visible .wa-tooltip {
+  opacity: 1;
+}
+
+/* ─── Header blur ao rolar ──────────────────────────────────────── */
+.site-header.is-scrolled {
+  background: rgba(8, 8, 7, .82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(233, 197, 103, .12);
+}
+
+/* ─── Cards de imóveis padronizados ─────────────────────────────── */
+.property-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  transition: transform .35s, border-color .35s, box-shadow .35s;
+}
+
+.property-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(233, 197, 103, .45);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, .35);
+}
+
+.property-card .property-image {
+  overflow: hidden;
+}
+
+.property-card .property-image img {
+  transition: transform .6s cubic-bezier(.22,.1,.36,1);
+}
+
+.property-card:hover .property-image img {
+  transform: scale(1.05);
+}
+
+.property-card .property-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.property-card .property-body h3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 2.6em;
+}
+
+.property-card .property-location {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.property-card .property-foot {
+  margin-top: auto;
+}
+
+/* ─── Filtro lateral compacto ───────────────────────────────────── */
+.catalog-sidebar {
+  max-width: 320px;
+}
+
+.catalog-sidebar .sidebar-card {
+  padding: 24px 20px;
+}
+
+.catalog-sidebar .filter-group {
+  margin-bottom: 14px;
+}
+
+.catalog-sidebar .filter-group label {
+  font-size: 10px;
+  margin-bottom: 6px;
+}
+
+.catalog-sidebar .field {
+  padding: 10px 12px;
+  font-size: 12.5px;
+}
+
+/* ─── Sort select ───────────────────────────────────────────────── */
+.catalog-meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.field-sort {
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.12);
+  color: #fff;
+  padding: 9px 14px;
+  font-family: var(--sans);
+  font-size: 11px;
+  letter-spacing: .08em;
+  cursor: pointer;
+}
+
+.field-sort:focus {
+  border-color: var(--gold-mid);
+  outline: none;
+}
+
+.field-sort option {
+  background: #0e0e0c;
+}
+
+/* ─── Bloco editorial imóveis ───────────────────────────────────── */
+.imoveis-editorial {
+  padding: 140px clamp(22px, 6vw, 96px) 10px;
+  max-width: 880px;
+}
+
+.imoveis-editorial .section-title {
+  margin: 14px 0 16px;
+}
+
+/* ─── Nota cambial ──────────────────────────────────────────────── */
+.currency-note {
+  font-family: var(--sans);
+  font-size: 10px;
+  letter-spacing: .06em;
+  color: rgba(255,255,255,.35);
+  margin-top: 18px;
+}
+
+/* ─── Microinterações ───────────────────────────────────────────── */
+.btn {
+  transition: background .3s, border-color .3s, color .3s, transform .25s;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.favorite-btn {
+  transition: transform .25s, color .25s;
+}
+
+.favorite-btn:hover {
+  transform: scale(1.15);
+}
+
+.field, select.field, input.field {
+  transition: border-color .25s, background .25s;
+}

@@ -2,6 +2,8 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
+  <meta http-equiv="Cross-Origin-Opener-Policy" content="same-origin-allow-popups">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://webhook.wiseuptech.com.br https://open.er-api.com https://*.supabase.co; frame-src https://www.google.com;">
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
   <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
   <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
@@ -65,6 +67,11 @@
         <p class="lead" data-i18n="imoveis_lead">Navegue por uma curadoria de imóveis de alto luxo em Balneário Camboriú e Praia Brava.</p>
       </div>
     </section>
+    <section class="imoveis-editorial">
+      <p class="eyebrow" data-i18n="imoveis_eyebrow">Portfólio</p>
+      <h1 class="section-title" data-i18n="imoveis_editorial_title">Propriedades selecionadas</h1>
+      <p class="section-sub" data-i18n="imoveis_editorial_sub">Uma seleção de imóveis de alto padrão em Balneário Camboriú e Praia Brava, incluindo oportunidades públicas e opções reservadas conduzidas sob curadoria privada.</p>
+    </section>
     <section class="portfolio-section">
       <div class="catalog-layout">
         <aside class="catalog-sidebar">
@@ -77,7 +84,7 @@
             <div class="filters filters-vertical">
               <div class="filter-group">
                 <label for="regionFilter" data-i18n="filter_region">Região</label>
-                <select id="regionFilter" class="field">
+                <select id="regionFilter" aria-label="Filtrar por região" class="field">
                   <option value="" data-i18n="filter_all_regions">Todas as regiões</option>
                   <option value="Balneário Camboriú">Balneário Camboriú</option>
                   <option value="Praia Brava">Praia Brava</option>
@@ -85,7 +92,7 @@
               </div>
               <div class="filter-group">
                 <label for="typeFilter" data-i18n="filter_type">Tipo de imóvel</label>
-                <select id="typeFilter" class="field">
+                <select id="typeFilter" aria-label="Filtrar por tipo" class="field">
                   <option value="" data-i18n="filter_all_types">Todos os tipos</option>
                   <option value="Na Planta">Na Planta</option>
                   <option value="Pronto">Pronto</option>
@@ -108,7 +115,7 @@
               </div>
               <div class="filter-group">
                 <label for="suitesFilter" data-i18n="filter_suites">Suítes</label>
-                <select id="suitesFilter" class="field">
+                <select id="suitesFilter" aria-label="Filtrar por suítes" class="field">
                   <option value="" data-i18n="filter_all">Todas</option>
                   <option value="1">1+</option>
                   <option value="2">2+</option>
@@ -119,7 +126,7 @@
               </div>
               <div class="filter-group">
                 <label for="parkingFilter" data-i18n="filter_parking">Vagas</label>
-                <select id="parkingFilter" class="field">
+                <select id="parkingFilter" aria-label="Filtrar por vagas" class="field">
                   <option value="" data-i18n="filter_all">Todas</option>
                   <option value="1">1+</option>
                   <option value="2">2+</option>
@@ -140,20 +147,24 @@
             </div>
             <div class="catalog-meta">
               <span id="resultCount" data-i18n="loading">Carregando imóveis...</span>
+              <div class="sort-group">
+                <label for="sortSelect" class="sr-only" data-i18n="sort_label">Ordenar por</label>
+                <select id="sortSelect" class="field field-sort" aria-label="Ordenar imóveis">
+                  <option value="featured" data-i18n="sort_featured">Destaques</option>
+                  <option value="recent" data-i18n="sort_recent">Mais recentes</option>
+                  <option value="price_desc" data-i18n="sort_price_desc">Maior valor</option>
+                  <option value="price_asc" data-i18n="sort_price_asc">Menor valor</option>
+                  <option value="area_desc" data-i18n="sort_area_desc">Maior metragem</option>
+                </select>
+              </div>
             </div>
-          </div>
-          <div class="section-head">
-            <div>
-              <p class="eyebrow" data-i18n="imoveis_eyebrow">Portfólio</p>
-              <h2 class="section-title" data-i18n="portfolio_expanding">Portfólio em expansão</h2>
-            </div>
-            <p class="section-sub" data-i18n="portfolio_sub">Uma seleção curada de imóveis de alto padrão em Balneário Camboriú e Praia Brava.</p>
           </div>
           <div id="propertyGrid" class="portfolio-grid"></div>
-          <div class="empty-state" id="emptyState">
+          <p class="currency-note" data-i18n="currency_note">Valores convertidos automaticamente e sujeitos à variação cambial.</p>
+          <div class="empty-state" id="emptyState" hidden>
             <h3 data-i18n="empty_title">Nenhum imóvel encontrado.</h3>
-            <p data-i18n="empty_sub">Altere os filtros ou explore todo o portfólio disponível.</p>
-            <button class="btn gold" id="emptyClearFilters" type="button" data-i18n="filter_clear">Limpar filtros</button>
+            <p data-i18n="empty_filters">Nenhum imóvel encontrado com esses filtros. Ajuste sua busca ou solicite uma curadoria privada com opções fora do portfólio público.</p>
+            <a class="btn gold" data-wa="https://wa.me/5585988085349" href="https://wa.me/5585988085349" target="_blank" data-i18n="contact_btn">Solicitar curadoria</a>
           </div>
           <div class="pagination">
             <button class="btn small" id="prevPage" type="button" data-i18n="page_prev">Anterior</button>
@@ -174,7 +185,7 @@
       <button type="button" id="acceptLgpd" data-i18n="lgpd_accept">Aceitar</button>
     </div>
   </div>
-  <a class="wa-float" data-wa="https://wa.me/5585988085349" href="https://wa.me/5585988085349" target="_blank" aria-label="WhatsApp">WA</a>
+  <a class="wa-float" data-wa="https://wa.me/5585988085349" href="https://wa.me/5585988085349" target="_blank" rel="noopener" aria-label="WhatsApp — Fale com Heleno" data-wa-tooltip><svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.149-.174.198-.298.297-.497.1-.198.05-.371-.025-.52-.074-.149-.668-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.197 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg><span class="wa-tooltip" data-i18n="wa_tooltip">Fale com Heleno</span></a>
   <footer class="site-footer">
     <div class="footer-main">
       <div>
@@ -182,7 +193,7 @@
         <p data-i18n="footer_desc">Curadoria imobiliária de alto luxo em Balneário Camboriú e Praia Brava.</p>
       </div>
       <div class="footer-col">
-        <h4 data-i18n="footer_nav">Navegação</h4>
+        <h3 data-i18n="footer_nav">Navegação</h3>
         <a href="imoveis.html" data-i18n="nav_imoveis">Imóveis</a>
         <a href="balneario-camboriu.html">Balneário Camboriú</a>
         <a href="praia-brava.html" data-i18n="nav_brava">Praia Brava</a>
@@ -190,13 +201,13 @@
         <a href="contato.html" data-i18n="nav_contato">Contato</a>
       </div>
       <div class="footer-col">
-        <h4 data-i18n="footer_contact">Atendimento</h4>
+        <h3 data-i18n="footer_contact">Atendimento</h3>
         <a href="https://wa.me/5585988085349" target="_blank">WhatsApp</a>
         <a href="mailto:contato@helenoalves.com.br">contato@helenoalves.com.br</a>
         <a href="usuario/login.html" data-i18n="nav_cliente">Área do cliente</a>
       </div>
       <div class="footer-col">
-        <h4 data-i18n="footer_legal">Legal</h4>
+        <h3 data-i18n="footer_legal">Legal</h3>
         <a href="politica-privacidade.html">Política de Privacidade</a>
         <a href="termos-uso.html">Termos de Uso</a>
         <a href="admin/login.html">Acesso restrito</a>
@@ -208,10 +219,10 @@
     </div>
   </footer>
   <script src="assets/js/i18n.js"></script>
-  <script src="assets/js/api.js"></script>
-  <script src="assets/js/app.js"></script>
-  <script src="assets/js/imoveis.js"></script>
-  <script src="assets/js/lgpd.js"></script>
-  <script src="assets/js/lead-popup.js"></script>
+  <script defer src="assets/js/api.js"></script>
+  <script defer src="assets/js/app.js"></script>
+  <script defer src="assets/js/imoveis.js"></script>
+  <script defer src="assets/js/lgpd.js"></script>
+  <script defer src="assets/js/lead-popup.js"></script>
 </body>
 </html>

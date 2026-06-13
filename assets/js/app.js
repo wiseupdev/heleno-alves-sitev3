@@ -683,3 +683,20 @@ document.addEventListener('DOMContentLoaded', () => {
   // 'detail' é gerenciado pelo property-detail.js — app.js não interfere
   // 'favorites' é gerenciado pelo usuario-favoritos.js — app.js não interfere
 });
+
+/* ─── Header blur ao rolar ──────────────────────────────────────── */
+(function () {
+  const header = document.querySelector('.site-header');
+  if (!header) return;
+  let ticking = false;
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      header.classList.toggle('is-scrolled', window.scrollY > 24);
+      ticking = false;
+    });
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();

@@ -135,7 +135,7 @@ const HA_I18N = (function () {
 
       /* Detalhe */
       detail_eyebrow:   'Detalhes do imóvel',
-      detail_interest:  'Tenho interesse',
+      detail_interest:  'Solicitar informações',
       detail_back:      'Voltar ao portfólio',
       detail_visual_eyebrow: 'Experiência visual',
       detail_ficha:     'Ficha do imóvel',
@@ -520,6 +520,30 @@ const HA_I18N = (function () {
       brava_zone2_range:     'R$ 25k — R$ 45k/m²',
       brava_zone3_range:     'R$ 18k — R$ 35k/m²',
       brava_zone4_range:     'R$ 11,8k — R$ 22k/m²',
+
+      cta_request_info:   'Solicitar informações',
+      cta_view_others:    'Ver outros imóveis',
+      cta_property_card:  'Ficha do imóvel',
+      cta_selected_props: 'Propriedades selecionadas',
+      currency_note:      'Valores convertidos automaticamente e sujeitos à variação cambial.',
+      imoveis_editorial_title: 'Propriedades selecionadas',
+      imoveis_editorial_sub:   'Uma seleção de imóveis de alto padrão em Balneário Camboriú e Praia Brava, incluindo oportunidades públicas e opções reservadas conduzidas sob curadoria privada.',
+      results_count:      'imóveis encontrados',
+      results_count_one:  'imóvel encontrado',
+      empty_filters:      'Nenhum imóvel encontrado com esses filtros. Ajuste sua busca ou solicite uma curadoria privada com opções fora do portfólio público.',
+      sort_label:         'Ordenar por',
+      sort_recent:        'Mais recentes',
+      sort_price_desc:    'Maior valor',
+      sort_price_asc:     'Menor valor',
+      sort_area_desc:     'Maior metragem',
+      sort_featured:      'Destaques',
+      filters_apply:      'Aplicar filtros',
+      filters_clear:      'Limpar filtros',
+      wa_msg_property:    'Olá, Heleno. Tenho interesse no imóvel {name}, em {region}. Gostaria de receber mais informações.',
+      wa_msg_listing:     'Olá, Heleno. Estou navegando pelo site e gostaria de receber uma curadoria de imóveis de alto padrão.',
+      wa_msg_bc:          'Olá, Heleno. Gostaria de receber uma curadoria de imóveis em Balneário Camboriú.',
+      wa_msg_brava:       'Olá, Heleno. Gostaria de receber uma curadoria de imóveis na Praia Brava.',
+      wa_tooltip:         'Fale com Heleno',
       currency_code:   'BRL',
       currency_symbol: 'R$',
       currency_format: 'pt-BR',
@@ -630,7 +654,7 @@ const HA_I18N = (function () {
       brava_view_btn:   'View properties at Praia Brava',
       brava_zones_btn:  'View value zones',
       detail_eyebrow:   'Property details',
-      detail_interest:  'I am interested',
+      detail_interest:  'Request information',
       detail_back:      'Back to portfolio',
       detail_visual_eyebrow: 'Visual experience',
       detail_ficha:     'Property sheet',
@@ -1006,6 +1030,30 @@ const HA_I18N = (function () {
       brava_zone2_range:     '$ 4.5k — $ 8.1k USD/sq.m.',
       brava_zone3_range:     '$ 3.2k — $ 6.3k USD/sq.m.',
       brava_zone4_range:     '$ 2.1k — $ 4k USD/sq.m.',
+
+      cta_request_info:   'Request information',
+      cta_view_others:    'View other properties',
+      cta_property_card:  'Property details',
+      cta_selected_props: 'Selected properties',
+      currency_note:      'Values converted automatically and subject to exchange rate variation.',
+      imoveis_editorial_title: 'Selected properties',
+      imoveis_editorial_sub:   'A selection of high-end properties in Balneário Camboriú and Praia Brava, including public opportunities and reserved options conducted under private curation.',
+      results_count:      'properties found',
+      results_count_one:  'property found',
+      empty_filters:      'No properties found with these filters. Adjust your search or request a private curation with options beyond the public portfolio.',
+      sort_label:         'Sort by',
+      sort_recent:        'Most recent',
+      sort_price_desc:    'Highest price',
+      sort_price_asc:     'Lowest price',
+      sort_area_desc:     'Largest area',
+      sort_featured:      'Featured',
+      filters_apply:      'Apply filters',
+      filters_clear:      'Clear filters',
+      wa_msg_property:    'Hello, Heleno. I am interested in the property {name}, in {region}. I would like to receive more information.',
+      wa_msg_listing:     'Hello, Heleno. I am browsing the website and would like to receive a curation of high-end properties.',
+      wa_msg_bc:          'Hello, Heleno. I would like to receive a curation of properties in Balneário Camboriú.',
+      wa_msg_brava:       'Hello, Heleno. I would like to receive a curation of properties at Praia Brava.',
+      wa_tooltip:         'Talk to Heleno',
       currency_code:   'USD',
       currency_symbol: '$',
       currency_format: 'en-US',
@@ -1116,7 +1164,7 @@ const HA_I18N = (function () {
       brava_view_btn:   'Ver propiedades en Praia Brava',
       brava_zones_btn:  'Ver zonas de valor',
       detail_eyebrow:   'Detalles de la propiedad',
-      detail_interest:  'Estoy interesado',
+      detail_interest:  'Solicitar información',
       detail_back:      'Volver al portafolio',
       detail_visual_eyebrow: 'Experiencia visual',
       detail_ficha:     'Ficha de la propiedad',
@@ -1492,6 +1540,30 @@ const HA_I18N = (function () {
       brava_zone2_range:     '€ 4.250 — € 7.650/m²',
       brava_zone3_range:     '€ 3.060 — € 5.950/m²',
       brava_zone4_range:     '€ 2.000 — € 3.740/m²',
+
+      cta_request_info:   'Solicitar información',
+      cta_view_others:    'Ver otras propiedades',
+      cta_property_card:  'Ficha de la propiedad',
+      cta_selected_props: 'Propiedades seleccionadas',
+      currency_note:      'Valores convertidos automáticamente y sujetos a variación cambiaria.',
+      imoveis_editorial_title: 'Propiedades seleccionadas',
+      imoveis_editorial_sub:   'Una selección de propiedades de alto estándar en Balneário Camboriú y Praia Brava, incluyendo oportunidades públicas y opciones reservadas conducidas bajo curaduría privada.',
+      results_count:      'propiedades encontradas',
+      results_count_one:  'propiedad encontrada',
+      empty_filters:      'No se encontraron propiedades con estos filtros. Ajuste su búsqueda o solicite una curaduría privada con opciones fuera del portafolio público.',
+      sort_label:         'Ordenar por',
+      sort_recent:        'Más recientes',
+      sort_price_desc:    'Mayor precio',
+      sort_price_asc:     'Menor precio',
+      sort_area_desc:     'Mayor superficie',
+      sort_featured:      'Destacados',
+      filters_apply:      'Aplicar filtros',
+      filters_clear:      'Limpiar filtros',
+      wa_msg_property:    'Hola, Heleno. Tengo interés en la propiedad {name}, en {region}. Me gustaría recibir más información.',
+      wa_msg_listing:     'Hola, Heleno. Estoy navegando por el sitio y me gustaría recibir una curaduría de propiedades de alto estándar.',
+      wa_msg_bc:          'Hola, Heleno. Me gustaría recibir una curaduría de propiedades en Balneário Camboriú.',
+      wa_msg_brava:       'Hola, Heleno. Me gustaría recibir una curaduría de propiedades en Praia Brava.',
+      wa_tooltip:         'Hable con Heleno',
       currency_code:   'USD',
       currency_symbol: '$',
       currency_format: 'es-AR',
@@ -1602,7 +1674,7 @@ const HA_I18N = (function () {
       brava_view_btn:   'Voir les propriétés à Praia Brava',
       brava_zones_btn:  'Voir les zones de valeur',
       detail_eyebrow:   'Détails de la propriété',
-      detail_interest:  'Je suis intéressé',
+      detail_interest:  'Demander des informations',
       detail_back:      'Retour au portfolio',
       detail_visual_eyebrow: 'Expérience visuelle',
       detail_ficha:     'Fiche de la propriété',
@@ -1978,6 +2050,30 @@ const HA_I18N = (function () {
       brava_zone2_range:     '€ 4 250 — € 7 650/m²',
       brava_zone3_range:     '€ 3 060 — € 5 950/m²',
       brava_zone4_range:     '€ 2 000 — € 3 740/m²',
+
+      cta_request_info:   'Demander des informations',
+      cta_view_others:    'Voir d\'autres propriétés',
+      cta_property_card:  'Détails du bien',
+      cta_selected_props: 'Biens sélectionnés',
+      currency_note:      'Valeurs converties automatiquement et sujettes aux variations de change.',
+      imoveis_editorial_title: 'Biens sélectionnés',
+      imoveis_editorial_sub:   'Une sélection de biens haut de gamme à Balneário Camboriú et Praia Brava, incluant des opportunités publiques et des options réservées conduites sous curation privée.',
+      results_count:      'biens trouvés',
+      results_count_one:  'bien trouvé',
+      empty_filters:      'Aucun bien trouvé avec ces filtres. Ajustez votre recherche ou demandez une curation privée avec des options hors du portefeuille public.',
+      sort_label:         'Trier par',
+      sort_recent:        'Plus récents',
+      sort_price_desc:    'Prix le plus élevé',
+      sort_price_asc:     'Prix le plus bas',
+      sort_area_desc:     'Plus grande surface',
+      sort_featured:      'En vedette',
+      filters_apply:      'Appliquer les filtres',
+      filters_clear:      'Effacer les filtres',
+      wa_msg_property:    'Bonjour Heleno. Je suis intéressé par le bien {name}, à {region}. Je souhaiterais recevoir plus d\'informations.',
+      wa_msg_listing:     'Bonjour Heleno. Je navigue sur le site et je souhaiterais recevoir une curation de biens haut de gamme.',
+      wa_msg_bc:          'Bonjour Heleno. Je souhaiterais recevoir une curation de biens à Balneário Camboriú.',
+      wa_msg_brava:       'Bonjour Heleno. Je souhaiterais recevoir une curation de biens à Praia Brava.',
+      wa_tooltip:         'Parler à Heleno',
       currency_code:   'EUR',
       currency_symbol: '€',
       currency_format: 'fr-FR',
@@ -2003,6 +2099,50 @@ const HA_I18N = (function () {
   }
 
   /* ─── Formata preço no idioma/moeda corretos ──────────────────── */
+  /**
+   * Parser robusto de valores monetários.
+   * Aceita: "R$ 2.700.000", "2.700.000,50", "639361.74", "639,361.74"
+   * Retorna número inteiro (centavos removidos — padrão alto luxo).
+   */
+  function parseMoney(text) {
+    const cleaned = String(text)
+      .replace(/r\$/gi, '')
+      .replace(/\s/g, '')
+      .replace(/[^\d.,]/g, '');
+    if (!cleaned) return NaN;
+
+    const lastComma = cleaned.lastIndexOf(',');
+    const lastDot   = cleaned.lastIndexOf('.');
+
+    let number;
+    if (lastComma > -1 && lastDot > -1) {
+      // Ambos presentes: o último é o separador decimal
+      if (lastComma > lastDot) {
+        // Formato BR: 1.234.567,89
+        number = parseFloat(cleaned.replace(/\./g, '').replace(',', '.'));
+      } else {
+        // Formato US: 1,234,567.89
+        number = parseFloat(cleaned.replace(/,/g, ''));
+      }
+    } else if (lastComma > -1) {
+      // Apenas vírgula: decimal BR se 2 dígitos após, senão milhar
+      const after = cleaned.length - lastComma - 1;
+      number = after === 2
+        ? parseFloat(cleaned.replace(/\./g, '').replace(',', '.'))
+        : parseFloat(cleaned.replace(/,/g, ''));
+    } else if (lastDot > -1) {
+      // Apenas ponto: decimal US se 2 dígitos após, senão milhar BR
+      const after = cleaned.length - lastDot - 1;
+      number = after === 2
+        ? parseFloat(cleaned)
+        : parseFloat(cleaned.replace(/\./g, ''));
+    } else {
+      number = parseFloat(cleaned);
+    }
+
+    return number;
+  }
+
   function formatPrice(brlString, lang) {
     const l = dict[lang] || dict.pt;
     const text = String(brlString || '').trim();
@@ -2012,34 +2152,39 @@ const HA_I18N = (function () {
       return l.card_consult;
     }
 
-    // Extrai número do formato brasileiro (ex: "R$ 2.700.000" ou "2.700.000")
-    const cleaned = text
-      .replace(/r\$/gi, '')
-      .replace(/\s/g, '')
-      .replace(/[^\d.,]/g, '');
-
-    let number;
-    if (cleaned.includes(',')) {
-      number = parseFloat(cleaned.replace(/\./g, '').replace(',', '.'));
-    } else {
-      number = parseFloat(cleaned.replace(/\./g, ''));
-    }
-
+    const number = parseMoney(text);
     if (!isFinite(number) || number <= 0) return text;
 
+    // Imóveis de alto padrão: sem centavos
+    const value = Math.round(number);
+
     if (lang === 'pt') {
-      return `R$ ${number.toLocaleString('pt-BR')}`;
+      return new Intl.NumberFormat('pt-BR', {
+        style: 'currency', currency: 'BRL',
+        minimumFractionDigits: 0, maximumFractionDigits: 0,
+      }).format(value);
     }
 
     if (lang === 'en') {
-      const usd = number * rates.USD;
-      return `$ ${Math.round(usd).toLocaleString('en-US')} USD`;
+      const usd = Math.round(value * rates.USD);
+      return new Intl.NumberFormat('en-US', {
+        style: 'currency', currency: 'USD',
+        minimumFractionDigits: 0, maximumFractionDigits: 0,
+      }).format(usd).replace('$', 'US$ ');
     }
 
-    if (lang === 'es' || lang === 'fr') {
-      const eur = number * rates.EUR;
-      const locale = lang === 'fr' ? 'fr-FR' : 'es-AR';
-      return `€ ${Math.round(eur).toLocaleString(locale)}`;
+    if (lang === 'es') {
+      const eur = Math.round(value * rates.EUR);
+      return '€ ' + new Intl.NumberFormat('es-ES', {
+        minimumFractionDigits: 0, maximumFractionDigits: 0,
+      }).format(eur);
+    }
+
+    if (lang === 'fr') {
+      const eur = Math.round(value * rates.EUR);
+      return new Intl.NumberFormat('fr-FR', {
+        minimumFractionDigits: 0, maximumFractionDigits: 0,
+      }).format(eur) + ' €';
     }
 
     return text;
@@ -2065,9 +2210,14 @@ const HA_I18N = (function () {
       if (raw !== undefined) el.textContent = formatPrice(raw, lang);
     });
 
-    // Atualiza href do WhatsApp com mensagem no idioma
+    // Atualiza href do WhatsApp com mensagem contextual por página e idioma
     // Ignora links com data-wa-custom — esses são gerenciados pelo JS da página
-    const waMsg = encodeURIComponent(l.wa_message || dict.pt.wa_message);
+    const page = (document.body.dataset.page || '').toLowerCase();
+    let waKey = 'wa_msg_listing';
+    if (page === 'bc') waKey = 'wa_msg_bc';
+    else if (page === 'brava') waKey = 'wa_msg_brava';
+    else if (page === 'home' || page === 'sobre' || page === 'contato') waKey = 'wa_msg_listing';
+    const waMsg = encodeURIComponent(l[waKey] || l.wa_message || dict.pt.wa_message);
     document.querySelectorAll('a[data-wa]:not([data-wa-custom])').forEach(a => {
       const base = a.dataset.wa;
       a.href = `${base}?text=${waMsg}`;

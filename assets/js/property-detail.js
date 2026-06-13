@@ -204,11 +204,12 @@
   function getWhatsappLink(item) {
     const lang = (typeof HA_I18N !== 'undefined') ? HA_I18N.getLang() : 'pt';
     const name = item.title || '';
+    const region = item.region || item.city || '';
 
     // Mensagens fixas por idioma — sem dependência de estado externo
     const messages = {
-      pt: `Olá, Heleno! Tenho interesse no imóvel: ${name}. Pode me passar mais informações?`,
-      en: `Hello Heleno! I am interested in the property: ${name}. Could you share more details?`,
+      pt: `Olá, Heleno. Tenho interesse no imóvel ${name}${region ? ', em ' + region : ''}. Gostaria de receber mais informações.`,
+      en: `Hello, Heleno. I am interested in the property ${name}${region ? ', in ' + region : ''}. I would like to receive more information.`,
       es: `¡Hola Heleno! Estoy interesado en la propiedad: ${name}. ¿Puede darme más información?`,
       fr: `Bonjour Heleno ! Je suis intéressé par la propriété : ${name}. Pouvez-vous me donner plus d'informations ?`,
     };
