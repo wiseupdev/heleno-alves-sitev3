@@ -551,3 +551,275 @@
     bottom: 18px;
   }
 }
+
+
+/* ═══ MOBILE MENU PREMIUM ══════════════════════════════════════ */
+
+/* Substituir mobile-panel herdado com design premium compacto */
+.mobile-panel {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: #030303;
+  z-index: 999;
+  flex-direction: column;
+  padding: 0;
+  overflow-y: auto;
+  max-height: 100dvh;
+  padding-bottom: calc(24px + env(safe-area-inset-bottom));
+}
+
+.mobile-panel.open {
+  display: flex;
+}
+
+/* Header do menu mobile */
+.mobile-panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  height: 70px;
+  border-bottom: 1px solid rgba(255,255,255,.07);
+  flex-shrink: 0;
+}
+
+/* Links do menu — tamanho proporcional */
+.mobile-panel a {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255,255,255,.07);
+  padding: 17px 24px;
+  font-family: var(--serif);
+  font-size: clamp(1.45rem, 6.5vw, 1.9rem);
+  line-height: 1.1;
+  color: rgba(255,255,255,.88);
+  transition: color .2s;
+}
+
+.mobile-panel a:hover,
+.mobile-panel a:active {
+  color: var(--gold-light);
+}
+
+.mobile-panel a span {
+  font-size: 1rem;
+  opacity: .45;
+  flex-shrink: 0;
+}
+
+/* Seletor de idiomas no menu mobile — compacto */
+.mobile-lang-group {
+  display: flex;
+  gap: 6px;
+  padding: 16px 24px;
+  border-bottom: 1px solid rgba(255,255,255,.07);
+  flex-shrink: 0;
+}
+
+.mobile-lang-group .lang-btn {
+  min-width: 38px;
+  height: 36px;
+  padding: 0 8px;
+  font-size: 10px;
+  letter-spacing: .12em;
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.1);
+  color: rgba(255,255,255,.55);
+  cursor: pointer;
+  font-family: var(--sans);
+  text-transform: uppercase;
+  transition: .2s;
+}
+
+.mobile-lang-group .lang-btn.active,
+.mobile-lang-group .lang-btn:hover {
+  background: rgba(233,197,103,.15);
+  border-color: var(--gold-mid);
+  color: var(--gold-light);
+}
+
+/* CTA no rodapé do menu mobile */
+.mobile-panel-cta {
+  padding: 20px 24px;
+  margin-top: auto;
+  flex-shrink: 0;
+}
+
+.mobile-panel-cta .btn {
+  width: 100%;
+  min-height: 50px;
+}
+
+/* Tamanhos para telas muito pequenas */
+@media (max-width: 375px) {
+  .mobile-panel a {
+    font-size: 1.45rem;
+    padding: 15px 20px;
+  }
+  .mobile-panel a span {
+    display: none;
+  }
+  .mobile-lang-group {
+    padding: 14px 20px;
+  }
+}
+
+@media (max-width: 320px) {
+  .mobile-panel a {
+    font-size: 1.35rem;
+    padding: 13px 16px;
+  }
+}
+
+/* ═══ ADMIN MOBILE RESPONSIVO ═══════════════════════════════════ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+@media (max-width: 767px) {
+  /* Admin geral */
+  .admin-shell {
+    grid-template-columns: 1fr !important;
+  }
+
+  .sidebar {
+    position: static !important;
+    height: auto !important;
+    padding: 16px 16px 12px !important;
+  }
+
+  .sidebar nav {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 12px;
+  }
+
+  .sidebar nav a {
+    padding: 9px 12px;
+    font-size: 11px;
+    flex: 1 1 auto;
+    text-align: center;
+    min-width: 80px;
+  }
+
+  .dashboard {
+    padding: 20px 16px !important;
+  }
+
+  /* Cards do dashboard */
+  .cards {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px;
+  }
+
+  .dash-card b {
+    font-size: 28px;
+  }
+
+  /* Ações admin */
+  .admin-actions,
+  .admin-header-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .admin-actions .btn,
+  .admin-actions a,
+  .admin-header-actions .btn,
+  .admin-header-actions a {
+    width: 100%;
+    min-height: 48px;
+    justify-content: center;
+  }
+
+  /* Filtros admin em coluna */
+  .admin-filters {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+    width: 100%;
+  }
+
+  /* Grid de imóveis admin */
+  .admin-property-grid,
+  .admin-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Formulários admin */
+  .admin-form,
+  .admin-form-grid {
+    grid-template-columns: 1fr !important;
+    gap: 14px;
+  }
+
+  .admin-form .full {
+    grid-column: auto !important;
+  }
+
+  /* Inputs/selects/textareas */
+  .admin-page input,
+  .admin-page select,
+  .admin-page textarea,
+  .admin-shell input,
+  .admin-shell select,
+  .admin-shell textarea {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box;
+  }
+
+  /* Tabelas admin — scroll interno */
+  .table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    max-width: 100%;
+  }
+
+  .table {
+    min-width: 600px;
+  }
+
+  /* Página admin */
+  .admin-page,
+  .dashboard {
+    width: 100%;
+    max-width: 100%;
+    padding: 20px 16px;
+    overflow-x: hidden;
+  }
+
+  /* Auth layout admin */
+  .auth-layout {
+    grid-template-columns: 1fr !important;
+  }
+
+  .auth-box {
+    padding: 40px 20px !important;
+  }
+}
+
+/* ═══ WHATSAPP MOBILE SEGURO ════════════════════════════════════ */
+.wa-float {
+  right: 16px !important;
+  bottom: calc(20px + env(safe-area-inset-bottom)) !important;
+}
+
+@media (max-width: 767px) {
+  body.has-sticky-cta .wa-float {
+    bottom: calc(80px + env(safe-area-inset-bottom)) !important;
+  }
+}

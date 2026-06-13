@@ -51,13 +51,31 @@
     </a>
     <button class="menu" onclick="toggleMenu()" aria-label="Abrir menu"><span></span></button>
   </header>
-  <div id="mobilePanel" class="mobile-panel">
-    <a onclick="toggleMenu()" href="balneario-camboriu.html"><span data-i18n="nav_balneario">Balneário</span> <span>→</span></a>
-    <a onclick="toggleMenu()" href="praia-brava.html"><span data-i18n="nav_brava">Praia Brava</span> <span>→</span></a>
-    <a onclick="toggleMenu()" href="imoveis.html"><span data-i18n="nav_imoveis">Imóveis</span> <span>→</span></a>
-    <a onclick="toggleMenu()" href="sobre.html"><span data-i18n="nav_sobre">Sobre</span> <span>→</span></a>
-    <a onclick="toggleMenu()" href="contato.html"><span data-i18n="nav_contato">Contato</span> <span>→</span></a>
-    <a onclick="toggleMenu()" href="usuario/login.html"><span data-i18n="nav_cliente">Área do cliente</span> <span>→</span></a>
+    <div id="mobilePanel" class="mobile-panel" role="dialog" aria-modal="true" aria-label="Menu">
+    <div class="mobile-panel-head">
+      <a href="index.html" class="logo logo-img" onclick="toggleMenu()">
+        <img src="assets/images/logo/ICON (1).png" alt="Heleno Alves" class="logo-icon" width="28" height="34">
+        <div class="logo-text">
+          <strong>Heleno Alves</strong>
+          <span>Corretor de Alto Luxo</span>
+        </div>
+      </a>
+      <button onclick="toggleMenu()" aria-label="Fechar menu" style="background:none;border:none;color:rgba(255,255,255,.6);font-size:28px;width:44px;height:44px;cursor:pointer;">×</button>
+    </div>
+    <div class="mobile-lang-group" id="mobileLangGroup"></div>
+    <nav>
+      <a onclick="toggleMenu()" href="balneario-camboriu.html"><span data-i18n="nav_balneario">Balneário</span> <span>→</span></a>
+      <a onclick="toggleMenu()" href="praia-brava.html"><span data-i18n="nav_brava">Praia Brava</span> <span>→</span></a>
+      <a onclick="toggleMenu()" href="imoveis.html"><span data-i18n="nav_imoveis">Imóveis</span> <span>→</span></a>
+      <a onclick="toggleMenu()" href="sobre.html"><span data-i18n="nav_sobre">Sobre</span> <span>→</span></a>
+      <a onclick="toggleMenu()" href="contato.html"><span data-i18n="nav_contato">Contato</span> <span>→</span></a>
+      <a onclick="toggleMenu()" href="usuario/login.html"><span data-i18n="nav_cliente">Área do cliente</span> <span>→</span></a>
+    </nav>
+    <div class="mobile-panel-cta">
+      <a class="btn gold" href="https://wa.me/5585988085349" target="_blank" rel="noopener">
+        <span data-i18n="nav_cta">Falar com Heleno</span>
+      </a>
+    </div>
   </div>
   <main>
     <section class="page-hero">
@@ -94,9 +112,9 @@
                 <label for="typeFilter" data-i18n="filter_type">Tipo de imóvel</label>
                 <select id="typeFilter" aria-label="Filtrar por tipo" class="field">
                   <option value="" data-i18n="filter_all_types">Todos os tipos</option>
-                  <option value="Na Planta">Na Planta</option>
-                  <option value="Pronto">Pronto</option>
-                  <option value="Locação">Locação</option>
+                  <option value="Na Planta" data-i18n="filter_type_offplan">Na Planta</option>
+                  <option value="Pronto" data-i18n="filter_type_ready">Pronto</option>
+                  <option value="Locação" data-i18n="filter_type_rental">Locação</option>
                 </select>
               </div>
               <div class="filter-group price-range-group">
@@ -117,22 +135,20 @@
                 <label for="suitesFilter" data-i18n="filter_suites">Suítes</label>
                 <select id="suitesFilter" aria-label="Filtrar por suítes" class="field">
                   <option value="" data-i18n="filter_all">Todas</option>
-                  <option value="1">1+</option>
-                  <option value="2">2+</option>
-                  <option value="3">3+</option>
-                  <option value="4">4+</option>
-                  <option value="5">5+</option>
+                  <option value="1" data-i18n="filter_suite_1">1 suíte</option>
+                  <option value="2" data-i18n="filter_suite_2">2 suítes</option>
+                  <option value="3" data-i18n="filter_suite_3">3 suítes</option>
+                  <option value="4" data-i18n="filter_suite_4">4+ suítes</option>
                 </select>
               </div>
               <div class="filter-group">
                 <label for="parkingFilter" data-i18n="filter_parking">Vagas</label>
                 <select id="parkingFilter" aria-label="Filtrar por vagas" class="field">
                   <option value="" data-i18n="filter_all">Todas</option>
-                  <option value="1">1+</option>
-                  <option value="2">2+</option>
-                  <option value="3">3+</option>
-                  <option value="4">4+</option>
-                  <option value="5">5+</option>
+                  <option value="1" data-i18n="filter_parking_1">1 vaga</option>
+                  <option value="2" data-i18n="filter_parking_2">2 vagas</option>
+                  <option value="3" data-i18n="filter_parking_3">3 vagas</option>
+                  <option value="4" data-i18n="filter_parking_4">4+ vagas</option>
                 </select>
               </div>
               <button class="btn sidebar-clear" id="clearFilters" type="button" data-i18n="filter_clear">Limpar filtros</button>
@@ -210,7 +226,6 @@
         <h3 data-i18n="footer_legal">Legal</h3>
         <a href="politica-privacidade.html">Política de Privacidade</a>
         <a href="termos-uso.html">Termos de Uso</a>
-        <a href="admin/login.html">Acesso restrito</a>
       </div>
     </div>
     <div class="footer-bottom">

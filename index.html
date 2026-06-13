@@ -52,14 +52,31 @@
     </a>
     <button class="menu" onclick="toggleMenu()" aria-label="Abrir menu"><span></span></button>
   </header>
-  <div id="mobilePanel" class="mobile-panel">
-    <a onclick="toggleMenu()" href="balneario-camboriu.html"><span data-i18n="nav_balneario">Balneário</span> <span>→</span></a>
-    <a onclick="toggleMenu()" href="praia-brava.html"><span data-i18n="nav_brava">Praia Brava</span> <span>→</span></a>
-    <a onclick="toggleMenu()" href="imoveis.html"><span data-i18n="nav_imoveis">Imóveis</span> <span>→</span></a>
-    <a onclick="toggleMenu()" href="sobre.html"><span data-i18n="nav_sobre">Sobre</span> <span>→</span></a>
-    <a onclick="toggleMenu()" href="contato.html"><span data-i18n="nav_contato">Contato</span> <span>→</span></a>
-    <a onclick="toggleMenu()" href="usuario/login.html"><span data-i18n="nav_cliente">Área do cliente</span> <span>→</span></a>
-    <a onclick="toggleMenu()" href="admin/login.html">Admin <span>→</span></a>
+    <div id="mobilePanel" class="mobile-panel" role="dialog" aria-modal="true" aria-label="Menu">
+    <div class="mobile-panel-head">
+      <a href="index.html" class="logo logo-img" onclick="toggleMenu()">
+        <img src="assets/images/logo/ICON (1).png" alt="Heleno Alves" class="logo-icon" width="28" height="34">
+        <div class="logo-text">
+          <strong>Heleno Alves</strong>
+          <span>Corretor de Alto Luxo</span>
+        </div>
+      </a>
+      <button onclick="toggleMenu()" aria-label="Fechar menu" style="background:none;border:none;color:rgba(255,255,255,.6);font-size:28px;width:44px;height:44px;cursor:pointer;">×</button>
+    </div>
+    <div class="mobile-lang-group" id="mobileLangGroup"></div>
+    <nav>
+      <a onclick="toggleMenu()" href="balneario-camboriu.html"><span data-i18n="nav_balneario">Balneário</span> <span>→</span></a>
+      <a onclick="toggleMenu()" href="praia-brava.html"><span data-i18n="nav_brava">Praia Brava</span> <span>→</span></a>
+      <a onclick="toggleMenu()" href="imoveis.html"><span data-i18n="nav_imoveis">Imóveis</span> <span>→</span></a>
+      <a onclick="toggleMenu()" href="sobre.html"><span data-i18n="nav_sobre">Sobre</span> <span>→</span></a>
+      <a onclick="toggleMenu()" href="contato.html"><span data-i18n="nav_contato">Contato</span> <span>→</span></a>
+      <a onclick="toggleMenu()" href="usuario/login.html"><span data-i18n="nav_cliente">Área do cliente</span> <span>→</span></a>
+    </nav>
+    <div class="mobile-panel-cta">
+      <a class="btn gold" href="https://wa.me/5585988085349" target="_blank" rel="noopener">
+        <span data-i18n="nav_cta">Falar com Heleno</span>
+      </a>
+    </div>
   </div>
   <main id="main-content">
     <section class="hero" data-hero-img="assets/images/heleno/helenofotos/heleno-01.jpg">
@@ -210,7 +227,6 @@
         <h4 data-i18n="footer_legal">Legal</h4>
         <a href="politica-privacidade.html">Política de Privacidade</a>
         <a href="termos-uso.html">Termos de Uso</a>
-        <a href="admin/login.html">Acesso restrito</a>
       </div>
     </div>
     <div class="footer-bottom">
