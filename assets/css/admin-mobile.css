@@ -1,0 +1,368 @@
+/**
+ * admin-mobile.css — Heleno Alves
+ * Reset mobile-first GLOBAL para todo o painel admin.
+ * Carregado em todas as páginas admin APÓS os CSS individuais.
+ * Sobrescreve qualquer regra desktop problemática.
+ */
+
+/* ═══════════════════════════════════════════════════════════════════
+   RESET BASE — previne overflow em qualquer viewport
+   ═══════════════════════════════════════════════════════════════════ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   TABLET (≤ 1023px) — colapsar sidebar lateral
+   ═══════════════════════════════════════════════════════════════════ */
+@media (max-width: 1023px) {
+  /* Layout principal: coluna única */
+  .admin-page,
+  .login-page {
+    grid-template-columns: 1fr !important;
+    display: block !important;
+  }
+
+  /* Sidebar vira topo fixo compacto */
+  .admin-sidebar {
+    position: static !important;
+    height: auto !important;
+    min-height: 0 !important;
+    padding: 16px 16px 12px !important;
+    border-right: none !important;
+    border-bottom: 1px solid rgba(255,255,255,.08) !important;
+  }
+
+  .admin-logo {
+    margin-bottom: 14px !important;
+  }
+
+  /* Nav em chips horizontais com scroll */
+  .admin-nav {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+    grid-template-columns: unset !important;
+  }
+
+  .admin-nav a {
+    flex: 1 1 auto !important;
+    min-width: 90px !important;
+    text-align: center !important;
+    padding: 10px 12px !important;
+    font-size: 12px !important;
+    min-height: 40px !important;
+  }
+
+  /* Login: esconde visual lateral */
+  .login-visual {
+    display: none !important;
+  }
+
+  .login-form-side {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    padding: 40px 20px !important;
+  }
+
+  /* Admin main: largura total */
+  .admin-main {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    padding: 28px 18px 60px !important;
+  }
+
+  /* Form layout: empilhado */
+  .form-layout {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Preview panel: estático */
+  .preview-panel {
+    position: static !important;
+  }
+
+  /* KPIs: 2 colunas no tablet */
+  .kpi-grid,
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   MOBILE (≤ 767px) — coluna única absoluta
+   ═══════════════════════════════════════════════════════════════════ */
+@media (max-width: 767px) {
+  /* ── Contenedores principais ─────────────────────────────────── */
+  .admin-page,
+  .admin-main,
+  .admin-content,
+  .admin-section,
+  .admin-panel,
+  .admin-card,
+  .admin-dashboard,
+  .admin-form,
+  .form-panel,
+  .preview-panel,
+  .panel {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    overflow-x: hidden !important;
+  }
+
+  .admin-main {
+    padding: 18px 14px 60px !important;
+  }
+
+  /* ── Sidebar compacta ────────────────────────────────────────── */
+  .admin-sidebar {
+    padding: 12px 14px 10px !important;
+  }
+
+  .admin-logo {
+    margin-bottom: 10px !important;
+  }
+
+  .admin-logo strong {
+    font-size: 17px !important;
+  }
+
+  /* Nav: scroll horizontal de chips */
+  .admin-nav {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+    gap: 6px !important;
+    padding-bottom: 4px !important;
+  }
+
+  .admin-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .admin-nav a {
+    flex: 0 0 auto !important;
+    white-space: nowrap !important;
+    min-width: auto !important;
+    padding: 9px 14px !important;
+    font-size: 12px !important;
+    min-height: 40px !important;
+    text-align: center !important;
+  }
+
+  .sidebar-footer {
+    display: none !important;
+  }
+
+  /* ── Todos os grids → 1 coluna ──────────────────────────────── */
+  .kpi-grid,
+  .stats-grid,
+  .dashboard-grid,
+  .admin-grid,
+  .admin-cards-grid,
+  .form-grid,
+  .form-layout,
+  .admin-form-grid,
+  .property-form-grid,
+  .media-grid,
+  .upload-grid,
+  .filter-row {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  /* KPIs: 2 colunas no mobile (aproveitamento melhor) */
+  .kpi-grid,
+  .stats-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px !important;
+  }
+
+  .kpi-card,
+  .stat-card,
+  .dash-card {
+    padding: 14px 12px !important;
+  }
+
+  .kpi-card b,
+  .stat-card b,
+  .dash-card b {
+    font-size: 24px !important;
+  }
+
+  /* ── Flex em linha → coluna ─────────────────────────────────── */
+  .admin-toolbar,
+  .admin-header-row,
+  .admin-controls,
+  .admin-filters,
+  .form-actions,
+  .admin-actions {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 10px !important;
+    width: 100% !important;
+  }
+
+  /* ── Inputs, selects, textareas ─────────────────────────────── */
+  .admin-page input,
+  .admin-page select,
+  .admin-page textarea,
+  .admin-form input,
+  .admin-form select,
+  .admin-form textarea,
+  .form-panel input,
+  .form-panel select,
+  .form-panel textarea {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+    font-size: 16px !important; /* evita zoom no iOS */
+  }
+
+  /* ── Botões proporcionais ────────────────────────────────────── */
+  .admin-page .btn,
+  .admin-page button,
+  .form-actions .btn,
+  .form-actions button,
+  .admin-actions .btn,
+  .admin-actions button {
+    width: 100% !important;
+    min-height: 50px !important;
+    font-size: 13px !important;
+    padding: 14px 18px !important;
+    box-sizing: border-box !important;
+    justify-content: center !important;
+  }
+
+  /* ── Tabelas: scroll interno, não estoura a página ─────────── */
+  .table-scroll,
+  .admin-table-wrapper {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  /* Remove min-width fixo das tabelas */
+  .clean-table,
+  .admin-table,
+  .leads-table {
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+
+  /* Se não tiver wrapper, força scroll no próprio elemento */
+  .panel > table,
+  .admin-main > table {
+    display: block !important;
+    overflow-x: auto !important;
+    max-width: 100% !important;
+  }
+
+  /* ── Tipografia admin ───────────────────────────────────────── */
+  .admin-page h1,
+  .page-title,
+  .panel-title {
+    font-size: clamp(1.8rem, 9vw, 2.8rem) !important;
+    line-height: 1.1 !important;
+  }
+
+  .admin-page h2 {
+    font-size: clamp(1.4rem, 7vw, 2rem) !important;
+  }
+
+  /* ── Painéis e cards ─────────────────────────────────────────── */
+  .panel,
+  .form-panel,
+  .preview-panel {
+    padding: 18px 14px !important;
+    border-radius: 0 !important;
+  }
+
+  /* ── Upload e mídia ─────────────────────────────────────────── */
+  .admin-media,
+  .admin-upload,
+  .media-grid,
+  .upload-grid,
+  .image-list,
+  .image-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    grid-template-columns: 1fr !important;
+  }
+
+  /* ── Login page ─────────────────────────────────────────────── */
+  .login-page {
+    display: block !important;
+    min-height: 100vh !important;
+  }
+
+  .login-visual {
+    display: none !important;
+  }
+
+  .login-form-side,
+  .login-box,
+  .auth-box {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 40px 20px !important;
+    min-height: 100vh !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .auth-card,
+  .login-card {
+    width: 100% !important;
+    max-width: 420px !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   TELAS MUITO PEQUENAS (≤ 360px)
+   ═══════════════════════════════════════════════════════════════════ */
+@media (max-width: 360px) {
+  .admin-main {
+    padding: 14px 12px 50px !important;
+  }
+
+  .admin-nav a {
+    padding: 8px 11px !important;
+    font-size: 11px !important;
+  }
+
+  .kpi-grid,
+  .stats-grid {
+    grid-template-columns: 1fr !important; /* 1 coluna em 360px */
+  }
+
+  .admin-page .btn,
+  .admin-page button {
+    font-size: 12px !important;
+    min-height: 46px !important;
+  }
+}
