@@ -444,3 +444,232 @@ body {
     box-sizing: border-box !important;
   }
 }
+
+
+/* ═══════════════════════════════════════════════════════════════════
+   ADMIN MOBILE NAV — Header compacto + Drawer lateral
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Esconder sidebar padrão no mobile/tablet ────────────────────── */
+@media (max-width: 1023px) {
+  .admin-sidebar {
+    display: none !important;
+  }
+
+  .admin-page {
+    grid-template-columns: 1fr !important;
+    display: block !important;
+  }
+}
+
+/* ── Header mobile do admin ──────────────────────────────────────── */
+.adm-mobile-header {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+  padding: 0 16px;
+  background: rgba(5, 5, 5, .98);
+  border-bottom: 1px solid rgba(255, 255, 255, .08);
+  position: sticky;
+  top: 0;
+  z-index: 900;
+  gap: 12px;
+}
+
+@media (max-width: 1023px) {
+  .adm-mobile-header {
+    display: flex;
+  }
+}
+
+.adm-mobile-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-decoration: none;
+}
+
+.adm-mobile-brand strong {
+  font-family: var(--serif);
+  font-size: 16px;
+  font-weight: 300;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: #fff;
+  line-height: 1;
+}
+
+.adm-mobile-brand span {
+  font-family: var(--sans);
+  font-size: 7px;
+  letter-spacing: .32em;
+  text-transform: uppercase;
+  color: var(--gold-mid, #c9a45a);
+  line-height: 1;
+}
+
+.adm-toggle {
+  background: none;
+  border: 1px solid rgba(255, 255, 255, .15);
+  color: rgba(255, 255, 255, .7);
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: border-color .2s, color .2s;
+}
+
+.adm-toggle:hover,
+.adm-toggle:focus-visible {
+  border-color: var(--gold-mid, #c9a45a);
+  color: var(--gold-light, #e9c567);
+  outline: none;
+}
+
+/* ── Overlay ─────────────────────────────────────────────────────── */
+.adm-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, .65);
+  backdrop-filter: blur(3px);
+  z-index: 1000;
+  opacity: 0;
+  transition: opacity .3s;
+}
+
+.adm-overlay.is-open {
+  display: block;
+  opacity: 1;
+}
+
+/* ── Drawer lateral ──────────────────────────────────────────────── */
+.adm-drawer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: min(84vw, 300px);
+  height: 100dvh;
+  background: #050505;
+  border-right: 1px solid rgba(233, 197, 103, .15);
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(-100%);
+  transition: transform .32s cubic-bezier(.22, .1, .36, 1);
+  overflow-y: auto;
+}
+
+.adm-drawer.is-open {
+  transform: translateX(0);
+}
+
+/* ── Cabeçalho do drawer ─────────────────────────────────────────── */
+.adm-drawer-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, .07);
+  flex-shrink: 0;
+}
+
+.adm-drawer-brand strong {
+  display: block;
+  font-family: var(--serif);
+  font-size: 18px;
+  font-weight: 300;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+.adm-drawer-brand span {
+  display: block;
+  font-family: var(--sans);
+  font-size: 7px;
+  letter-spacing: .32em;
+  text-transform: uppercase;
+  color: var(--gold-mid, #c9a45a);
+  margin-top: 3px;
+}
+
+.adm-close {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, .5);
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: color .2s;
+}
+
+.adm-close:hover {
+  color: #fff;
+}
+
+/* ── Links do drawer ─────────────────────────────────────────────── */
+.adm-mobile-nav {
+  display: flex;
+  flex-direction: column;
+  padding: 12px 0;
+  flex: 1;
+}
+
+.adm-mobile-link {
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  font-family: var(--sans);
+  font-size: 13px;
+  letter-spacing: .1em;
+  color: rgba(255, 255, 255, .65);
+  border-bottom: 1px solid rgba(255, 255, 255, .05);
+  transition: color .2s, background .2s;
+  min-height: 52px;
+  text-decoration: none;
+}
+
+.adm-mobile-link:hover {
+  color: var(--gold-light, #e9c567);
+  background: rgba(233, 197, 103, .04);
+}
+
+.adm-mobile-link.is-active {
+  color: var(--gold-light, #e9c567);
+  background: rgba(233, 197, 103, .07);
+  border-left: 3px solid var(--gold-mid, #c9a45a);
+  padding-left: 17px;
+}
+
+/* ── Scroll lock quando drawer aberto ────────────────────────────── */
+body.adm-drawer-open {
+  overflow: hidden !important;
+}
+
+/* ── Garantir que admin-main ocupe tudo no mobile ────────────────── */
+@media (max-width: 1023px) {
+  .admin-main {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 20px 14px 60px !important;
+  }
+}
+
+@media (max-width: 360px) {
+  .adm-drawer {
+    width: 88vw;
+  }
+
+  .adm-mobile-brand strong {
+    font-size: 14px;
+  }
+}
