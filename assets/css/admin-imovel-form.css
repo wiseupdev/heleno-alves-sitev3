@@ -423,3 +423,164 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ═══ FORM MOBILE (≤ 767px) ════════════════════════════════════ */
+@media (max-width: 767px) {
+
+  /* admin-top: título + ações empilhados */
+  .admin-top {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 14px !important;
+  }
+
+  .admin-title h1,
+  .page-title {
+    font-size: clamp(1.6rem, 8vw, 2.4rem) !important;
+    line-height: 1.1 !important;
+  }
+
+  /* hero-actions: botões empilhados */
+  .hero-actions {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+    width: 100% !important;
+  }
+
+  .hero-actions .btn,
+  .hero-actions a,
+  .hero-actions button {
+    width: 100% !important;
+    min-height: 50px !important;
+    justify-content: center !important;
+  }
+
+  /* form-layout: coluna única (remove preview lateral) */
+  .form-layout {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+
+  /* preview-panel estático */
+  .preview-panel {
+    position: static !important;
+  }
+
+  /* panel-title */
+  .panel-title {
+    font-size: clamp(1.4rem, 7vw, 2rem) !important;
+  }
+
+  /* form-grid: 1 coluna */
+  .form-grid {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+  }
+
+  .full {
+    grid-column: auto !important;
+  }
+
+  /* field-group: 100% */
+  .field-group,
+  .form-group {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* form-grid dos rows internos (suites/vagas/etc) */
+  .form-row {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  /* Feature bank e tools */
+  .feature-tools {
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+
+  .feature-bank {
+    gap: 6px !important;
+  }
+
+  .custom-feature-row {
+    grid-template-columns: 1fr auto !important;
+    gap: 8px !important;
+  }
+
+  /* Upload box */
+  .upload-box {
+    padding: 24px 16px !important;
+    min-height: 100px !important;
+  }
+
+  /* Media preview grid: 2 colunas no mobile */
+  .media-preview-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+  }
+
+  /* Botões de salvar/limpar empilhados */
+  .form-actions,
+  .form-submit {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+    width: 100% !important;
+  }
+
+  .form-actions .btn,
+  .form-submit .btn,
+  .form-actions button,
+  .form-submit button {
+    width: 100% !important;
+    min-height: 50px !important;
+    justify-content: center !important;
+  }
+
+  /* Inputs/selects/textareas */
+  .form-grid input,
+  .form-grid select,
+  .form-grid textarea,
+  .field-group input,
+  .field-group select,
+  .field-group textarea {
+    width: 100% !important;
+    font-size: 16px !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Seção de specs do preview */
+  .preview-specs {
+    grid-template-columns: 1fr 1fr !important;
+  }
+
+  /* Status chips */
+  .status-options {
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+}
+
+/* ═══ FORM TABLET (768px – 1023px) ════════════════════════════ */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .form-layout {
+    grid-template-columns: 1fr !important;
+  }
+
+  .preview-panel {
+    position: static !important;
+  }
+
+  .hero-actions {
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+  }
+
+  .hero-actions .btn {
+    flex: 1 1 auto !important;
+    min-width: 140px !important;
+  }
+}

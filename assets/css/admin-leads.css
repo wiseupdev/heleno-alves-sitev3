@@ -399,3 +399,168 @@ body {
     flex-wrap: wrap;
   }
 }
+
+/* ═══ LEADS MOBILE (≤ 767px) ═══════════════════════════════════ */
+@media (max-width: 767px) {
+
+  /* admin-top */
+  .admin-top {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 14px !important;
+  }
+
+  .admin-title h1 {
+    font-size: clamp(1.6rem, 8vw, 2.4rem) !important;
+  }
+
+  /* Toolbar */
+  .toolbar {
+    flex-direction: column !important;
+    gap: 10px !important;
+    align-items: stretch !important;
+  }
+
+  .search-box,
+  .filter-box {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .search-box input,
+  .filter-box select {
+    width: 100% !important;
+    font-size: 16px !important;
+    box-sizing: border-box !important;
+  }
+
+  /* kpi-grid: 2 colunas */
+  .kpi-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px !important;
+  }
+
+  .kpi-card,
+  .stat-card {
+    padding: 14px 12px !important;
+  }
+
+  /* leads-panel */
+  .leads-panel {
+    padding: 18px 14px !important;
+  }
+
+  .panel-head {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 12px !important;
+  }
+
+  .panel-title {
+    font-size: clamp(1.4rem, 7vw, 2rem) !important;
+  }
+
+  .panel-head .btn,
+  .panel-head a,
+  .panel-head button {
+    width: 100% !important;
+    min-height: 50px !important;
+    justify-content: center !important;
+  }
+
+  /* leads-table → cards */
+  .leads-table {
+    display: block !important;
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .leads-table thead {
+    display: none !important;
+  }
+
+  .leads-table tbody {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0 !important;
+    width: 100% !important;
+  }
+
+  .leads-table tr {
+    display: flex !important;
+    flex-direction: column !important;
+    padding: 16px 0 !important;
+    border-bottom: 1px solid rgba(255,255,255,.08) !important;
+    gap: 6px !important;
+    width: 100% !important;
+  }
+
+  .leads-table td {
+    display: block !important;
+    padding: 0 !important;
+    border: none !important;
+    font-size: 13px !important;
+    width: 100% !important;
+  }
+
+  /* Nome do lead — destaque */
+  .leads-table td:nth-child(1) {
+    font-weight: 500 !important;
+    font-size: 14px !important;
+    color: #fff !important;
+  }
+
+  /* WhatsApp e objetivo: linha menor */
+  .leads-table td:nth-child(2),
+  .leads-table td:nth-child(3) {
+    font-size: 12px !important;
+    color: rgba(255,255,255,.55) !important;
+  }
+
+  /* Data: pequena e discreta */
+  .leads-table td:last-child {
+    font-size: 11px !important;
+    color: rgba(255,255,255,.35) !important;
+  }
+
+  /* Ações */
+  .lead-actions {
+    display: flex !important;
+    gap: 8px !important;
+    margin-top: 8px !important;
+  }
+
+  .lead-actions .btn,
+  .lead-actions a {
+    flex: 1 !important;
+    min-height: 40px !important;
+    justify-content: center !important;
+    font-size: 11px !important;
+  }
+
+  /* Paginação */
+  .pagination {
+    justify-content: flex-start !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+  }
+}
+
+/* ═══ TABLET (768px – 1023px) ══════════════════════════════════ */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .kpi-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  .leads-table {
+    display: table !important;
+    min-width: 0 !important;
+  }
+
+  .leads-table thead,
+  .leads-table tbody,
+  .leads-table tr,
+  .leads-table td {
+    display: revert !important;
+  }
+}

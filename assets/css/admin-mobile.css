@@ -366,3 +366,81 @@ body {
     min-height: 46px !important;
   }
 }
+
+
+/* ═══ PATCH GLOBAL admin-top + hero-actions (todas as páginas) ═ */
+@media (max-width: 767px) {
+  .admin-top {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 14px !important;
+    width: 100% !important;
+  }
+
+  .admin-title {
+    width: 100% !important;
+  }
+
+  .admin-title h1,
+  .admin-title .page-title {
+    font-size: clamp(1.6rem, 8vw, 2.4rem) !important;
+    line-height: 1.1 !important;
+    word-break: break-word !important;
+  }
+
+  .hero-actions {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+    width: 100% !important;
+  }
+
+  .hero-actions .btn,
+  .hero-actions a,
+  .hero-actions button {
+    width: 100% !important;
+    min-height: 50px !important;
+    justify-content: center !important;
+    box-sizing: border-box !important;
+  }
+
+  /* panel-head global */
+  .panel-head {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 14px !important;
+  }
+
+  .panel-head .btn,
+  .panel-head > a,
+  .panel-head > button {
+    width: 100% !important;
+    min-height: 50px !important;
+    justify-content: center !important;
+    text-align: center !important;
+  }
+
+  /* toolbar global */
+  .toolbar {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+    align-items: stretch !important;
+    width: 100% !important;
+  }
+
+  .toolbar .search-box,
+  .toolbar .filter-box {
+    width: 100% !important;
+    flex: none !important;
+  }
+
+  .toolbar input,
+  .toolbar select {
+    width: 100% !important;
+    font-size: 16px !important;
+    box-sizing: border-box !important;
+  }
+}
