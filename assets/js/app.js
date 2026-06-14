@@ -111,17 +111,6 @@ function toggleMenu() {
   document.body.style.overflow = isOpen ? 'hidden' : '';
   const btn = document.querySelector('.menu');
   if (btn) btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-  // Reinjetar idiomas ao abrir
-  if (isOpen && typeof HA_I18N !== 'undefined') {
-    const group = document.getElementById('mobileLangGroup');
-    if (group) {
-      const langs = ['pt','en','es','fr'];
-      const current = HA_I18N.getLang();
-      group.innerHTML = langs.map(l =>
-        `<button class="lang-btn ${l === current ? 'active' : ''}" onclick="HA_I18N.setLang('${l}')">${l.toUpperCase()}</button>`
-      ).join('');
-    }
-  }
 }
 
 function slide(id, dir) {
@@ -714,21 +703,4 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
-})();
-
-
-/* ─── Seletor de idiomas no menu mobile ────────────────────────── */
-(function () {
-  function injectMobileLang() {
-    const group = document.getElementById('mobileLangGroup');
-    if (!group || typeof HA_I18N === 'undefined') return;
-    const langs = ['pt', 'en', 'es', 'fr'];
-    const current = HA_I18N.getLang();
-    group.innerHTML = langs.map(l =>
-      `<button class="lang-btn ${l === current ? 'active' : ''}" onclick="HA_I18N.setLang('${l}')">${l.toUpperCase()}</button>`
-    ).join('');
-  }
-
-  document.addEventListener('DOMContentLoaded', injectMobileLang);
-  window.addEventListener('ha:langchange', injectMobileLang);
 })();

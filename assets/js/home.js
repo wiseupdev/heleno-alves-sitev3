@@ -10,10 +10,10 @@
   function applyHeroImage() {
     const hero = document.querySelector('.hero[data-hero-img]');
     if (!hero) return;
-    const img = hero.dataset.heroImg;
+    // Escolhe imagem conforme a largura (mobile vs desktop)
+    const isMobile = window.matchMedia('(max-width: 767px)').matches;
+    const img = (isMobile ? hero.dataset.heroImg : (hero.dataset.heroImgDesktop || hero.dataset.heroImg));
     if (!img) return;
-    // Resolve o caminho absoluto relativo ao index.html (raiz do site)
-    // e aplica o background diretamente no ::before via style no elemento pai
     const absolute = new URL(img, window.location.href).href;
     hero.style.setProperty('--hero-img', `url("${absolute}")`);
   }

@@ -20,18 +20,19 @@
   <link rel="canonical" href="https://helenoalves.com.br/balneario-camboriu.html">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Montserrat:wght@300;400;500&family=Tenor+Sans&display=swap" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Montserrat:wght@300;400;500&family=Tenor+Sans&display=swap"></noscript>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,400&family=Montserrat:wght@300;400;500&family=Tenor+Sans&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,400&family=Montserrat:wght@300;400;500&family=Tenor+Sans&display=swap"></noscript>
   <link rel="stylesheet" href="assets/css/styles.css">
   <link rel="stylesheet" href="assets/css/balneario-camboriu.css">
-  <link rel="stylesheet" href="assets/css/lead-popup.css">
+  <link rel="preload" href="assets/css/lead-popup.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="assets/css/lead-popup.css"></noscript>
 </head>
 <body data-page="bc">
   <div class="grain"></div>
   <header class="site-header">
     <a href="index.html" class="logo logo-img">
-      <img src="assets/images/logo/ICON (1).png" alt="Heleno Alves" class="logo-icon" width="36" height="44">
-      <div class="logo-text">
+      <img src="assets/images/logo/logo-icon.webp" alt="Heleno Alves" class="logo-icon" width="32" height="40">
+      <div class="logo-text brand-desktop">
         <strong>Heleno Alves</strong>
         <span>Corretor de Alto Luxo</span>
       </div>
@@ -52,7 +53,7 @@
     <div id="mobilePanel" class="mobile-panel" role="dialog" aria-modal="true" aria-label="Menu">
     <div class="mobile-panel-head">
       <a href="index.html" class="logo logo-img" onclick="toggleMenu()">
-        <img src="assets/images/logo/ICON (1).png" alt="Heleno Alves" class="logo-icon" width="28" height="34">
+        <img src="assets/images/logo/logo-icon.webp" alt="Heleno Alves" class="logo-icon" width="28" height="34">
         <div class="logo-text">
           <strong>Heleno Alves</strong>
           <span>Corretor de Alto Luxo</span>
@@ -60,7 +61,6 @@
       </a>
       <button onclick="toggleMenu()" aria-label="Fechar menu" style="background:none;border:none;color:rgba(255,255,255,.6);font-size:28px;width:44px;height:44px;cursor:pointer;">×</button>
     </div>
-    <div class="mobile-lang-group" id="mobileLangGroup"></div>
     <nav>
       <a onclick="toggleMenu()" href="balneario-camboriu.html"><span data-i18n="nav_balneario">Balneário</span> <span>→</span></a>
       <a onclick="toggleMenu()" href="praia-brava.html"><span data-i18n="nav_brava">Praia Brava</span> <span>→</span></a>
@@ -233,7 +233,7 @@
   <footer class="site-footer">
     <div class="footer-main">
       <div>
-        <a class="footer-brand" href="index.html"><img src="assets/images/logo/LOGO H - BRANCA (1).png" alt="Heleno Alves" class="footer-logo" width="220" height="60" loading="lazy"></a>
+        <a class="footer-brand" href="index.html"><img src="assets/images/logo/logo-horizontal.webp" alt="Heleno Alves" class="footer-logo" width="220" height="60" loading="lazy"></a>
         <p data-i18n="footer_desc">Curadoria imobiliária de alto luxo em Balneário Camboriú e Praia Brava.</p>
       </div>
       <div class="footer-col">
@@ -261,8 +261,8 @@
       <span data-i18n="footer_dev">Site desenvolvido para curadoria imobiliária premium.</span>
     </div>
   </footer>
-  <script src="assets/js/i18n.js"></script>
-  <script src="assets/js/features-i18n.js"></script>
+  <script defer src="assets/js/i18n.js"></script>
+  <script defer src="assets/js/features-i18n.js"></script>
   <script defer src="assets/js/api.js"></script>
   <script defer src="assets/js/app.js"></script>
   <script defer src="assets/js/balneario-camboriu.js"></script>

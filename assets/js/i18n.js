@@ -2239,6 +2239,19 @@ const HA_I18N = (function () {
   let currentLang = localStorage.getItem('ha_lang') || 'pt';
 
   /* ─── Busca cotação em tempo real ─────────────────────────────── */
+  function loadCachedRates() {
+    try {
+      const raw = localStorage.getItem('ha_rates');
+      if (!raw) return false;
+      const data = JSON.parse(raw);
+      // Cache válido por 24h
+      if (Date.now() - data.ts > 24 * 60 * 60 * 1000) return false;
+      if (data.USD) rates.USD = data.USD;
+      if (data.EUR) rates.EUR = data.EUR;
+      return true;
+    } catch (e) { return false; }
+  }
+
   async function fetchRates() {
     try {
       const res = await fetch('https://open.er-api.com/v6/latest/BRL');
@@ -2247,6 +2260,20 @@ const HA_I18N = (function () {
       if (data.rates) {
         rates.USD = data.rates.USD || rates.USD;
         rates.EUR = data.rates.EUR || rates.EUR;
+        // Salva no cache
+        try {
+          localStorage.setItem('ha_rates', JSON.stringify({
+            USD: rates.USD, EUR: rates.EUR, ts: Date.now()
+          }));
+        } catch (e) {}
+        // Re-traduz preços com a nova cotação
+        if (document.readyState !== 'loading') {
+          document.querySelectorAll('[data-price-brl]').forEach(el => {
+            const raw = el.dataset.priceBrl;
+            if (raw !== undefined) el.textContent = formatPrice(raw, currentLang);
+          });
+          window.dispatchEvent(new CustomEvent('ha:ratesupdated'));
+        }
       }
     } catch (e) {
       // usa fallback silenciosamente
@@ -2449,11 +2476,15 @@ const HA_I18N = (function () {
   }
 
   /* ─── Init ─────────────────────────────────────────────────────── */
-  async function init() {
-    await fetchRates();
+  function init() {
+    // Carrega cotação do cache imediatamente (sem rede)
+    loadCachedRates();
+    // Aplica traduções na hora — não espera a rede
     injectSelector();
     applyTranslations(currentLang);
     observeDynamic();
+    // Busca cotação atualizada em segundo plano (não bloqueia render)
+    fetchRates();
   }
 
   /* ─── API pública ──────────────────────────────────────────────── */

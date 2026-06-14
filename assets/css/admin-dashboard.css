@@ -348,16 +348,27 @@ body {
 
 @media (max-width: 720px) {
   .admin-main {
-    padding: 28px 18px 60px;
+    padding: 20px 14px 50px;
   }
 
-  .admin-nav,
+  /* KPIs em 2 colunas — cards menores e melhor aproveitamento */
   .kpi-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px;
+  }
+
+  .kpi-card,
+  .stat-card {
+    padding: 16px 14px !important;
+  }
+
+  .kpi-card b,
+  .stat-card b {
+    font-size: 26px !important;
   }
 
   .panel {
-    padding: 20px;
+    padding: 18px 16px;
   }
 
   .clean-table {

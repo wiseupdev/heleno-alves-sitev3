@@ -115,19 +115,134 @@
   .admin-sidebar {
     position: static;
     height: auto;
+    padding: 18px 16px;
+    flex-direction: column;
   }
 
+  .admin-logo {
+    margin-bottom: 16px;
+  }
+
+  .admin-logo strong {
+    font-size: 19px;
+  }
+
+  /* Nav horizontal compacto em tablet */
   .admin-nav {
-    grid-template-columns: repeat(3, 1fr);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .admin-nav a {
+    flex: 1 1 auto;
+    min-width: 100px;
+    text-align: center;
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+
+  .sidebar-footer {
+    margin-top: 14px;
+    padding-top: 14px;
+    font-size: 11px;
   }
 }
 
-@media (max-width: 720px) {
-  .admin-main {
-    padding: 28px 18px 60px;
+/* ─── ADMIN MOBILE REAL (≤767px) ────────────────────────────────── */
+@media (max-width: 767px) {
+  .admin-page {
+    display: block;
   }
 
+  .admin-sidebar {
+    padding: 14px 14px 10px;
+    border-right: none;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+  }
+
+  .admin-logo {
+    margin-bottom: 12px;
+    text-align: center;
+  }
+
+  .admin-logo strong {
+    font-size: 17px;
+    letter-spacing: .14em;
+  }
+
+  .admin-logo span {
+    font-size: 7px;
+  }
+
+  /* Nav em chips horizontais com scroll */
   .admin-nav {
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 6px;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .admin-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .admin-nav a {
+    flex: 0 0 auto;
+    min-width: auto;
+    white-space: nowrap;
+    padding: 9px 14px;
+    font-size: 12px;
+  }
+
+  .sidebar-footer {
+    display: none; /* esconde "última atualização" no mobile para poupar espaço */
+  }
+
+  .admin-main {
+    width: 100%;
+    max-width: 100%;
+    padding: 20px 14px 50px;
+    margin: 0;
+  }
+
+  /* Inputs/selects/textareas 100% */
+  .admin-main input,
+  .admin-main select,
+  .admin-main textarea {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Botões de ação empilhados */
+  .admin-actions,
+  .form-actions,
+  .admin-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .admin-actions .btn,
+  .form-actions .btn,
+  .admin-buttons .btn {
+    width: 100%;
+    min-height: 46px;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 360px) {
+  .admin-main {
+    padding: 16px 12px 40px;
+  }
+  .admin-nav a {
+    padding: 8px 12px;
+    font-size: 11px;
   }
 }

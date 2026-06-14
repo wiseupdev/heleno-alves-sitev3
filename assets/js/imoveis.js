@@ -414,7 +414,7 @@
   function buildCard(item) {
     return `<article class="property-card">
       <div class="property-image">
-        <img loading="lazy" src="${esc(getImage(item))}" alt="${esc(item.title)}" width="600" height="400">
+        <img loading="lazy" decoding="async" src="${esc(getImage(item))}" alt="${esc(item.title)}" width="600" height="400">
         <span class="property-tag">${esc(tFeat(item.tag) || 'Destaque')}</span>
         <button class="favorite-btn ${isFav(item) ? 'active' : ''}" type="button"
           data-action="favorite" data-id="${item.id}" aria-label="Favoritar">
