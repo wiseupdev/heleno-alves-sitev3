@@ -83,12 +83,12 @@
         <strong>Heleno Alves</strong>
         <span>Painel Admin</span>
       </a>
-      <button class="adm-toggle" aria-label="Abrir menu" aria-expanded="false">
-        <svg viewBox="0 0 24 24" width="22" height="22" fill="none"
-             stroke="currentColor" stroke-width="2" stroke-linecap="round">
-          <line x1="3" y1="6" x2="21" y2="6"/>
+      <button class="adm-toggle" aria-label="Abrir menu admin" aria-expanded="false">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none"
+             stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+          <line x1="3" y1="7" x2="21" y2="7"/>
           <line x1="3" y1="12" x2="21" y2="12"/>
-          <line x1="3" y1="18" x2="21" y2="18"/>
+          <line x1="3" y1="17" x2="21" y2="17"/>
         </svg>
       </button>`;
 
@@ -155,9 +155,10 @@
     drawer.querySelector('.adm-close').addEventListener('click', close);
   }
 
-  // ── Init apenas no mobile/tablet ─────────────────────────────────
+  // ── Init: sempre cria o header/drawer; o CSS controla a exibição ──
+  // (header só aparece ≤1023px via media query). Isso garante que
+  // redimensionar a janela ou simular mobile no DevTools funcione.
   function init() {
-    if (window.innerWidth > 1023) return;
     initDrawer();
   }
 
