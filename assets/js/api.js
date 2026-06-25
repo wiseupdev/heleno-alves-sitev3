@@ -8,10 +8,9 @@ const HA_API = (function () {
   const WEBHOOK_URL = 'https://webhook.wiseuptech.com.br/webhook/apipaginationha';
   const TENANT_ID   = '1911202511';
   const PAGE_SIZE   = 20;
-  // v4: bump de versão — dedupe em 2 camadas (id + título/região/preço),
-  // pois o id sozinho pode não ser suficiente se o webhook gerar ids
-  // distintos para a mesma propriedade (ex.: JOIN duplicando linhas).
-  const CACHE_KEY   = 'ha_props_v4';
+  // v6: detecção de páginas idênticas (paginação quebrada no n8n) +
+  // resumo por cidade + tratamento de erro isolado por página.
+  const CACHE_KEY   = 'ha_props_v6';
   const CACHE_TTL   = 15 * 60 * 1000; // 15 min
 
   /* ─── Slugify ─────────────────────────────────────────────────── */
@@ -106,17 +105,17 @@ const HA_API = (function () {
     catch { /* ignora quota exceeded */ }
   }
 
-  /* ─── Deduplicação ────────────────────────────────────────────────
-   * Protege contra imóveis repetidos vindos do webhook N8n.
+  /* ─── Agrupamento por identidade real ──────────────────────────────
+   * Se a query do n8n faz JOIN com imagens/amenities sem agregação
+   * (sem GROUP BY / array_agg), o MESMO imóvel pode chegar em várias
+   * "linhas" — uma por imagem ou característica associada — cada
+   * linha com o id da linha do JOIN, não necessariamente o id real
+   * da propriedade.
    *
-   * Roda em DUAS camadas, pois o "id" por si só pode não bastar:
-   *   1) por id/slug — pega repetição exata (mesma linha vindo 2x);
-   *   2) por título+região+preço — pega o caso em que o backend
-   *      retorna o MESMO imóvel com ids DIFERENTES (ex.: se a query
-   *      do n8n faz JOIN com imagens/amenities sem agregação, cada
-   *      imóvel pode vir 1x por imagem, e se o id usado na resposta
-   *      for o da linha do JOIN — não o id real da propriedade — a
-   *      camada 1 não detecta, mas a camada 2 detecta).
+   * Em vez de simplesmente descartar essas linhas (o que perderia
+   * fotos/características reais que vieram em linhas diferentes),
+   * AGRUPAMOS por identidade e MESCLAMOS galeria/features de todas
+   * as linhas do mesmo grupo.
    * ──────────────────────────────────────────────────────────────── */
   function normalizeKey(value) {
     return String(value || '')
@@ -139,32 +138,53 @@ const HA_API = (function () {
   }
 
   function dedupeProperties(list, context = 'global') {
-    const seenIds      = new Set();
-    const seenContents = new Set();
-    const unique = [];
+    // Mapa por chave de CONTEÚDO (título+região+preço) — é o que
+    // realmente identifica "é o mesmo imóvel", já que o id da linha
+    // do JOIN pode variar entre repetições do mesmo imóvel.
+    const groups = new Map();
+    const order  = []; // mantém a ordem de primeira aparição
 
     list.forEach((property) => {
-      const idKey      = keyById(property);
-      const contentKey = keyByContent(property);
-
-      const dupById      = idKey && seenIds.has(idKey);
-      const dupByContent = contentKey && seenContents.has(contentKey);
-
-      if (dupById || dupByContent) {
-        console.warn(
-          `[HA_API] (${context}) Imóvel duplicado removido — ` +
-          `id="${idKey}" conteúdo="${contentKey}" — "${property.title}"` +
-          (dupByContent && !dupById ? ' [detectado pela 2ª camada: id distinto, mesmo conteúdo]' : '')
-        );
+      const contentKey = keyByContent(property) || keyById(property);
+      if (!contentKey) {
+        // Sem nenhuma chave possível — mantém como item isolado
+        order.push(property);
         return;
       }
 
-      if (idKey)      seenIds.add(idKey);
-      if (contentKey) seenContents.add(contentKey);
-      unique.push(property);
+      if (!groups.has(contentKey)) {
+        groups.set(contentKey, {
+          ...property,
+          gallery:  Array.isArray(property.gallery)  ? [...property.gallery]  : [],
+          features: Array.isArray(property.features) ? [...property.features] : [],
+        });
+        order.push(contentKey);
+      } else {
+        // Já existe — é uma linha duplicada do mesmo imóvel.
+        // Mescla galeria e features em vez de simplesmente descartar.
+        const existing = groups.get(contentKey);
+        console.warn(`[HA_API] (${context}) Linha duplicada mesclada — "${property.title}" (chave: ${contentKey})`);
+
+        if (Array.isArray(property.gallery)) {
+          property.gallery.forEach((url) => {
+            if (url && !existing.gallery.includes(url)) existing.gallery.push(url);
+          });
+        }
+        if (property.cover && !existing.cover) existing.cover = property.cover;
+
+        if (Array.isArray(property.features)) {
+          property.features.forEach((f) => {
+            if (f && !existing.features.includes(f)) existing.features.push(f);
+          });
+        }
+      }
     });
 
-    console.log(`[HA_API] (${context}) ${list.length} recebidos → ${unique.length} únicos`);
+    const unique = order.map((entry) =>
+      typeof entry === 'string' ? groups.get(entry) : entry
+    );
+
+    console.log(`[HA_API] (${context}) ${list.length} recebidos → ${unique.length} únicos (agrupados)`);
     return unique;
   }
 
@@ -184,6 +204,16 @@ const HA_API = (function () {
     if (!res.ok) throw new Error(`API ${res.status}`);
     const data    = await res.json();
     const wrapper = Array.isArray(data) ? data[0] : data;
+
+    // Diagnóstico de paginação — log obrigatório pedido na auditoria
+    console.log('[PAGINATION] response:', {
+      pageRequested: page,
+      total:    wrapper.propertyAmount,
+      itemsLength: Array.isArray(wrapper.listProperty) ? wrapper.listProperty.length : 0,
+      firstId:  wrapper.listProperty?.[0]?.id,
+      lastId:   wrapper.listProperty?.[wrapper.listProperty.length - 1]?.id,
+    });
+
     return {
       total: wrapper.propertyAmount || 0,
       list:  wrapper.listProperty   || [],
@@ -196,15 +226,56 @@ const HA_API = (function () {
     let all = [...first.list];
     const total = first.total;
 
+    // Assinatura da página 1 (ids), usada abaixo para provar se o
+    // backend está de fato avançando a paginação ou sempre devolvendo
+    // o mesmo conteúdo independente do número de página pedido.
+    const firstPageIds = first.list.map(p => p.id).join(',');
+    let identicalPageCount = 0;
+
     if (total > PAGE_SIZE) {
       const totalPages = Math.ceil(total / PAGE_SIZE);
       const pages = Array.from({ length: totalPages - 1 }, (_, i) => i + 2);
       // Lotes de 5 para não sobrecarregar
       for (let i = 0; i < pages.length; i += 5) {
-        const batch   = pages.slice(i, i + 5);
-        const results = await Promise.all(batch.map(p => fetchPage(p)));
-        results.forEach(r => { all = all.concat(r.list); });
+        const batch = pages.slice(i, i + 5);
+
+        // Cada página é buscada com seu próprio try/catch — uma falha
+        // isolada não pode mais derrubar as páginas restantes.
+        const results = await Promise.all(
+          batch.map(async (p) => {
+            try {
+              return await fetchPage(p);
+            } catch (err) {
+              console.error(`[HA_API] Falha ao buscar página ${p}:`, err.message);
+              return { total: 0, list: [] };
+            }
+          })
+        );
+
+        results.forEach((r, idx) => {
+          const pageNum   = batch[idx];
+          const theseIds  = r.list.map(p => p.id).join(',');
+          if (theseIds && theseIds === firstPageIds) {
+            identicalPageCount++;
+            console.warn(
+              `[PAGINATION] ⚠ Página ${pageNum} retornou EXATAMENTE os mesmos ids da página 1. ` +
+              'Isso indica que o webhook/n8n está IGNORANDO o parâmetro de página e sempre ' +
+              'devolvendo o mesmo conteúdo — causa raiz provável da duplicação E da incompletude ' +
+              '(os imóveis "reais" dessas páginas nunca chegam a ser buscados).'
+            );
+          }
+          all = all.concat(r.list);
+        });
       }
+    }
+
+    if (identicalPageCount > 0) {
+      console.error(
+        `[PAGINATION] CONFIRMADO: ${identicalPageCount} de ${Math.ceil(total / PAGE_SIZE) - 1} ` +
+        'páginas adicionais retornaram conteúdo idêntico à página 1. ' +
+        'A paginação do webhook N8n precisa ser corrigida (verificar nome do parâmetro de página ' +
+        'esperado pelo workflow — possivelmente sem o acento em "página").'
+      );
     }
 
     return all;
@@ -212,6 +283,17 @@ const HA_API = (function () {
 
   /* ─── Proteção contra chamadas concorrentes ────────────────────── */
   let _fetchInFlight = null;
+
+  /* ─── Resumo por cidade — log obrigatório de auditoria ──────────── */
+  function summarizeByCity(properties, context) {
+    const summary = properties.reduce((acc, p) => {
+      const city = String(p.region || p.property_city || '').trim() || '(sem cidade)';
+      acc[city] = (acc[city] || 0) + 1;
+      return acc;
+    }, {});
+    console.log(`[${context}] resumo por cidade:`, summary);
+    return summary;
+  }
 
   /* ─── API principal ───────────────────────────────────────────── */
   async function fetchProperties() {
@@ -226,37 +308,27 @@ const HA_API = (function () {
       const raw        = await fetchAll();
       const normalized = raw.map(normalize);
 
-      // ── Diagnóstico: estado ANTES da deduplicação ──────────────────
-      console.log('[HA_API] Total recebido da API (bruto):', normalized.length);
+      // ── [API RAW] Diagnóstico ANTES do agrupamento ──────────────────
+      console.log('[API RAW] total bruto:', normalized.length);
+      summarizeByCity(normalized, 'API RAW');
 
-      const brava = normalized.filter((p) =>
-        String(p.region || '').toLowerCase().includes('praia brava')
-      );
-      console.log('[HA_API] Praia Brava recebido (bruto):', brava.length);
-      console.table(brava.map((p) => ({ id: p.id, title: p.title, price: p.price })));
+      // ── Agrupamento (mescla linhas duplicadas por JOIN sem perder
+      //    galeria/features) ──────────────────────────────────────────
+      const grouped = dedupeProperties(normalized, 'after-fetch');
 
-      const raro = brava.filter((p) => String(p.title || '').toLowerCase().includes('raro'));
-      console.log('[HA_API] "Raro" recebido (bruto), antes do dedupe:', raro.length);
-      if (raro.length > 1) {
-        console.warn('[HA_API] "Raro" já chega duplicado do webhook/n8n — ver tabela:', raro);
-      }
+      console.log('[API DEDUPE] total único:', grouped.length);
+      summarizeByCity(grouped, 'API DEDUPE');
 
-      // ── Deduplicação em 2 camadas ───────────────────────────────────
-      const deduped = dedupeProperties(normalized, 'after-fetch');
-
-      const raroAfter = deduped.filter((p) => String(p.title || '').toLowerCase().includes('raro'));
-      console.log('[HA_API] "Raro" após dedupe:', raroAfter.length, '(esperado: 1)');
-
-      if (deduped.length !== normalized.length) {
+      if (grouped.length !== normalized.length) {
         console.warn(
-          `[HA_API] ${normalized.length - deduped.length} imóvel(is) duplicado(s) removido(s) ` +
-          'no front. Isso confirma que o webhook/n8n está retornando registros repetidos — ' +
-          'recomenda-se revisar a query/paginação do lado do n8n também.'
+          `[HA_API] ${normalized.length - grouped.length} linha(s) duplicada(s) mesclada(s) ` +
+          'no front. Isso confirma que o webhook/n8n retorna registros repetidos — provavelmente ' +
+          'um JOIN sem agregação (ver seção de correção SQL sugerida: DISTINCT ON ou GROUP BY + array_agg).'
         );
       }
 
-      setCache(deduped);
-      return deduped;
+      setCache(grouped);
+      return grouped;
     })();
 
     try {
@@ -266,6 +338,15 @@ const HA_API = (function () {
     }
   }
 
-  return { fetchProperties, normalize, dedupeProperties, TENANT_ID, WEBHOOK_URL };
+  return {
+    fetchProperties,
+    normalize,
+    dedupeProperties,
+    // Alias com o nome usado na auditoria — mesma função
+    groupPropertiesByRealEstate: dedupeProperties,
+    summarizeByCity,
+    TENANT_ID,
+    WEBHOOK_URL,
+  };
 
 })();

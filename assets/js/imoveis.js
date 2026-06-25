@@ -316,12 +316,16 @@
     try {
       const data = await HA_API.fetchProperties();
       const normalized = normalizeList(data);
-      // Blindagem redundante: mesmo que api.js já tenha deduplicado,
+      // Blindagem redundante: mesmo que api.js já tenha agrupado,
       // roda de novo aqui (custo desprezível) para garantir que nenhuma
       // etapa futura reintroduza duplicados antes do filtro/render.
       properties = (typeof HA_API.dedupeProperties === 'function')
         ? HA_API.dedupeProperties(normalized, 'imoveis.js:before-filter')
         : normalized;
+
+      if (typeof HA_API.summarizeByCity === 'function') {
+        HA_API.summarizeByCity(properties, 'IMOVEIS.JS — após load');
+      }
     } catch (err) {
       console.error('[HA] imoveis.js — falha na API:', err);
       properties = [];
@@ -369,9 +373,16 @@
     updateLabel();
 
     // Filtro síncrono direto — os campos pré-computados são simples o suficiente
-    filteredProperties = properties.filter(item =>
+    const matched = properties.filter(item =>
       itemMatches(item, search, regionNorm, type, maxP, suites, parking)
     );
+
+    // Blindagem: o contador e a paginação usam filteredProperties.length,
+    // então a dedupe TEM que acontecer aqui — não basta ter sido feita
+    // só no fetch, se algo entre o fetch e o filtro reintroduzir linhas.
+    filteredProperties = (typeof HA_API !== 'undefined' && typeof HA_API.dedupeProperties === 'function')
+      ? HA_API.dedupeProperties(matched, 'imoveis.js:after-filter')
+      : matched;
 
     applySort();
     currentPage = 1;
@@ -471,7 +482,17 @@
 
     const items = filteredProperties.slice((currentPage - 1) * perPage, currentPage * perPage);
 
-    if (!items.length) {
+    // ── [RENDER FINAL] — última blindagem, exatamente no ponto que escreve no DOM
+    console.log('[RENDER FINAL] quantidade recebida (página atual):', items.length);
+    console.table(items.map(p => ({
+      id: p.id, title: p.title, region: p.region, price: p.price,
+    })));
+    const finalUnique = (typeof HA_API !== 'undefined' && typeof HA_API.dedupeProperties === 'function')
+      ? HA_API.dedupeProperties(items, 'RENDER FINAL')
+      : items;
+    console.log('[RENDER FINAL] quantidade após dedupe:', finalUnique.length);
+
+    if (!finalUnique.length) {
       grid.innerHTML = '';
       if (empty) empty.style.display = 'block';
       return;
@@ -484,7 +505,7 @@
 
     // Render no próximo frame — não bloqueia o clique
     requestAnimationFrame(() => {
-      grid.innerHTML = items.map(buildCard).join('');
+      grid.innerHTML = finalUnique.map(buildCard).join('');
       grid.style.opacity = '1';
     });
   }
@@ -579,14 +600,30 @@
   document.addEventListener('DOMContentLoaded', init);
 
   // ── Helper de validação manual (rodar no console após carregar) ──
-  // window.haCheckDuplicates() mostra quantos cards de "Praia Brava"
-  // e quantos cards de "Raro" estão de fato renderizados na tela.
-  window.haCheckDuplicates = function () {
+  // window.haCheckDuplicates(term) mostra quantos cards de "Praia Brava"
+  // e quantos cards de um termo específico (ex: "raro", "brava view",
+  // "garden") estão de fato renderizados na tela, mais um resumo por
+  // cidade dos cards atualmente visíveis no DOM.
+  window.haCheckDuplicates = function (term) {
+    const containers = {
+      propertyGrid:   document.querySelectorAll('#propertyGrid').length,
+      propertiesGrid: document.querySelectorAll('#propertiesGrid').length,
+      imoveisGrid:    document.querySelectorAll('#imoveisGrid').length,
+      cardsTotal:     document.querySelectorAll('.property-card').length,
+    };
+    console.log('[DOM] containers encontrados:', containers);
+
     const cards = Array.from(document.querySelectorAll('.property-card'));
     const brava = cards.filter(c => c.textContent.toLowerCase().includes('praia brava'));
-    const raro  = cards.filter(c => c.textContent.toLowerCase().includes('raro'));
-    console.log('Cards Praia Brava renderizados:', brava.length);
-    console.log('Cards "Raro" renderizados:', raro.length, '(esperado: 1)');
-    return { totalCards: cards.length, bravaCards: brava.length, raroCards: raro.length };
+    const bc    = cards.filter(c => c.textContent.toLowerCase().includes('balneário cambori') || c.textContent.toLowerCase().includes('balneario cambori'));
+    console.log('Cards Praia Brava renderizados:', brava.length, '(esperado: 8 se filtro = Praia Brava)');
+    console.log('Cards Balneário Camboriú renderizados:', bc.length);
+
+    if (term) {
+      const filtered = cards.filter(c => c.textContent.toLowerCase().includes(term.toLowerCase()));
+      console.log(`Cards "${term}" renderizados:`, filtered.length, '(esperado: 1)');
+      return { ...containers, bravaCards: brava.length, bcCards: bc.length, termCards: filtered.length };
+    }
+    return { ...containers, bravaCards: brava.length, bcCards: bc.length };
   };
 })();
