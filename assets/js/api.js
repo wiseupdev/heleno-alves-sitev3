@@ -8,9 +8,9 @@ const HA_API = (function () {
   const WEBHOOK_URL = 'https://webhook.wiseuptech.com.br/webhook/apipaginationha';
   const TENANT_ID   = '1911202511';
   const PAGE_SIZE   = 20;
-  // v6: detecção de páginas idênticas (paginação quebrada no n8n) +
-  // resumo por cidade + tratamento de erro isolado por página.
-  const CACHE_KEY   = 'ha_props_v6';
+  // v7: contrato de requisição trocado para inglês (event_name/page/
+  // limit/offset/filters) — o webhook responde melhor a esse formato.
+  const CACHE_KEY   = 'ha_props_v7';
   const CACHE_TTL   = 15 * 60 * 1000; // 15 min
 
   /* ─── Slugify ─────────────────────────────────────────────────── */
@@ -190,17 +190,28 @@ const HA_API = (function () {
 
   /* ─── Fetch uma página ────────────────────────────────────────── */
   async function fetchPage(page) {
+    const offset = (page - 1) * PAGE_SIZE;
+
+    const payload = {
+      event_name: 'get_client_property',
+      tenant_id:  TENANT_ID,
+      page,
+      limit:      PAGE_SIZE,
+      offset,
+      filters: {
+        min_price: 0,
+        max_price: 999999999,
+      },
+    };
+
+    console.log('[PAGINATION] request:', payload);
+
     const res = await fetch(WEBHOOK_URL, {
       method:  'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        nome_do_evento: 'obter_propriedade_do_cliente',
-        tenant_id:      TENANT_ID,
-        página:         page,
-        limite:         PAGE_SIZE,
-        filtros: { preço_mínimo: 0, preço_máximo: 999999999 },
-      }),
+      body: JSON.stringify(payload),
     });
+
     if (!res.ok) throw new Error(`API ${res.status}`);
     const data    = await res.json();
     const wrapper = Array.isArray(data) ? data[0] : data;
@@ -349,4 +360,4 @@ const HA_API = (function () {
     WEBHOOK_URL,
   };
 
-})();
+})(); 
