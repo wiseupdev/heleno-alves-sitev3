@@ -1,0 +1,31 @@
+# Heleno Alves — Curadoria imobiliária de alto padrão
+
+Site oficial de curadoria imobiliária premium em Balneário Camboriú e Praia Brava.
+
+## Sobre
+
+Heleno Alves apresenta imóveis selecionados de alto padrão, com foco em curadoria privada, localização, liquidez, exclusividade e atendimento consultivo.
+
+## Páginas principais
+
+- Home: https://helenoalves.com.br/
+- Imóveis: https://helenoalves.com.br/imoveis.html
+- Balneário Camboriú: https://helenoalves.com.br/balneario-camboriu.html
+- Praia Brava: https://helenoalves.com.br/praia-brava.html
+- Sobre: https://helenoalves.com.br/sobre.html
+- Contato: https://helenoalves.com.br/contato.html
+- Política de privacidade: https://helenoalves.com.br/politica-privacidade.html
+- Termos de uso: https://helenoalves.com.br/termos-uso.html
+
+## Conteúdo disponível
+
+- Portfólio de imóveis de alto padrão
+- Filtros por região, tipo, valor, suítes e vagas
+- Páginas de detalhes dos imóveis
+- Características e diferenciais dos imóveis
+- Atendimento via WhatsApp
+- Curadoria privada
+
+## Contato
+
+WhatsApp: https://wa.me/5585988085349

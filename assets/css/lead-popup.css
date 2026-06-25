@@ -147,3 +147,16 @@
     padding: 28px 20px;
   }
 }
+/* ─── Acessibilidade: foco visível ──────────────────────────────── */
+.lead-popup-input:focus-visible {
+  outline: none;
+  border-color: var(--gold-mid);
+  box-shadow: 0 0 0 2px rgba(233, 197, 103, .35);
+}
+
+.lead-popup-close:focus-visible,
+.lead-popup-skip:focus-visible,
+.lead-popup-submit:focus-visible {
+  outline: 2px solid var(--gold-mid);
+  outline-offset: 2px;
+}

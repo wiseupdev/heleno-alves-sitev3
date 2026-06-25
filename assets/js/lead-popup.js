@@ -84,29 +84,34 @@
     const overlay = document.createElement('div');
     overlay.id = 'leadPopupOverlay';
     overlay.innerHTML = `
-      <div class="lead-popup" role="dialog" aria-modal="true" aria-label="${l.title}">
+      <div class="lead-popup" role="dialog" aria-modal="true" aria-labelledby="leadPopupTitle">
         <button class="lead-popup-close" id="leadPopupClose" aria-label="${l.skip}">×</button>
         <div class="lead-popup-eyebrow">Heleno Alves</div>
-        <h2 class="lead-popup-title">${l.title}</h2>
+        <h2 class="lead-popup-title" id="leadPopupTitle">${l.title}</h2>
         <p class="lead-popup-sub">${l.sub}</p>
         <form class="lead-popup-form" id="leadPopupForm" novalidate>
+          <label class="sr-only" for="lpName">${l.name}</label>
           <input
             type="text"
             id="lpName"
+            name="name"
             class="lead-popup-input"
             placeholder="${l.name}"
             autocomplete="name"
             required
           >
+          <label class="sr-only" for="lpPhone">${l.phone}</label>
           <input
             type="tel"
             id="lpPhone"
+            name="phone"
             class="lead-popup-input"
             placeholder="${l.phone} (+55)"
             autocomplete="tel"
             required
           >
-          <select id="lpGoal" class="lead-popup-input">
+          <label class="sr-only" for="lpGoal">${l.goal}</label>
+          <select id="lpGoal" name="goal" class="lead-popup-input" aria-label="${l.goal}">
             <option value="">${l.goal}</option>
             <option value="moradia">${l.opt1}</option>
             <option value="investimento">${l.opt2}</option>
@@ -126,8 +131,15 @@
     // Fechar
     const close = () => {
       overlay.classList.remove('is-open');
+      document.removeEventListener('keydown', onKeydown);
       setTimeout(() => overlay.remove(), 400);
     };
+
+    // ESC fecha o popup
+    function onKeydown(e) {
+      if (e.key === 'Escape') close();
+    }
+    document.addEventListener('keydown', onKeydown);
 
     document.getElementById('leadPopupClose').addEventListener('click', close);
     document.getElementById('leadPopupSkip').addEventListener('click', close);
