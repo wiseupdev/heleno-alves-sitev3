@@ -292,7 +292,7 @@
 
     container.innerHTML = images.slice(0, 5).map((image, index) => `
       <div class="gallery-item gallery-clickable" data-gallery-idx="${index}">
-        <img loading="lazy" src="${image}" alt="${escapeText(item.title || 'Imóvel')} ${index + 1}">
+        <img loading="lazy" decoding="async" width="320" height="220" src="${image}" alt="${escapeText(item.title || 'Imóvel')} ${index + 1}">
       </div>
     `).join('');
 
@@ -664,7 +664,7 @@
       return `
         <article class="similar-card">
           <div class="similar-img">
-            <img loading="lazy" src="${getImage(property)}" alt="${escapeText(property.title)}">
+            <img loading="lazy" decoding="async" width="320" height="220" src="${getImage(property)}" alt="${escapeText(property.title)}">
           </div>
 
           <div class="similar-body">
@@ -748,4 +748,4 @@ window.addEventListener('ha:langchange', function () {
     if (typeof renderTechnicalSheet === 'function') renderTechnicalSheet(currentProperty);
     if (typeof renderDifferentials === 'function') renderDifferentials(currentProperty);
   }
-}); 
+});

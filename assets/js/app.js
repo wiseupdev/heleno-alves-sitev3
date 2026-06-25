@@ -211,7 +211,7 @@ function card(p, root = '') {
 
       ${hasValue(cover) ? `
         <div class="property-img">
-          <img src="${cover}" alt="${p.title || 'Imóvel'}" loading="lazy">
+          <img src="${cover}" alt="${p.title || 'Imóvel'}" loading="lazy" decoding="async" width="600" height="400">
 
           ${hasValue(p.tag) ? `<span class="tag">${p.tag}</span>` : ''}
           ${hasValue(p.region) ? `<span class="region-badge">${p.region}</span>` : ''}
@@ -318,14 +318,23 @@ async function initHome() {
   const bcProps    = props.filter(p => p.regionSlug === 'balneario-camboriu');
   const bravaProps = props.filter(p => p.regionSlug === 'praia-brava');
 
-  renderCarousel('bcCarousel',    bcProps);
-  renderCarousel('bravaCarousel', bravaProps);
-  renderMapList(props);
+  // Performance: a home é vitrine, não listagem completa.
+  // Mostrar no máximo 8 imóveis por região aqui; o catálogo completo
+  // fica em /imoveis.html. Isso evita centenas de cards no DOM inicial.
+  const FEATURED_LIMIT = 8;
+  const bcFeatured    = bcProps.slice(0, FEATURED_LIMIT);
+  const bravaFeatured = bravaProps.slice(0, FEATURED_LIMIT);
+
+  renderCarousel('bcCarousel',    bcFeatured);
+  renderCarousel('bravaCarousel', bravaFeatured);
+  // Mapa: mesmo recorte do destaque, para não gerar centenas de pins/itens
+  renderMapList([...bcFeatured, ...bravaFeatured]);
 
   // Alimenta os region cards com fotos reais dos imóveis do banco
   applyRegionCardImages(bcProps,    'bc');
   applyRegionCardImages(bravaProps, 'brava');
 
+  // Métricas usam o total real (não o recorte de destaque)
   if ($('metricProperties')) {
     $('metricProperties').textContent = String(props.length).padStart(2, '0');
   }

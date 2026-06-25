@@ -177,7 +177,7 @@
     grid.innerHTML = pageItems.map((item) => `
       <article class="favorite-card">
         <div class="favorite-image">
-          <img src="${getImage(item)}" alt="${escapeText(item.title)}">
+          <img loading="lazy" decoding="async" width="320" height="220" src="${getImage(item)}" alt="${escapeText(item.title)}">
           <span class="favorite-tag">${escapeText(item.tag || item.status || 'Favorito')}</span>
         </div>
 

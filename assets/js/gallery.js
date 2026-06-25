@@ -60,7 +60,7 @@ const HA_GALLERY = (function () {
     const wrap = overlay.querySelector('#haGalThumbs');
     wrap.innerHTML = images.map((src, i) =>
       `<button class="ha-gallery-thumb ${i === current ? 'active' : ''}" data-idx="${i}" aria-label="Foto ${i+1}">
-        <img loading="lazy" src="${src}" alt="" />
+        <img loading="lazy" decoding="async" width="64" height="48" src="${src}" alt="" />
       </button>`
     ).join('');
     wrap.querySelectorAll('.ha-gallery-thumb').forEach(btn => {
