@@ -315,7 +315,13 @@
     showSkeleton();
     try {
       const data = await HA_API.fetchProperties();
-      properties = normalizeList(data);
+      const normalized = normalizeList(data);
+      // Blindagem redundante: mesmo que api.js já tenha deduplicado,
+      // roda de novo aqui (custo desprezível) para garantir que nenhuma
+      // etapa futura reintroduza duplicados antes do filtro/render.
+      properties = (typeof HA_API.dedupeProperties === 'function')
+        ? HA_API.dedupeProperties(normalized, 'imoveis.js:before-filter')
+        : normalized;
     } catch (err) {
       console.error('[HA] imoveis.js — falha na API:', err);
       properties = [];
@@ -571,4 +577,16 @@
   }
 
   document.addEventListener('DOMContentLoaded', init);
+
+  // ── Helper de validação manual (rodar no console após carregar) ──
+  // window.haCheckDuplicates() mostra quantos cards de "Praia Brava"
+  // e quantos cards de "Raro" estão de fato renderizados na tela.
+  window.haCheckDuplicates = function () {
+    const cards = Array.from(document.querySelectorAll('.property-card'));
+    const brava = cards.filter(c => c.textContent.toLowerCase().includes('praia brava'));
+    const raro  = cards.filter(c => c.textContent.toLowerCase().includes('raro'));
+    console.log('Cards Praia Brava renderizados:', brava.length);
+    console.log('Cards "Raro" renderizados:', raro.length, '(esperado: 1)');
+    return { totalCards: cards.length, bravaCards: brava.length, raroCards: raro.length };
+  };
 })();

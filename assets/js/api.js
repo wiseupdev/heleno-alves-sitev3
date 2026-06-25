@@ -8,9 +8,10 @@ const HA_API = (function () {
   const WEBHOOK_URL = 'https://webhook.wiseuptech.com.br/webhook/apipaginationha';
   const TENANT_ID   = '1911202511';
   const PAGE_SIZE   = 20;
-  // v3: bump de versão para invalidar caches antigos que possam conter
-  // imóveis duplicados (ver dedupeProperties abaixo)
-  const CACHE_KEY   = 'ha_props_v3';
+  // v4: bump de versão — dedupe em 2 camadas (id + título/região/preço),
+  // pois o id sozinho pode não ser suficiente se o webhook gerar ids
+  // distintos para a mesma propriedade (ex.: JOIN duplicando linhas).
+  const CACHE_KEY   = 'ha_props_v4';
   const CACHE_TTL   = 15 * 60 * 1000; // 15 min
 
   /* ─── Slugify ─────────────────────────────────────────────────── */
@@ -106,10 +107,16 @@ const HA_API = (function () {
   }
 
   /* ─── Deduplicação ────────────────────────────────────────────────
-   * Protege contra imóveis repetidos vindos do webhook N8n (paginação
-   * que pode retornar a mesma página mais de uma vez) ou de duplicidade
-   * real na base. Roda 1x, imediatamente após normalizar os dados e
-   * antes de qualquer filtro/ordenação/render.
+   * Protege contra imóveis repetidos vindos do webhook N8n.
+   *
+   * Roda em DUAS camadas, pois o "id" por si só pode não bastar:
+   *   1) por id/slug — pega repetição exata (mesma linha vindo 2x);
+   *   2) por título+região+preço — pega o caso em que o backend
+   *      retorna o MESMO imóvel com ids DIFERENTES (ex.: se a query
+   *      do n8n faz JOIN com imagens/amenities sem agregação, cada
+   *      imóvel pode vir 1x por imagem, e se o id usado na resposta
+   *      for o da linha do JOIN — não o id real da propriedade — a
+   *      camada 1 não detecta, mas a camada 2 detecta).
    * ──────────────────────────────────────────────────────────────── */
   function normalizeKey(value) {
     return String(value || '')
@@ -119,30 +126,46 @@ const HA_API = (function () {
       .replace(/\s+/g, '-');
   }
 
-  function getPropertyUniqueKey(property) {
-    // Prioridade: id > slug > combinação nome+região+preço+capa
+  function keyById(property) {
     const directKey = property.id || property.slug;
-    if (directKey) return normalizeKey(directKey);
+    return directKey ? normalizeKey(directKey) : '';
+  }
 
+  function keyByContent(property) {
     const name   = property.title  || '';
     const region = property.region || '';
     const value  = property.price  || '';
-    const image  = property.cover  || '';
-    return normalizeKey(`${name}-${region}-${value}-${image}`);
+    return normalizeKey(`${name}-${region}-${value}`);
   }
 
-  function dedupeProperties(list) {
-    const seen = new Set();
-    return list.filter((property) => {
-      const key = getPropertyUniqueKey(property);
-      if (!key) return true;
-      if (seen.has(key)) {
-        console.warn('[HA_API] Imóvel duplicado removido:', key, '—', property.title);
-        return false;
+  function dedupeProperties(list, context = 'global') {
+    const seenIds      = new Set();
+    const seenContents = new Set();
+    const unique = [];
+
+    list.forEach((property) => {
+      const idKey      = keyById(property);
+      const contentKey = keyByContent(property);
+
+      const dupById      = idKey && seenIds.has(idKey);
+      const dupByContent = contentKey && seenContents.has(contentKey);
+
+      if (dupById || dupByContent) {
+        console.warn(
+          `[HA_API] (${context}) Imóvel duplicado removido — ` +
+          `id="${idKey}" conteúdo="${contentKey}" — "${property.title}"` +
+          (dupByContent && !dupById ? ' [detectado pela 2ª camada: id distinto, mesmo conteúdo]' : '')
+        );
+        return;
       }
-      seen.add(key);
-      return true;
+
+      if (idKey)      seenIds.add(idKey);
+      if (contentKey) seenContents.add(contentKey);
+      unique.push(property);
     });
+
+    console.log(`[HA_API] (${context}) ${list.length} recebidos → ${unique.length} únicos`);
+    return unique;
   }
 
   /* ─── Fetch uma página ────────────────────────────────────────── */
@@ -187,28 +210,60 @@ const HA_API = (function () {
     return all;
   }
 
+  /* ─── Proteção contra chamadas concorrentes ────────────────────── */
+  let _fetchInFlight = null;
+
   /* ─── API principal ───────────────────────────────────────────── */
   async function fetchProperties() {
     const cached = getCached();
     if (cached) return cached;
 
-    const raw        = await fetchAll();
-    const normalized = raw.map(normalize);
+    // Se já existe um fetch em andamento, todos esperam o mesmo resultado
+    // em vez de disparar requisições paralelas redundantes.
+    if (_fetchInFlight) return _fetchInFlight;
 
-    console.log('[HA_API] Total recebido da API (bruto):', normalized.length);
-    const deduped = dedupeProperties(normalized);
-    console.log('[HA_API] Total após deduplicação:', deduped.length);
+    _fetchInFlight = (async () => {
+      const raw        = await fetchAll();
+      const normalized = raw.map(normalize);
 
-    if (deduped.length !== normalized.length) {
-      console.warn(
-        `[HA_API] ${normalized.length - deduped.length} imóvel(is) duplicado(s) removido(s). ` +
-        'Verificar a paginação do webhook N8n (parâmetro "página" pode estar sendo ignorado, ' +
-        'retornando a mesma página repetidamente).'
+      // ── Diagnóstico: estado ANTES da deduplicação ──────────────────
+      console.log('[HA_API] Total recebido da API (bruto):', normalized.length);
+
+      const brava = normalized.filter((p) =>
+        String(p.region || '').toLowerCase().includes('praia brava')
       );
-    }
+      console.log('[HA_API] Praia Brava recebido (bruto):', brava.length);
+      console.table(brava.map((p) => ({ id: p.id, title: p.title, price: p.price })));
 
-    setCache(deduped);
-    return deduped;
+      const raro = brava.filter((p) => String(p.title || '').toLowerCase().includes('raro'));
+      console.log('[HA_API] "Raro" recebido (bruto), antes do dedupe:', raro.length);
+      if (raro.length > 1) {
+        console.warn('[HA_API] "Raro" já chega duplicado do webhook/n8n — ver tabela:', raro);
+      }
+
+      // ── Deduplicação em 2 camadas ───────────────────────────────────
+      const deduped = dedupeProperties(normalized, 'after-fetch');
+
+      const raroAfter = deduped.filter((p) => String(p.title || '').toLowerCase().includes('raro'));
+      console.log('[HA_API] "Raro" após dedupe:', raroAfter.length, '(esperado: 1)');
+
+      if (deduped.length !== normalized.length) {
+        console.warn(
+          `[HA_API] ${normalized.length - deduped.length} imóvel(is) duplicado(s) removido(s) ` +
+          'no front. Isso confirma que o webhook/n8n está retornando registros repetidos — ' +
+          'recomenda-se revisar a query/paginação do lado do n8n também.'
+        );
+      }
+
+      setCache(deduped);
+      return deduped;
+    })();
+
+    try {
+      return await _fetchInFlight;
+    } finally {
+      _fetchInFlight = null;
+    }
   }
 
   return { fetchProperties, normalize, dedupeProperties, TENANT_ID, WEBHOOK_URL };
