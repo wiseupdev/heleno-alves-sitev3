@@ -557,6 +557,12 @@
 
   /* ─── Init ─────────────────────────────────────────────────────── */
   async function init() {
+    if (window.__imoveisPageInitialized) {
+      console.warn('[IMOVEIS] Inicialização duplicada bloqueada');
+      return;
+    }
+    window.__imoveisPageInitialized = true;
+
     bindEvents();
     await loadProperties();
     applyInitialRegion();

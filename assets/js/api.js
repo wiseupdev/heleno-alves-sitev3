@@ -8,7 +8,9 @@ const HA_API = (function () {
   const WEBHOOK_URL = 'https://webhook.wiseuptech.com.br/webhook/apipaginationha';
   const TENANT_ID   = '1911202511';
   const PAGE_SIZE   = 20;
-  const CACHE_KEY   = 'ha_props_v2';
+  // v3: bump de versão para invalidar caches antigos que possam conter
+  // imóveis duplicados (ver dedupeProperties abaixo)
+  const CACHE_KEY   = 'ha_props_v3';
   const CACHE_TTL   = 15 * 60 * 1000; // 15 min
 
   /* ─── Slugify ─────────────────────────────────────────────────── */
@@ -103,6 +105,46 @@ const HA_API = (function () {
     catch { /* ignora quota exceeded */ }
   }
 
+  /* ─── Deduplicação ────────────────────────────────────────────────
+   * Protege contra imóveis repetidos vindos do webhook N8n (paginação
+   * que pode retornar a mesma página mais de uma vez) ou de duplicidade
+   * real na base. Roda 1x, imediatamente após normalizar os dados e
+   * antes de qualquer filtro/ordenação/render.
+   * ──────────────────────────────────────────────────────────────── */
+  function normalizeKey(value) {
+    return String(value || '')
+      .trim()
+      .toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .replace(/\s+/g, '-');
+  }
+
+  function getPropertyUniqueKey(property) {
+    // Prioridade: id > slug > combinação nome+região+preço+capa
+    const directKey = property.id || property.slug;
+    if (directKey) return normalizeKey(directKey);
+
+    const name   = property.title  || '';
+    const region = property.region || '';
+    const value  = property.price  || '';
+    const image  = property.cover  || '';
+    return normalizeKey(`${name}-${region}-${value}-${image}`);
+  }
+
+  function dedupeProperties(list) {
+    const seen = new Set();
+    return list.filter((property) => {
+      const key = getPropertyUniqueKey(property);
+      if (!key) return true;
+      if (seen.has(key)) {
+        console.warn('[HA_API] Imóvel duplicado removido:', key, '—', property.title);
+        return false;
+      }
+      seen.add(key);
+      return true;
+    });
+  }
+
   /* ─── Fetch uma página ────────────────────────────────────────── */
   async function fetchPage(page) {
     const res = await fetch(WEBHOOK_URL, {
@@ -152,10 +194,23 @@ const HA_API = (function () {
 
     const raw        = await fetchAll();
     const normalized = raw.map(normalize);
-    setCache(normalized);
-    return normalized;
+
+    console.log('[HA_API] Total recebido da API (bruto):', normalized.length);
+    const deduped = dedupeProperties(normalized);
+    console.log('[HA_API] Total após deduplicação:', deduped.length);
+
+    if (deduped.length !== normalized.length) {
+      console.warn(
+        `[HA_API] ${normalized.length - deduped.length} imóvel(is) duplicado(s) removido(s). ` +
+        'Verificar a paginação do webhook N8n (parâmetro "página" pode estar sendo ignorado, ' +
+        'retornando a mesma página repetidamente).'
+      );
+    }
+
+    setCache(deduped);
+    return deduped;
   }
 
-  return { fetchProperties, normalize, TENANT_ID, WEBHOOK_URL };
+  return { fetchProperties, normalize, dedupeProperties, TENANT_ID, WEBHOOK_URL };
 
 })();
