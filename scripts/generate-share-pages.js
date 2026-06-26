@@ -153,7 +153,9 @@ function normalizeForShare(raw) {
   const rawPrice = String(raw.property_price || '').trim();
   let price = 'Sob consulta';
   if (rawPrice && rawPrice !== '0' && rawPrice !== 'R$ 0,00') {
-    price = rawPrice.startsWith('R$') ? rawPrice : `R$ ${rawPrice}`;
+    // Remove centavos (",00") — padrão "sem centavos" usado no resto do site
+    const noCents = rawPrice.replace(/,00$/, '');
+    price = noCents.startsWith('R$') ? noCents : `R$ ${noCents}`;
   }
 
   const title = raw.property_title || 'Imóvel de alto padrão';
@@ -175,8 +177,13 @@ function normalizeForShare(raw) {
 
 /* ─── Monta a descrição curta usada no preview ──────────────────────── */
 function buildDescription(item) {
-  const parts = [item.region, item.area, item.suites ? `${item.suites} suítes` : '', item.price]
-    .filter(Boolean);
+  const parts = [
+    item.region,
+    item.price,
+    item.area,
+    item.suites  ? `${item.suites} suítes`  : '',
+    item.parking ? `${item.parking} vagas`  : '',
+  ].filter(Boolean);
   return parts.join(' · ') || 'Imóvel de alto padrão selecionado por Heleno Alves.';
 }
 

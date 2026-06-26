@@ -707,6 +707,96 @@
     });
   }
 
+  /* ─── Compartilhamento e cópia de link ───────────────────────────── */
+  function getCurrentSlug() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('slug') || '';
+  }
+
+  function getSharePreviewUrl(slug) {
+    return new URL(`/compartilhar/${encodeURIComponent(slug)}/`, window.location.origin).href;
+  }
+
+  function buildDetailShareText(property) {
+    const slug      = getCurrentSlug();
+    const shareUrl   = getSharePreviewUrl(slug);
+    const title      = property?.title || document.querySelector('h1')?.textContent?.trim() || 'Imóvel Heleno Alves';
+    const region     = [property?.region, property?.district].filter(Boolean).join(' · ');
+    const price      = property?.price || '';
+    const specs      = getSpecs(property || {}).join(' · ');
+
+    return [
+      'Confira este imóvel selecionado por Heleno Alves:',
+      '',
+      title,
+      region,
+      price,
+      specs,
+      '',
+      shareUrl,
+    ].filter(Boolean).join('\n');
+  }
+
+  async function copyPropertyLink(slug) {
+    const shareUrl = getSharePreviewUrl(slug);
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      return true;
+    } catch {
+      const input = document.createElement('input');
+      input.value = shareUrl;
+      document.body.appendChild(input);
+      input.select();
+      document.execCommand('copy');
+      input.remove();
+      return true;
+    }
+  }
+
+  function openWhatsAppShare(property) {
+    const text = buildDetailShareText(property);
+    const url  = `https://wa.me/?text=${encodeURIComponent(text)}`;
+    window.open(url, '_blank', 'noopener,noreferrer');
+  }
+
+  function bindDetailShare(property) {
+    const shareBtn = document.getElementById('sharePropertyBtn');
+    const copyBtn  = document.getElementById('copyPropertyLinkBtn');
+
+    if (shareBtn) {
+      shareBtn.addEventListener('click', async () => {
+        const slug = getCurrentSlug();
+
+        if (navigator.share) {
+          try {
+            await navigator.share({
+              title: property?.title || 'Imóvel Heleno Alves',
+              text:  buildDetailShareText(property),
+              url:   getSharePreviewUrl(slug),
+            });
+            return;
+          } catch {
+            // Usuário cancelou ou navegador não permitiu — cai no WhatsApp
+          }
+        }
+
+        openWhatsAppShare(property);
+      });
+    }
+
+    if (copyBtn) {
+      const originalLabel = copyBtn.textContent;
+      copyBtn.addEventListener('click', async () => {
+        const slug = getCurrentSlug();
+        await copyPropertyLink(slug);
+
+        const copiedLabel = (typeof HA_I18N !== 'undefined') ? HA_I18N.t('detail_link_copied') : 'Link copiado';
+        copyBtn.textContent = copiedLabel || 'Link copiado';
+        setTimeout(() => { copyBtn.textContent = originalLabel; }, 1800);
+      });
+    }
+  }
+
   async function initDetail() {
     bindEvents();
 
@@ -727,6 +817,7 @@
     setupMediaSection(currentProperty);
     renderSimilar(currentProperty);
     updateFavoriteButton();
+    bindDetailShare(currentProperty);
   }
 
   document.addEventListener('DOMContentLoaded', initDetail);

@@ -555,3 +555,44 @@ body[data-page="detail"] {
     padding: 6px 10px;
   }
 }
+/* ─── Compartilhar / Copiar link ─────────────────────────────────── */
+.detail-share-btn,
+.detail-copy-btn {
+  width: 100%;
+  min-height: 48px;
+  margin-top: 12px;
+  border: 1px solid rgba(214, 181, 91, .65);
+  background: rgba(12, 12, 12, .42);
+  color: #f4d779;
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: background .25s ease, color .25s ease, border-color .25s ease, transform .25s ease;
+}
+
+.detail-share-btn svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
+
+.detail-share-btn:hover,
+.detail-copy-btn:hover {
+  background: linear-gradient(135deg, #f1d476, #b98d32);
+  color: #0b0b0b;
+  border-color: transparent;
+  transform: translateY(-1px);
+}
+
+.detail-share-btn:focus-visible,
+.detail-copy-btn:focus-visible {
+  outline: 2px solid #f4d779;
+  outline-offset: 2px;
+}
