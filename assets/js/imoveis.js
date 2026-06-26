@@ -79,6 +79,38 @@
     return `imoveis/detalhe.html?slug=${item.slug || slugify(item.title)}`;
   }
 
+  /* ─── Compartilhamento via WhatsApp ──────────────────────────────── */
+  function absoluteUrl(path) {
+    return new URL(path, window.location.origin + '/').href;
+  }
+
+  function getShareUrl(item) {
+    const slug = item.slug || slugify(item.title);
+    return absoluteUrl(`compartilhar/${slug}/`);
+  }
+
+  function buildWhatsAppShareText(item) {
+    const specs = getSpecs(item).join(' · ');
+    const url = getShareUrl(item);
+
+    return [
+      'Confira este imóvel selecionado por Heleno Alves:',
+      '',
+      item.title || 'Imóvel de alto padrão',
+      [item.region, item.district].filter(Boolean).join(' · '),
+      item.price || 'Valor sob consulta',
+      specs || '',
+      '',
+      url,
+    ].filter(Boolean).join('\n');
+  }
+
+  function shareProperty(item) {
+    const text  = buildWhatsAppShareText(item);
+    const waUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
+    window.open(waUrl, '_blank', 'noopener,noreferrer');
+  }
+
   /* ─── Preço ────────────────────────────────────────────────────── */
   function priceNum(price) {
     const txt = String(price || '').toLowerCase().trim();
@@ -437,6 +469,10 @@
           data-action="favorite" data-id="${item.id}" aria-label="Favoritar">
           ${isFav(item) ? '★' : '☆'}
         </button>
+        <button class="share-btn" type="button"
+          data-action="share" data-id="${item.id}" aria-label="Compartilhar no WhatsApp">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L7.04 9.81C6.5 9.31 5.79 9 5 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>
+        </button>
         <span class="region-badge">${esc(item.region || '')}</span>
       </div>
       <div class="property-body">
@@ -575,10 +611,21 @@
     $('prevPage')?.addEventListener('click', () => changePage(-1));
     $('nextPage')?.addEventListener('click', () => changePage(1));
     $('propertyGrid')?.addEventListener('click', e => {
-      const btn = e.target.closest('[data-action="favorite"]');
-      if (!btn) return;
-      const item = properties.find(p => String(p.id) === String(btn.dataset.id));
-      if (item) toggleFav(item);
+      const favBtn = e.target.closest('[data-action="favorite"]');
+      if (favBtn) {
+        const item = properties.find(p => String(p.id) === String(favBtn.dataset.id));
+        if (item) toggleFav(item);
+        return;
+      }
+
+      const shareBtn = e.target.closest('[data-action="share"]');
+      if (shareBtn) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const item = properties.find(p => String(p.id) === String(shareBtn.dataset.id));
+        if (item) shareProperty(item);
+      }
     });
   }
 
