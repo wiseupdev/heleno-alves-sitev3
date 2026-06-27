@@ -202,11 +202,15 @@ function buildHtml(item, slug, baseUrl) {
   <meta name="twitter:image" content="${IMG}">
 
   <link rel="canonical" href="${DET}">
-  <meta http-equiv="refresh" content="0;url=${DET}">
 </head>
 <body>
   <p>Redirecionando para o imóvel...</p>
-  <script>window.location.replace(${JSON.stringify(detailUrl)});</script>
+  <p><a href="${DET}">Abrir imóvel</a></p>
+  <script>
+    setTimeout(function () {
+      window.location.replace(${JSON.stringify(detailUrl)});
+    }, 700);
+  </script>
 </body>
 </html>`;
 }
@@ -229,11 +233,15 @@ function buildFallbackHtml(slug, baseUrl) {
   <meta property="og:url" content="${escapeHtml(`${baseUrl}/compartilhar/${slug}/`)}">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="canonical" href="${DET}">
-  <meta http-equiv="refresh" content="0;url=${DET}">
 </head>
 <body>
   <p>Redirecionando...</p>
-  <script>window.location.replace(${JSON.stringify(detailUrl)});</script>
+  <p><a href="${DET}">Abrir imóvel</a></p>
+  <script>
+    setTimeout(function () {
+      window.location.replace(${JSON.stringify(detailUrl)});
+    }, 700);
+  </script>
 </body>
 </html>`;
 }
