@@ -1,0 +1,32 @@
+# netlify.toml — Heleno Alves
+#
+# Configura a Netlify Function de preview de imóveis e os redirects que
+# fazem /compartilhar/:slug/ ser servido pela function (em vez do HTML
+# estático antigo gerado em scripts/generate-share-pages.js).
+#
+# force = true é OBRIGATÓRIO aqui: como já existe a pasta estática
+# /compartilhar/<slug>/index.html, sem o force a Netlify serviria o
+# arquivo estático e a function nunca rodaria. Com force = true, a
+# function tem prioridade sobre o arquivo no disco.
+
+[build]
+  publish = "."
+
+[functions]
+  directory = "netlify/functions"
+  # Runtime Node 18 (fetch global nativo, sem precisar de node-fetch)
+  node_bundler = "esbuild"
+
+# Variante COM barra final: /compartilhar/harmony-516/
+[[redirects]]
+  from   = "/compartilhar/:slug/"
+  to     = "/.netlify/functions/property-preview?slug=:slug"
+  status = 200
+  force  = true
+
+# Variante SEM barra final: /compartilhar/harmony-516
+[[redirects]]
+  from   = "/compartilhar/:slug"
+  to     = "/.netlify/functions/property-preview?slug=:slug"
+  status = 200
+  force  = true
