@@ -198,11 +198,19 @@ function buildHtml(item, slug, baseUrl) {
   const URL = escapeHtml(shareUrl);
   const DET = escapeHtml(detailUrl);
 
-  // Detecta o tipo da imagem pela extensão; se não der, assume jpeg
-  // (a maioria das fotos do cadastro vem em jpg).
+  // Detecta o tipo da imagem a partir da URL. Procura o formato em
+  // qualquer parte da URL (não só na extensão final), pois CDNs como o
+  // Cloudinary podem embutir o formato no caminho sem extensão no fim.
+  // Se nada casar, assume jpeg.
   let imageType = 'image/jpeg';
-  if (/\.png(\?|$)/i.test(item.cover))       imageType = 'image/png';
-  else if (/\.webp(\?|$)/i.test(item.cover)) imageType = 'image/webp';
+  const coverLower = String(item.cover).toLowerCase();
+  if (/\.webp(\?|#|$)/.test(coverLower) || /[/_.]webp(\b|[/_])/.test(coverLower)) {
+    imageType = 'image/webp';
+  } else if (/\.png(\?|#|$)/.test(coverLower) || /[/_.]png(\b|[/_])/.test(coverLower)) {
+    imageType = 'image/png';
+  } else if (/\.(jpe?g)(\?|#|$)/.test(coverLower) || /[/_.]jpe?g(\b|[/_])/.test(coverLower)) {
+    imageType = 'image/jpeg';
+  }
 
   return `<!doctype html>
 <html lang="pt-BR">
