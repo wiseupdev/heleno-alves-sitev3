@@ -202,19 +202,37 @@
   }
 
   function getWhatsappLink(item) {
-    const lang = (typeof HA_I18N !== 'undefined') ? HA_I18N.getLang() : 'pt';
-    const name = item.title || '';
+    const lang   = (typeof HA_I18N !== 'undefined') ? HA_I18N.getLang() : 'pt';
+    const name   = item.title  || '';
     const region = item.region || item.city || '';
+    const price  = item.price  || '';
+    const specs  = getSpecs(item).join(' · ');
+    const ref    = item.id ? String(item.id) : '';
+    const slug   = item.slug || slugify(item.title);
 
-    // Mensagens fixas por idioma — sem dependência de estado externo
-    const messages = {
-      pt: `Olá, Heleno. Tenho interesse no imóvel ${name}${region ? ', em ' + region : ''}. Gostaria de receber mais informações.`,
-      en: `Hello, Heleno. I am interested in the property ${name}${region ? ', in ' + region : ''}. I would like to receive more information.`,
-      es: `¡Hola Heleno! Estoy interesado en la propiedad: ${name}. ¿Puede darme más información?`,
-      fr: `Bonjour Heleno ! Je suis intéressé par la propriété : ${name}. Pouvez-vous me donner plus d'informations ?`,
+    // Link de preview estático — é ele que o WhatsApp lê para montar o
+    // card com foto/título/descrição (a página de detalhe real renderiza
+    // via JS, então o WhatsApp nunca veria as meta tags certas nela).
+    const shareUrl = new URL(`compartilhar/${encodeURIComponent(slug)}/`, window.location.origin + '/').href;
+
+    const T = {
+      pt: { greet: 'Olá, Heleno! Tenho interesse neste imóvel:', ref: 'Referência', link: 'Link do imóvel:' },
+      en: { greet: 'Hello, Heleno! I am interested in this property:', ref: 'Reference', link: 'Property link:' },
+      es: { greet: '¡Hola, Heleno! Estoy interesado en esta propiedad:', ref: 'Referencia', link: 'Enlace de la propiedad:' },
+      fr: { greet: 'Bonjour Heleno ! Je suis intéressé par ce bien :', ref: 'Référence', link: 'Lien du bien :' },
     };
+    const t = T[lang] || T.pt;
 
-    const message = encodeURIComponent(messages[lang] || messages.pt);
+    // Só os campos de DADOS (nome/região/preço/specs) são filtrados se
+    // vazios — as linhas em branco estruturais abaixo são preservadas
+    // de propósito, para o texto final sair formatado como no exemplo.
+    const dataLines = [name, region, price, specs].filter(Boolean);
+
+    const parts = [t.greet, '', ...dataLines];
+    if (ref) parts.push(`${t.ref}: #${ref}`);
+    parts.push('', t.link, shareUrl);
+
+    const message = encodeURIComponent(parts.join('\n'));
     return `https://wa.me/5585988085349?text=${message}`;
   }
 
@@ -707,96 +725,6 @@
     });
   }
 
-  /* ─── Compartilhamento e cópia de link ───────────────────────────── */
-  function getCurrentSlug() {
-    const params = new URLSearchParams(window.location.search);
-    return params.get('slug') || '';
-  }
-
-  function getSharePreviewUrl(slug) {
-    return new URL(`/compartilhar/${encodeURIComponent(slug)}/`, window.location.origin).href;
-  }
-
-  function buildDetailShareText(property) {
-    const slug      = getCurrentSlug();
-    const shareUrl   = getSharePreviewUrl(slug);
-    const title      = property?.title || document.querySelector('h1')?.textContent?.trim() || 'Imóvel Heleno Alves';
-    const region     = [property?.region, property?.district].filter(Boolean).join(' · ');
-    const price      = property?.price || '';
-    const specs      = getSpecs(property || {}).join(' · ');
-
-    return [
-      'Confira este imóvel selecionado por Heleno Alves:',
-      '',
-      title,
-      region,
-      price,
-      specs,
-      '',
-      shareUrl,
-    ].filter(Boolean).join('\n');
-  }
-
-  async function copyPropertyLink(slug) {
-    const shareUrl = getSharePreviewUrl(slug);
-    try {
-      await navigator.clipboard.writeText(shareUrl);
-      return true;
-    } catch {
-      const input = document.createElement('input');
-      input.value = shareUrl;
-      document.body.appendChild(input);
-      input.select();
-      document.execCommand('copy');
-      input.remove();
-      return true;
-    }
-  }
-
-  function openWhatsAppShare(property) {
-    const text = buildDetailShareText(property);
-    const url  = `https://wa.me/?text=${encodeURIComponent(text)}`;
-    window.open(url, '_blank', 'noopener,noreferrer');
-  }
-
-  function bindDetailShare(property) {
-    const shareBtn = document.getElementById('sharePropertyBtn');
-    const copyBtn  = document.getElementById('copyPropertyLinkBtn');
-
-    if (shareBtn) {
-      shareBtn.addEventListener('click', async () => {
-        const slug = getCurrentSlug();
-
-        if (navigator.share) {
-          try {
-            await navigator.share({
-              title: property?.title || 'Imóvel Heleno Alves',
-              text:  buildDetailShareText(property),
-              url:   getSharePreviewUrl(slug),
-            });
-            return;
-          } catch {
-            // Usuário cancelou ou navegador não permitiu — cai no WhatsApp
-          }
-        }
-
-        openWhatsAppShare(property);
-      });
-    }
-
-    if (copyBtn) {
-      const originalLabel = copyBtn.textContent;
-      copyBtn.addEventListener('click', async () => {
-        const slug = getCurrentSlug();
-        await copyPropertyLink(slug);
-
-        const copiedLabel = (typeof HA_I18N !== 'undefined') ? HA_I18N.t('detail_link_copied') : 'Link copiado';
-        copyBtn.textContent = copiedLabel || 'Link copiado';
-        setTimeout(() => { copyBtn.textContent = originalLabel; }, 1800);
-      });
-    }
-  }
-
   async function initDetail() {
     bindEvents();
 
@@ -817,7 +745,6 @@
     setupMediaSection(currentProperty);
     renderSimilar(currentProperty);
     updateFavoriteButton();
-    bindDetailShare(currentProperty);
   }
 
   document.addEventListener('DOMContentLoaded', initDetail);
