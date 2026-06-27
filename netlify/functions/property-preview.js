@@ -92,12 +92,30 @@ async function fetchPage(page) {
   };
 }
 
+/* ─── Primeira imagem válida do imóvel ───────────────────────────────
+ * Prioriza a primeira imagem do array `images` que tenha uma URL http(s)
+ * válida — tende a ser a primeira foto adicionada no cadastro. Só cai no
+ * fallback da logo se o imóvel não tiver nenhuma imagem utilizável.
+ * Cobre variações de nome de campo da URL (url/previewUrl/src/image_url).
+ * ──────────────────────────────────────────────────────────────────── */
+function getFirstValidImage(raw, baseUrl) {
+  const fallbackImage = `${baseUrl}/assets/images/logo/logo-horizontal.webp`;
+  const images = Array.isArray(raw.images) ? raw.images : [];
+
+  const pickUrl = (img) =>
+    (img && (img.url || img.previewUrl || img.src || img.image_url)) || '';
+
+  const firstImage = images.find((img) => {
+    const url = pickUrl(img);
+    return typeof url === 'string' && /^https?:\/\//i.test(url);
+  });
+
+  return pickUrl(firstImage) || fallbackImage;
+}
+
 /* ─── Normaliza 1 imóvel para os dados que o preview precisa ────────── */
 function normalizeForPreview(raw, baseUrl) {
-  const images   = Array.isArray(raw.images) ? raw.images : [];
-  const coverObj = images.find((img) => img.is_cover) || images[0] || null;
-  const cover    = coverObj ? coverObj.url : '';
-  const fallbackImage = `${baseUrl}/assets/images/logo/logo-horizontal.webp`;
+  const cover = getFirstValidImage(raw, baseUrl);
 
   const city = String(raw.property_city || '').trim();
   let region = city;
@@ -127,7 +145,7 @@ function normalizeForPreview(raw, baseUrl) {
     area,
     suites:  raw.property_bedrooms      ? Number(raw.property_bedrooms)      : 0,
     parking: raw.property_garage_spaces ? Number(raw.property_garage_spaces) : 0,
-    cover:   cover || fallbackImage,
+    cover,
   };
 }
 
@@ -180,6 +198,12 @@ function buildHtml(item, slug, baseUrl) {
   const URL = escapeHtml(shareUrl);
   const DET = escapeHtml(detailUrl);
 
+  // Detecta o tipo da imagem pela extensão; se não der, assume jpeg
+  // (a maioria das fotos do cadastro vem em jpg).
+  let imageType = 'image/jpeg';
+  if (/\.png(\?|$)/i.test(item.cover))       imageType = 'image/png';
+  else if (/\.webp(\?|$)/i.test(item.cover)) imageType = 'image/webp';
+
   return `<!doctype html>
 <html lang="pt-BR">
 <head>
@@ -194,6 +218,9 @@ function buildHtml(item, slug, baseUrl) {
   <meta property="og:description" content="${D}">
   <meta property="og:image" content="${IMG}">
   <meta property="og:image:secure_url" content="${IMG}">
+  <meta property="og:image:type" content="${imageType}">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
   <meta property="og:url" content="${URL}">
 
   <meta name="twitter:card" content="summary_large_image">
