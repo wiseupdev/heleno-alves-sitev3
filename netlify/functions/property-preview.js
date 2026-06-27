@@ -238,10 +238,44 @@ function buildFallbackHtml(slug, baseUrl) {
 </html>`;
 }
 
+/* ─── Leitura robusta do slug ────────────────────────────────────────
+ * Com redirect + force=true, o :slug nem sempre chega em
+ * queryStringParameters. Então, se não vier pela query, extraímos da
+ * própria URL (rawUrl/path) ou, em último caso, do referer.
+ * ──────────────────────────────────────────────────────────────────── */
+function getSlugFromEvent(event) {
+  const fromQuery = event.queryStringParameters && event.queryStringParameters.slug;
+  if (fromQuery && String(fromQuery).trim()) {
+    return String(fromQuery).trim();
+  }
+
+  const candidates = [
+    event.rawUrl,
+    event.path,
+    event.headers && event.headers.referer,
+  ].filter(Boolean);
+
+  for (const value of candidates) {
+    const match = String(value).match(/\/compartilhar\/([^/?#]+)/);
+    if (match && match[1]) {
+      return decodeURIComponent(match[1]).trim();
+    }
+  }
+
+  return '';
+}
+
 /* ─── Handler ────────────────────────────────────────────────────────── */
 exports.handler = async (event) => {
   const baseUrl = getBaseUrl(event);
-  const slug = (event.queryStringParameters && event.queryStringParameters.slug || '').trim();
+  const slug = getSlugFromEvent(event);
+
+  // Log temporário de diagnóstico — remover quando confirmado em produção
+  console.log('[property-preview] slug recebido:', slug, {
+    path:   event.path,
+    rawUrl: event.rawUrl,
+    query:  event.queryStringParameters,
+  });
 
   // Cache curto na CDN: o WhatsApp/Facebook cacheiam o preview de qualquer
   // forma, e isso evita martelar o webhook a cada acesso.
