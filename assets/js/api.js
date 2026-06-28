@@ -8,9 +8,7 @@ const HA_API = (function () {
   const WEBHOOK_URL = 'https://webhook.wiseuptech.com.br/webhook/apipaginationha';
   const TENANT_ID   = '1911202511';
   const PAGE_SIZE   = 20;
-  // v7: contrato de requisição trocado para inglês (event_name/page/
-  // limit/offset/filters) — o webhook responde melhor a esse formato.
-  const CACHE_KEY   = 'ha_props_v7';
+  const CACHE_KEY   = 'ha_props_v8';
   const CACHE_TTL   = 15 * 60 * 1000; // 15 min
 
   /* ─── Slugify ─────────────────────────────────────────────────── */
@@ -190,17 +188,14 @@ const HA_API = (function () {
 
   /* ─── Fetch uma página ────────────────────────────────────────── */
   async function fetchPage(page) {
-    const offset = (page - 1) * PAGE_SIZE;
-
     const payload = {
-      event_name: 'get_client_property',
-      tenant_id:  TENANT_ID,
-      page,
-      limit:      PAGE_SIZE,
-      offset,
-      filters: {
-        min_price: 0,
-        max_price: 999999999,
+      nome_do_evento: 'obter_propriedade_do_cliente',
+      tenant_id:      TENANT_ID,
+      página:         page,
+      limite:         PAGE_SIZE,
+      filtros: {
+        preço_mínimo: 0,
+        preço_máximo: 999999999,
       },
     };
 

@@ -655,48 +655,141 @@ function loadPropertyForEditing() {
   }
 }
 
-function saveProperty() {
-  const data = getFormData();
+function cityFromRegion(region) {
+  if (!region) return '';
+  if (region === 'BC' || region === 'Balneario Camboriu' || region === 'balneario-camboriu') {
+    return 'Balneário Camboriú';
+  }
+  if (region === 'praia-brava') return 'Praia Brava';
+  return region;
+}
+
+function setSaveButtonLoading(isLoading) {
+  // Pega qualquer botão "Salvar imóvel" e desabilita/restaura durante o envio.
+  var candidates = [];
+  var byId = $('saveProperty') || $('saveBtn') || $('btnSave');
+  if (byId) candidates.push(byId);
+  document.querySelectorAll('[onclick*="saveProperty"], button[type="submit"]').forEach(function (btn) {
+    if (candidates.indexOf(btn) === -1) candidates.push(btn);
+  });
+
+  candidates.forEach(function (btn) {
+    if (!btn) return;
+    if (isLoading) {
+      if (!btn.dataset.originalLabel) {
+        btn.dataset.originalLabel = btn.textContent;
+      }
+      btn.disabled = true;
+      btn.setAttribute('aria-busy', 'true');
+      btn.textContent = 'Enviando…';
+    } else {
+      btn.disabled = false;
+      btn.removeAttribute('aria-busy');
+      if (btn.dataset.originalLabel) {
+        btn.textContent = btn.dataset.originalLabel;
+        delete btn.dataset.originalLabel;
+      }
+    }
+  });
+}
+
+function clearAdminPropertyCaches() {
+  try { localStorage.removeItem('admin_properties_list'); } catch (_) {}
+  try { localStorage.removeItem('admin_properties_draft'); } catch (_) {}
+  try { localStorage.removeItem('ha_props_v7'); } catch (_) {}
+  // Remove qualquer cache ha_props_* (chaves versionadas) por garantia.
+  try {
+    for (var i = localStorage.length - 1; i >= 0; i--) {
+      var k = localStorage.key(i);
+      if (k && /^ha_props_/.test(k)) localStorage.removeItem(k);
+    }
+  } catch (_) {}
+}
+
+async function saveProperty(event) {
+  if (event && typeof event.preventDefault === 'function') {
+    event.preventDefault();
+  }
+
+  var data = getFormData();
 
   if (!data.title) {
     alert('Preencha o nome do imóvel.');
-    return;
+    return false;
   }
 
   if (!data.price) {
     alert('Preencha o preço do imóvel.');
-    return;
+    return false;
   }
 
-  const properties = getStorageArray('admin_properties_list');
-  const editingId = editingPropertyId || data.id;
+  // File[] real das fotos selecionadas. Nunca enviar previewUrl/blob.
+  var files = selectedPhotos
+    .map(function (photo) { return photo && photo.file; })
+    .filter(Boolean);
 
-  const existingIndex = properties.findIndex((item) => {
-    return String(item.id) === String(editingId);
-  });
+  var cidade = cityFromRegion(data.region);
+  var endereco = data.loc || [data.district, cidade].filter(Boolean).join(' · ');
+  var caracteristicas = (selectedFeatures || []).join(', ');
 
-  const propertyToSave = {
-    ...data,
-    id: editingId,
-    createdAt: existingIndex >= 0 ? properties[existingIndex].createdAt || new Date().toISOString() : new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    note: 'Protótipo: URLs locais aparecem na prévia. No sistema real, arquivos serão enviados para storage/backend.'
+  var payload = {
+    titulo: data.title,
+    descricao: data.description || '',
+    cidade: cidade,
+    bairro: data.district || '',
+    rua: '',
+    cep: '',
+    numero: '',
+    valor: data.price || '',
+    negociacao: data.status || 'Venda',
+    tipo: data.type || '',
+    quartos: data.suites || '',
+    banheiros: '',
+    vagas: data.parking || '',
+    metros: data.privateArea || data.area || '',
+    condominio: '',
+    valorNegociacao: data.price || '',
+    valorLocacao: '',
+    foto: files,
+    phone: '',
+    email: '',
+    message: data.description || '',
+    area: data.privateArea || data.area || '',
+    quarto: data.suites || '',
+    banheiro: '',
+    vaga: data.parking || '',
+    endereco: endereco,
+    finalidade: 'Venda',
+    event_name: 'create_property',
+    caracteristicas: caracteristicas,
+    comodidades: caracteristicas,
+    nome: data.title
   };
 
-  if (existingIndex >= 0) {
-    properties[existingIndex] = propertyToSave;
-  } else {
-    properties.unshift(propertyToSave);
+  if (!window.HAPropertyManager || typeof window.HAPropertyManager.sendPropertyToWebhook !== 'function') {
+    alert('Erro: módulo de envio (property-manager.js) não carregado.');
+    return false;
   }
 
-  saveStorageArray('admin_properties_list', properties);
+  setSaveButtonLoading(true);
 
-  localStorage.removeItem('editing_property_id');
-  editingPropertyId = propertyToSave.id;
+  try {
+    await window.HAPropertyManager.sendPropertyToWebhook(payload);
 
-  alert('Imóvel salvo com sucesso no painel.');
+    // Sucesso real — limpa caches antigos para a lista renovar via API.
+    clearAdminPropertyCaches();
+    localStorage.removeItem('editing_property_id');
 
-  window.location.href = 'imoveis.html';
+    alert('Imóvel enviado com sucesso!');
+    window.location.href = 'imoveis.html';
+    return true;
+  } catch (error) {
+    console.error('[saveProperty] Falha ao enviar imóvel:', error);
+    alert('Erro ao enviar imóvel: ' + (error && error.message ? error.message : 'tente novamente.'));
+    return false;
+  } finally {
+    setSaveButtonLoading(false);
+  }
 }
 
 function clearForm() {

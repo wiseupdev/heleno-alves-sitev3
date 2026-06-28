@@ -202,38 +202,90 @@
   }
 
   function getWhatsappLink(item) {
-    const lang   = (typeof HA_I18N !== 'undefined') ? HA_I18N.getLang() : 'pt';
-    const name   = item.title  || '';
-    const region = item.region || item.city || '';
-    const price  = item.price  || '';
-    const specs  = getSpecs(item).join(' · ');
-    const ref    = item.id ? String(item.id) : '';
-    const slug   = item.slug || slugify(item.title);
+    const lang      = (typeof HA_I18N !== 'undefined') ? HA_I18N.getLang() : 'pt';
+    const name      = item.title || '';
+    const location  = getLocation(item);
+    const tipo      = item.type || '';
+    const price     = item.price || 'Sob consulta';
+    const area      = item.privateArea || item.area || '';
+    const suitesNum = Number(item.suites)   || 0;
+    const bedsNum   = Number(item.bedrooms) || 0;
+    const parkNum   = Number(item.parking)  || 0;
+    const slug      = item.slug || slugify(item.title);
 
-    // Link de preview estático — é ele que o WhatsApp lê para montar o
-    // card com foto/título/descrição (a página de detalhe real renderiza
-    // via JS, então o WhatsApp nunca veria as meta tags certas nela).
     const shareUrl = new URL(`compartilhar/${encodeURIComponent(slug)}/`, window.location.origin + '/').href;
 
     const T = {
-      pt: { greet: 'Olá, Heleno! Tenho interesse neste imóvel:', ref: 'Referência', link: 'Link do imóvel:' },
-      en: { greet: 'Hello, Heleno! I am interested in this property:', ref: 'Reference', link: 'Property link:' },
-      es: { greet: '¡Hola, Heleno! Estoy interesado en esta propiedad:', ref: 'Referencia', link: 'Enlace de la propiedad:' },
-      fr: { greet: 'Bonjour Heleno ! Je suis intéressé par ce bien :', ref: 'Référence', link: 'Lien du bien :' },
+      pt: { greet: 'Olá, Heleno! Tenho interesse neste imóvel:', nome: 'Nome', loc: 'Localização', tipo: 'Tipo', preco: 'Preço', area: 'Área', suites: 'Suítes/Quartos', vagas: 'Vagas', link: 'Link', close: 'Pode me passar mais informações?' },
+      en: { greet: 'Hello, Heleno! I am interested in this property:', nome: 'Name', loc: 'Location', tipo: 'Type', preco: 'Price', area: 'Area', suites: 'Suites/Bedrooms', vagas: 'Parking', link: 'Link', close: 'Could you send me more information?' },
+      es: { greet: '¡Hola, Heleno! Estoy interesado en esta propiedad:', nome: 'Nombre', loc: 'Ubicación', tipo: 'Tipo', preco: 'Precio', area: 'Área', suites: 'Suites/Habitaciones', vagas: 'Estacionamiento', link: 'Enlace', close: '¿Puede enviarme más información?' },
+      fr: { greet: 'Bonjour Heleno ! Je suis intéressé par ce bien :', nome: 'Nom', loc: 'Localisation', tipo: 'Type', preco: 'Prix', area: 'Surface', suites: 'Suites/Chambres', vagas: 'Parking', link: 'Lien', close: "Pouvez-vous m'envoyer plus d'informations ?" },
     };
     const t = T[lang] || T.pt;
 
-    // Só os campos de DADOS (nome/região/preço/specs) são filtrados se
-    // vazios — as linhas em branco estruturais abaixo são preservadas
-    // de propósito, para o texto final sair formatado como no exemplo.
-    const dataLines = [name, region, price, specs].filter(Boolean);
+    const suitesStr = [
+      suitesNum > 0 ? `${suitesNum} suítes`  : '',
+      bedsNum   > 0 ? `${bedsNum} quartos`   : '',
+    ].filter(Boolean).join(' / ');
 
-    const parts = [t.greet, '', ...dataLines];
-    if (ref) parts.push(`${t.ref}: #${ref}`);
-    parts.push('', t.link, shareUrl);
+    const lines = [t.greet, ''];
+    if (name)       lines.push(`${t.nome}: ${name}`);
+    if (location)   lines.push(`${t.loc}: ${location}`);
+    if (tipo)       lines.push(`${t.tipo}: ${tipo}`);
+                    lines.push(`${t.preco}: ${price}`);
+    if (area)       lines.push(`${t.area}: ${area}`);
+    if (suitesStr)  lines.push(`${t.suites}: ${suitesStr}`);
+    if (parkNum > 0) lines.push(`${t.vagas}: ${parkNum}`);
+                    lines.push(`${t.link}: ${shareUrl}`);
+    lines.push('', t.close);
 
-    const message = encodeURIComponent(parts.join('\n'));
+    const message = encodeURIComponent(lines.join('\n'));
     return `https://wa.me/5585988085349?text=${message}`;
+  }
+
+  function copyToClipboard(text) {
+    if (navigator.clipboard && window.isSecureContext) {
+      return navigator.clipboard.writeText(text);
+    }
+    return new Promise((resolve, reject) => {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.cssText = 'position:fixed;opacity:0;pointer-events:none';
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      try {
+        document.execCommand('copy') ? resolve() : reject(new Error('execCommand failed'));
+      } catch (e) {
+        reject(e);
+      } finally {
+        document.body.removeChild(ta);
+      }
+    });
+  }
+
+  function shareProperty(btn) {
+    if (!currentProperty) return;
+    const slug     = currentProperty.slug || slugify(currentProperty.title);
+    const shareUrl = new URL(`compartilhar/${encodeURIComponent(slug)}/`, window.location.origin + '/').href;
+    const title    = (currentProperty.title || 'Imóvel') + ' — Heleno Alves';
+
+    function feedback(msg) {
+      if (!btn) return;
+      const orig = btn.textContent;
+      btn.textContent = msg;
+      btn.disabled = true;
+      setTimeout(() => { btn.textContent = orig; btn.disabled = false; }, 2000);
+    }
+
+    if (navigator.share) {
+      navigator.share({ title, url: shareUrl }).catch(() => {});
+      return;
+    }
+
+    copyToClipboard(shareUrl)
+      .then(() => feedback('Link copiado!'))
+      .catch(() => { prompt('Copie o link:', shareUrl); });
   }
 
   // Retorna o link atualizado com o idioma atual no momento da chamada
@@ -524,6 +576,10 @@
       $('stickyWaDetail').removeAttribute('href');
       $('stickyWaDetail').onclick = openWa;
     }
+
+    const doShare = (e) => { e.preventDefault(); shareProperty(e.currentTarget); };
+    if ($('shareDetailHero'))  $('shareDetailHero').onclick  = doShare;
+    if ($('shareDetailPanel')) $('shareDetailPanel').onclick = doShare;
   }
 
   function setupMediaSection(item) {

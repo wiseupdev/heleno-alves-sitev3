@@ -245,47 +245,57 @@
     });
   }
 
-  async function loadPublicJsonProperties() {
-    try {
-      // Busca real no Postgres via webhook N8n
-      const data = await HA_API.fetchProperties();
-      const list = Array.isArray(data) ? data : [];
+  async function loadFromApi() {
+    // Busca real no Postgres via webhook N8n. Lança em caso de falha
+    // para que o caller possa decidir usar cache/fallback.
+    const data = await HA_API.fetchProperties();
+    const list = Array.isArray(data) ? data : [];
+    return list.map(normalizeProperty);
+  }
 
-      return list.map(normalizeProperty);
-    } catch (error) {
-      return fallbackProperties.map(normalizeProperty);
-    }
+  function loadFromCache() {
+    const saved = getStorageArray('admin_properties_list');
+    if (!saved.length) return [];
+    return saved.map(normalizeProperty);
   }
 
   async function loadProperties() {
-    const saved = getStorageArray('admin_properties_list');
+    // Prioridade #1: API real (webhook). localStorage só entra como
+    // fallback se a API falhar, NUNCA como fonte principal.
+    try {
+      const apiProperties = await loadFromApi();
+      const drafts = loadDraftProperties();
 
-    if (saved.length) {
-      properties = saved.map(normalizeProperty);
-      saveProperties();
+      const merged = [...drafts, ...apiProperties];
+      const unique = [];
+
+      merged.forEach((item) => {
+        const exists = unique.some((property) => {
+          return String(property.id) === String(item.id) || property.slug === item.slug;
+        });
+        if (!exists) unique.push(item);
+      });
+
+      properties = unique.length ? unique : apiProperties;
+
+      // Atualiza cache para uso offline futuro, sem virar fonte primária.
+      try {
+        localStorage.setItem('admin_properties_list', JSON.stringify(properties));
+      } catch (_) {}
+
+      return;
+    } catch (error) {
+      console.warn('[admin-imoveis] API falhou, usando cache/fallback:', error);
+    }
+
+    // Fallback: cache local, depois mock estático.
+    const cached = loadFromCache();
+    if (cached.length) {
+      properties = cached;
       return;
     }
 
-    const jsonProperties = await loadPublicJsonProperties();
-    const drafts = loadDraftProperties();
-
-    const merged = [...drafts, ...jsonProperties];
-
-    const unique = [];
-
-    merged.forEach((item) => {
-      const exists = unique.some((property) => {
-        return String(property.id) === String(item.id) || property.slug === item.slug;
-      });
-
-      if (!exists) {
-        unique.push(item);
-      }
-    });
-
-    properties = unique.length ? unique : fallbackProperties.map(normalizeProperty);
-
-    saveProperties();
+    properties = fallbackProperties.map(normalizeProperty);
   }
 
   function applyFilters() {
