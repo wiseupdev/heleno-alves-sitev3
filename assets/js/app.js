@@ -74,14 +74,26 @@ function getDescription(p) {
 }
 
 function getCover(p) {
-  return p.cover || p.img || '';
+  const firstImage = Array.isArray(p.images) ? p.images[0] : null;
+  return [mediaUrl(firstImage), mediaUrl(p.cover), mediaUrl(p.img), mediaUrl(p.image)].find(isValidUrl) || '';
 }
 
 function getGallery(p) {
-  if (Array.isArray(p.gallery) && p.gallery.length) return p.gallery;
-  if (hasValue(p.cover)) return [p.cover];
-  if (hasValue(p.img)) return [p.img];
-  return [];
+  const gallery = Array.isArray(p.gallery) ? p.gallery.map(mediaUrl).filter(isValidUrl) : [];
+  if (gallery.length) return gallery;
+  const cover = getCover(p);
+  return cover ? [cover] : [];
+}
+
+function isValidUrl(value) {
+  const url = String(value || '').trim();
+  return url !== '' && !['#', 'null', 'undefined'].includes(url.toLowerCase());
+}
+
+function mediaUrl(media) {
+  if (!media) return '';
+  if (typeof media === 'string') return media.trim();
+  return String(media.url || media.media_url || media.image_url || media.previewUrl || media.src || '').trim();
 }
 
 function getSpecs(p) {
@@ -195,7 +207,7 @@ function toggleFavorite(id, event) {
 window.toggleFavorite = toggleFavorite;
 
 function card(p, root = '') {
-  const detailUrl = `${root}imoveis/detalhe.html?slug=${p.slug}`;
+  const detailUrl = p.id ? `${root}imoveis/detalhe.html?id=${encodeURIComponent(p.id)}&slug=${encodeURIComponent(p.slug || '')}` : `${root}imoveis/detalhe.html?slug=${encodeURIComponent(p.slug || '')}`;
   const cover = getCover(p);
   const specs = getSpecs(p);
 
@@ -209,14 +221,14 @@ function card(p, root = '') {
         ♡
       </button>
 
-      ${hasValue(cover) ? `
-        <div class="property-img">
-          <img src="${cover}" alt="${p.title || 'Imóvel'}" loading="lazy" decoding="async" width="600" height="400">
+      <div class="property-img">
+        ${cover
+          ? `<img src="${cover}" alt="${p.title || 'Imóvel'}" loading="lazy" decoding="async" width="600" height="400">`
+          : '<div class="property-image-placeholder"><span>Sem imagem</span></div>'}
 
-          ${hasValue(p.tag) ? `<span class="tag">${p.tag}</span>` : ''}
-          ${hasValue(p.region) ? `<span class="region-badge">${p.region}</span>` : ''}
-        </div>
-      ` : ''}
+        ${hasValue(p.tag) ? `<span class="tag">${p.tag}</span>` : ''}
+        ${hasValue(p.region) ? `<span class="region-badge">${p.region}</span>` : ''}
+      </div>
 
       <div class="property-body">
         ${hasValue(p.title) ? `<h3>${p.title}</h3>` : ''}
@@ -330,10 +342,6 @@ async function initHome() {
   // Mapa: mesmo recorte do destaque, para não gerar centenas de pins/itens
   renderMapList([...bcFeatured, ...bravaFeatured]);
 
-  // Alimenta os region cards com fotos reais dos imóveis do banco
-  applyRegionCardImages(bcProps,    'bc');
-  applyRegionCardImages(bravaProps, 'brava');
-
   // Métricas usam o total real (não o recorte de destaque)
   if ($('metricProperties')) {
     $('metricProperties').textContent = String(props.length).padStart(2, '0');
@@ -344,37 +352,6 @@ async function initHome() {
       [...new Set(props.map(p => p.area).filter(Boolean))].length
     ).padStart(2, '0');
   }
-}
-
-// Pega a foto de capa do primeiro imóvel com imagem e aplica no region card
-function applyRegionCardImages(regionProps, cardId) {
-  // Busca os primeiros imóveis com foto
-  const withPhoto = regionProps.filter(p => p.cover || p.img);
-  if (!withPhoto.length) return;
-
-  // Pega até 3 fotos para criar um background dinâmico
-  const photos = withPhoto.slice(0, 3).map(p => p.cover || p.img);
-
-  // Encontra o region card pelo data-region ou pelo h3 dentro
-  const cards = document.querySelectorAll('.region-card');
-  let targetCard = null;
-
-  cards.forEach(card => {
-    const h3 = card.querySelector('h3');
-    if (!h3) return;
-    const text = h3.textContent.toLowerCase();
-    if (cardId === 'bc' && (text.includes('balneário') || text.includes('balneario'))) {
-      targetCard = card;
-    }
-    if (cardId === 'brava' && text.includes('praia brava')) {
-      targetCard = card;
-    }
-  });
-
-  if (!targetCard) return;
-
-  // Aplica a foto — usa a primeira com melhor qualidade
-  targetCard.style.setProperty('--bg', `url(${photos[0]})`);
 }
 
 async function initList(regionSlug = null) {

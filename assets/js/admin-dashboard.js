@@ -1,29 +1,9 @@
 (function () {
   const $ = (id) => document.getElementById(id);
 
-  const fallbackProperties = [
-    {
-      id: 1,
-      title: 'Vitra by Pininfarina',
-      region: 'BC',
-      loc: 'Barra Sul · BC',
-      img: 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=300&q=80&auto=format&fit=crop'
-    },
-    {
-      id: 2,
-      title: 'Brava Ocean House',
-      region: 'Praia Brava',
-      loc: 'Brava Norte · Praia Brava',
-      img: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=300&q=80&auto=format&fit=crop'
-    },
-    {
-      id: 3,
-      title: 'One Tower Residence',
-      region: 'BC',
-      loc: 'Centro · BC',
-      img: 'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=300&q=80&auto=format&fit=crop'
-    }
-  ];
+  // Sem mock como fonte principal — fallback vazio quando o webhook falha
+  // (auditoria: localStorage/mock NÃO devem aparecer como fonte de imóveis).
+  const fallbackProperties = [];
 
   function escapeText(value) {
     return String(value || '')
@@ -63,18 +43,37 @@
   }
 
   function normalizeProperty(property, index) {
+    const img = getPropertyImage(property);
     return {
       id: property.id || index + 1,
       title: property.title || property.name || 'Imóvel sem nome',
       region: property.region || '',
       loc: property.loc || [property.district, property.region].filter(Boolean).join(' · ') || 'Localização sob consulta',
-      img: property.cover?.previewUrl ||
-        property.cover ||
-        property.img ||
-        property.image ||
-        'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=300&q=80&auto=format&fit=crop',
+      img,
       status: property.status || 'Ativo'
     };
+  }
+
+  function isValidUrl(value) {
+    const url = String(value || '').trim();
+    return url !== '' && !['#', 'null', 'undefined'].includes(url.toLowerCase());
+  }
+
+  function mediaUrl(media) {
+    if (!media) return '';
+    if (typeof media === 'string') return media.trim();
+    return String(media.url || media.media_url || media.image_url || media.previewUrl || media.src || '').trim();
+  }
+
+  function getPropertyImage(property) {
+    const firstImage = Array.isArray(property.images) ? property.images[0] : null;
+    return [mediaUrl(firstImage), mediaUrl(property.cover), mediaUrl(property.img), mediaUrl(property.image)]
+      .find(isValidUrl) || '';
+  }
+
+  function renderMiniImage(item) {
+    if (!item.img) return '<div class="property-image-placeholder property-mini-placeholder"><span>Sem imagem</span></div>';
+    return `<img src="${escapeText(item.img)}" alt="${escapeText(item.title)}">`;
   }
 
   function loadLeads() {
@@ -94,15 +93,21 @@
     return merged.map(normalizeLead);
   }
 
-  function loadProperties() {
-    const adminProperties = getStorageArray('admin_properties_list');
-
-    if (adminProperties.length) {
-      return adminProperties
-        .map(normalizeProperty)
-        .filter((property) => property.status !== 'Oculto' && property.status !== 'Vendido');
+  async function loadProperties() {
+    // Fonte real: webhook admin do projeto antigo.
+    if (typeof HA_API_ADMIN !== 'undefined') {
+      try {
+        const res = await HA_API_ADMIN.listAllProperties({ pageSize: 50 });
+        const N = window.HA_NORMALIZER || null;
+        const list = Array.isArray(res.properties) ? res.properties : [];
+        const normalized = N ? N.normalizeList(list) : list;
+        return normalized
+          .map(normalizeProperty)
+          .filter((p) => p.status !== 'Oculto' && p.status !== 'Vendido');
+      } catch (err) {
+        console.error('[DASHBOARD] falha listando imóveis:', err);
+      }
     }
-
     return fallbackProperties.map(normalizeProperty);
   }
 
@@ -344,7 +349,7 @@
       <tr>
         <td>
           <div class="property-mini">
-            <img src="${escapeText(item.img)}" alt="${escapeText(item.title)}">
+            ${renderMiniImage(item)}
             <div>
               <b>${escapeText(item.title)}</b>
               <span>${escapeText(item.loc)}</span>
@@ -371,17 +376,16 @@
     });
   }
 
-  function getDashboardData() {
+  async function getDashboardData() {
     return {
-      properties: loadProperties(),
+      properties: await loadProperties(),
       leads: loadLeads(),
       favorites: loadFavorites()
     };
   }
 
-  function renderDashboard() {
-    const data = getDashboardData();
-
+  async function renderDashboard() {
+    const data = await getDashboardData();
     renderKpis(data);
     renderFunnel(data);
     renderSources(data);

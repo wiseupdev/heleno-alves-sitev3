@@ -73,7 +73,26 @@
   }
 
   function getImage(item) {
-    return item.cover?.previewUrl || item.cover || item.img || item.image || 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=900&q=82&auto=format&fit=crop';
+    const firstImage = Array.isArray(item.images) ? item.images[0] : null;
+    return [mediaUrl(firstImage), mediaUrl(item.cover), mediaUrl(item.img), mediaUrl(item.image)]
+      .find(isValidUrl) || '';
+  }
+
+  function isValidUrl(value) {
+    const url = String(value || '').trim();
+    return url !== '' && !['#', 'null', 'undefined'].includes(url.toLowerCase());
+  }
+
+  function mediaUrl(media) {
+    if (!media) return '';
+    if (typeof media === 'string') return media.trim();
+    return String(media.url || media.media_url || media.image_url || media.previewUrl || media.src || '').trim();
+  }
+
+  function renderFavoriteImage(item) {
+    const image = getImage(item);
+    if (!image) return '<div class="property-image-placeholder"><span>Sem imagem</span></div>';
+    return `<img loading="lazy" decoding="async" width="320" height="220" src="${escapeText(image)}" alt="${escapeText(item.title || 'Imóvel')}">`;
   }
 
   function getSpecs(item) {
@@ -95,7 +114,7 @@
   function getDetailUrl(item) {
     const slug = item.slug || slugify(item.title);
 
-    return `../imoveis/detalhe.html?slug=${slug}`;
+    return item.id ? `../imoveis/detalhe.html?id=${encodeURIComponent(item.id)}&slug=${encodeURIComponent(slug)}` : `../imoveis/detalhe.html?slug=${encodeURIComponent(slug)}`;
   }
 
   async function loadProperties() {
@@ -107,11 +126,6 @@
       properties = fallbackProperties;
     }
 
-    const adminProperties = JSON.parse(localStorage.getItem('admin_properties_list') || '[]');
-
-    if (adminProperties.length) {
-      properties = [...adminProperties, ...properties];
-    }
 
     properties = properties.map((item, index) => ({
       ...item,
@@ -177,7 +191,7 @@
     grid.innerHTML = pageItems.map((item) => `
       <article class="favorite-card">
         <div class="favorite-image">
-          <img loading="lazy" decoding="async" width="320" height="220" src="${getImage(item)}" alt="${escapeText(item.title)}">
+          ${renderFavoriteImage(item)}
           <span class="favorite-tag">${escapeText(item.tag || item.status || 'Favorito')}</span>
         </div>
 

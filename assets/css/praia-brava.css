@@ -15,7 +15,7 @@ body[data-page="brava"] {
   overflow: hidden;
   background:
     linear-gradient(90deg, rgba(0,0,0,.94), rgba(0,0,0,.56), rgba(0,0,0,.18)),
-    url("https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1900&q=84&auto=format&fit=crop") center/cover;
+    url("../images/praiabrava/orlapraiabrava2.jpg") center/cover;
 }
 
 .brava-hero::after {
@@ -384,6 +384,134 @@ body[data-page="brava"] {
   line-height: 1.7;
 }
 
+.brava-featured-development {
+  padding: 120px clamp(22px, 6vw, 96px);
+  display: grid;
+  grid-template-columns: 1.08fr .92fr;
+  gap: 64px;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 18% 20%, rgba(233,197,103,.11), transparent 32%),
+    linear-gradient(180deg, rgba(255,255,255,.025), rgba(255,255,255,.01));
+}
+
+.brava-featured-development::before {
+  content: "TEMPO";
+  position: absolute;
+  right: -2vw;
+  top: 4%;
+  font-family: var(--serif);
+  font-size: clamp(92px, 16vw, 250px);
+  line-height: 1;
+  color: rgba(255,255,255,.035);
+  pointer-events: none;
+}
+
+.featured-media,
+.featured-content {
+  position: relative;
+  z-index: 2;
+}
+
+.featured-media {
+  display: grid;
+  gap: 16px;
+}
+
+.featured-video-card {
+  border: 1px solid rgba(255,255,255,.09);
+  overflow: hidden;
+  background: rgba(255,255,255,.025);
+  position: relative;
+}
+
+.featured-video-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to top, rgba(0,0,0,.28), transparent 48%),
+    linear-gradient(90deg, rgba(0,0,0,.18), transparent);
+  pointer-events: none;
+}
+
+.featured-development-video {
+  width: 100%;
+  aspect-ratio: 21 / 9;
+  object-fit: cover;
+  display: block;
+  background: #050505;
+  filter: brightness(.82) contrast(1.04);
+}
+
+.featured-image-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.featured-image-grid img {
+  width: 100%;
+  height: 190px;
+  object-fit: cover;
+  border: 1px solid rgba(255,255,255,.08);
+  filter: brightness(.82);
+  transition: .7s ease;
+}
+
+.featured-image-grid img:hover {
+  filter: brightness(.68);
+  transform: scale(1.015);
+}
+
+.featured-content {
+  max-width: 620px;
+}
+
+.featured-location {
+  display: inline-block;
+  margin: 10px 0 22px;
+  font-family: var(--sans);
+  font-size: 9px;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.45);
+}
+
+.featured-name {
+  display: block;
+  margin-bottom: 12px;
+  font-family: var(--serif);
+  font-size: clamp(42px, 5vw, 76px);
+  font-weight: 300;
+  line-height: .95;
+  color: var(--gold-light);
+}
+
+.featured-content .section-sub {
+  margin: 24px 0 32px;
+}
+
+.featured-highlights {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 34px;
+}
+
+.featured-highlights span {
+  border: 1px solid rgba(233,197,103,.16);
+  background: rgba(233,197,103,.045);
+  padding: 16px 18px;
+  font-family: var(--sans);
+  font-size: 9px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.64);
+}
+
 .brava-final-cta {
   text-align: center;
   position: relative;
@@ -461,7 +589,8 @@ body[data-page="brava"] {
   }
 
   .brava-value-zones,
-  .brava-lifestyle {
+  .brava-lifestyle,
+  .brava-featured-development {
     grid-template-columns: 1fr;
   }
 
@@ -476,6 +605,14 @@ body[data-page="brava"] {
   .lifestyle-image,
   .lifestyle-image img {
     min-height: 440px;
+  }
+
+  .featured-content {
+    max-width: 900px;
+  }
+
+  .featured-development-video {
+    aspect-ratio: 16 / 9;
   }
 }
 
@@ -500,6 +637,7 @@ body[data-page="brava"] {
   .brava-final-cta,
   .brava-numbers,
   .brava-lifestyle,
+  .brava-featured-development,
   .brava-drivers {
     padding: 76px 22px;
   }
@@ -508,7 +646,9 @@ body[data-page="brava"] {
   .number-grid,
   .profile-grid,
   .driver-grid,
-  .lifestyle-grid {
+  .lifestyle-grid,
+  .featured-image-grid,
+  .featured-highlights {
     grid-template-columns: 1fr;
   }
 
@@ -537,5 +677,13 @@ body[data-page="brava"] {
   .lifestyle-image,
   .lifestyle-image img {
     min-height: 340px;
+  }
+
+  .featured-image-grid img {
+    height: 220px;
+  }
+
+  .brava-featured-development .hero-actions .btn {
+    width: 100%;
   }
 }

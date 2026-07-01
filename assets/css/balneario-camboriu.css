@@ -15,7 +15,7 @@ body[data-page="bc"] {
   overflow: hidden;
   background:
     linear-gradient(90deg, rgba(0,0,0,.94), rgba(0,0,0,.55), rgba(0,0,0,.22)),
-    url("https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=1900&q=84&auto=format&fit=crop") center/cover;
+    url("../images/sennatower/imagenbc2.png") center/cover;
 }
 
 .bc-hero::after {
@@ -386,6 +386,168 @@ body[data-page="bc"] {
     width: 100%;
   }
 }
+
+/* ── Senna Tower — Empreendimento em evidência ─────────────── */
+.bc-senna {
+  padding: 120px clamp(22px, 6vw, 96px);
+  display: grid;
+  grid-template-columns: .9fr 1.1fr;
+  gap: 64px;
+  align-items: start;
+  position: relative;
+  overflow: hidden;
+  background:
+    linear-gradient(105deg, rgba(0,0,0,.84) 0%, rgba(0,0,0,.62) 52%, rgba(0,0,0,.80) 100%),
+    url("../images/sennatower/fundo-conceito-senna.avif") center/cover no-repeat;
+}
+
+.bc-senna::before {
+  content: "SENNA";
+  position: absolute;
+  right: -2vw;
+  top: 4%;
+  font-family: var(--serif);
+  font-size: clamp(92px, 16vw, 250px);
+  line-height: 1;
+  color: rgba(255,255,255,.03);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.bc-senna-content,
+.bc-senna-media {
+  position: relative;
+  z-index: 2;
+}
+
+.bc-senna-content {
+  max-width: 620px;
+}
+
+.bc-senna-media {
+  display: grid;
+  gap: 16px;
+}
+
+.bc-senna-video-card {
+  border: 1px solid rgba(255,255,255,.12);
+  overflow: hidden;
+  background: rgba(248,247,244,1);
+}
+
+.senna-tower-model-video {
+  width: 100%;
+  max-height: 520px;
+  object-fit: contain;
+  display: block;
+}
+
+.bc-senna-image-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.bc-senna-image-grid img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  display: block;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.04);
+  filter: brightness(.84);
+  transition: transform .45s ease, filter .45s ease;
+}
+
+.bc-senna-image-grid img:hover {
+  transform: scale(1.025);
+  filter: brightness(.86);
+}
+
+.bc-senna-image-grid img:nth-child(1) {
+  object-position: center center;
+}
+
+.bc-senna-image-grid img:nth-child(2) {
+  object-position: center top;
+}
+
+.bc-senna-image-grid img:nth-child(3) {
+  object-position: center center;
+}
+
+.featured-location {
+  display: inline-block;
+  margin: 10px 0 22px;
+  font-family: var(--sans);
+  font-size: 9px;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.45);
+}
+
+.featured-name {
+  display: block;
+  margin-bottom: 12px;
+  font-family: var(--serif);
+  font-size: clamp(42px, 5vw, 76px);
+  font-weight: 300;
+  line-height: .95;
+  color: var(--gold-light);
+}
+
+.bc-senna .section-sub {
+  margin: 24px 0 32px;
+}
+
+.featured-highlights {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 34px;
+}
+
+.featured-highlights span {
+  border: 1px solid rgba(233,197,103,.16);
+  background: rgba(233,197,103,.045);
+  padding: 16px 18px;
+  font-family: var(--sans);
+  font-size: 9px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.64);
+}
+
+@media (max-width: 1180px) {
+  .bc-senna {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .bc-senna {
+    padding: 76px 22px;
+  }
+
+  .bc-senna .hero-actions .btn {
+    width: 100%;
+  }
+
+  .bc-senna-image-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .bc-senna-image-grid img {
+    height: 180px;
+    object-position: center center;
+  }
+
+  .bc-senna-image-grid img:nth-child(2) {
+    object-position: center top;
+  }
+}
+
 .market-chart-card {
   border: 1px solid rgba(255,255,255,.08);
   background:

@@ -21,6 +21,7 @@
  */
 
 const WEBHOOK_URL = 'https://webhook.wiseuptech.com.br/webhook/apipaginationha';
+const UNIQUE_URL  = 'https://webhook.wiseuptech.com.br/webhook/uniqueITEM';
 const TENANT_ID   = '1911202511';
 const PAGE_SIZE   = 20;
 
@@ -175,6 +176,24 @@ async function findPropertyBySlug(targetSlug, baseUrl) {
   return null;
 }
 
+/* ─── Busca um imóvel pelo ID via webhook/uniqueITEM ────────────────── */
+async function findPropertyById(propertyId, baseUrl) {
+  const id = Number(propertyId) || propertyId;
+  const payload = { id, property_id: id, tenant_id: TENANT_ID };
+  console.log('[property-preview] uniqueITEM payload:', payload);
+  const res = await fetch(UNIQUE_URL, {
+    method:  'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body:    JSON.stringify(payload),
+  });
+  if (!res.ok) throw new Error(`uniqueITEM ${res.status}`);
+  const data = await res.json();
+  const wrapper = Array.isArray(data) ? data[0] : data;
+  const raw = wrapper && Array.isArray(wrapper.listProperty) && wrapper.listProperty[0];
+  if (!raw) return null;
+  return normalizeForPreview(raw, baseUrl);
+}
+
 /* ─── Descrição curta usada no preview ──────────────────────────────── */
 function buildDescription(item) {
   const parts = [
@@ -189,8 +208,8 @@ function buildDescription(item) {
 
 /* ─── HTML da página de preview ─────────────────────────────────────── */
 function buildHtml(item, slug, baseUrl) {
-  const shareUrl  = `${baseUrl}/compartilhar/${slug}/`;
-  const detailUrl = `${baseUrl}/imoveis/detalhe.html?slug=${slug}`;
+  const shareUrl  = item.id ? `${baseUrl}/compartilhar/${slug}/?id=${encodeURIComponent(item.id)}` : `${baseUrl}/compartilhar/${slug}/`;
+  const detailUrl = item.id ? `${baseUrl}/imoveis/detalhe.html?id=${encodeURIComponent(item.id)}&slug=${encodeURIComponent(slug)}` : `${baseUrl}/imoveis/detalhe.html?slug=${encodeURIComponent(slug)}`;
 
   const T   = escapeHtml(`${item.title} | Heleno Alves`);
   const D   = escapeHtml(buildDescription(item));
@@ -308,13 +327,24 @@ function getSlugFromEvent(event) {
   return '';
 }
 
+/* ─── Leitura do ID (?id= ou ?property_id=) ─────────────────────────── */
+function getIdFromEvent(event) {
+  const q = event.queryStringParameters || {};
+  const candidate = q.id || q.property_id;
+  if (candidate && String(candidate).trim()) {
+    return String(candidate).trim();
+  }
+  return '';
+}
+
 /* ─── Handler ────────────────────────────────────────────────────────── */
 exports.handler = async (event) => {
   const baseUrl = getBaseUrl(event);
   const slug = getSlugFromEvent(event);
+  const propertyId = getIdFromEvent(event);
 
   // Log temporário de diagnóstico — remover quando confirmado em produção
-  console.log('[property-preview] slug recebido:', slug, {
+  console.log('[property-preview] params recebidos:', { slug, propertyId }, {
     path:   event.path,
     rawUrl: event.rawUrl,
     query:  event.queryStringParameters,
@@ -327,20 +357,33 @@ exports.handler = async (event) => {
     'Cache-Control': 'public, max-age=300',
   };
 
-  if (!slug) {
+  if (!slug && !propertyId) {
     return { statusCode: 400, headers: baseHeaders, body: buildFallbackHtml('', baseUrl) };
   }
 
   try {
-    const item = await findPropertyBySlug(slug, baseUrl);
+    // Caminho principal: se houver id, buscar via uniqueITEM (sem paginar)
+    let item = null;
+    if (propertyId) {
+      try {
+        item = await findPropertyById(propertyId, baseUrl);
+      } catch (err) {
+        console.error('[property-preview] uniqueITEM falhou, caindo p/ slug:', err.message);
+      }
+    }
+    // Fallback: se não houver id ou uniqueITEM falhou, busca por slug
+    if (!item && slug) {
+      item = await findPropertyBySlug(slug, baseUrl);
+    }
+    const finalSlug = (item && item.slug) || slug || '';
     if (!item) {
       // Imóvel não encontrado — devolve fallback (ainda redireciona)
-      return { statusCode: 200, headers: baseHeaders, body: buildFallbackHtml(slug, baseUrl) };
+      return { statusCode: 200, headers: baseHeaders, body: buildFallbackHtml(finalSlug, baseUrl) };
     }
-    return { statusCode: 200, headers: baseHeaders, body: buildHtml(item, slug, baseUrl) };
+    return { statusCode: 200, headers: baseHeaders, body: buildHtml(item, finalSlug, baseUrl) };
   } catch (err) {
     console.error('[property-preview] erro:', err);
     // Mesmo em erro, devolve algo que redireciona o usuário
-    return { statusCode: 200, headers: baseHeaders, body: buildFallbackHtml(slug, baseUrl) };
+    return { statusCode: 200, headers: baseHeaders, body: buildFallbackHtml(slug || '', baseUrl) };
   }
 };

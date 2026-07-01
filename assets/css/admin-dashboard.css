@@ -295,10 +295,30 @@ body {
   gap: 13px;
 }
 
-.property-mini img {
+.property-mini img,
+.property-mini-placeholder {
   width: 68px;
   height: 52px;
+  flex: 0 0 68px;
+}
+
+.property-mini img {
   object-fit: cover;
+}
+
+.property-image-placeholder {
+  display: grid;
+  place-items: center;
+  background:
+    linear-gradient(145deg, rgba(233,197,103,.08), rgba(255,255,255,.025)),
+    #111;
+  border: 1px solid rgba(233,197,103,.16);
+  color: rgba(255,255,255,.56);
+  font-family: var(--sans);
+  font-size: 8px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  text-align: center;
 }
 
 .property-mini b {

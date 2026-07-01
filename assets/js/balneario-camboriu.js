@@ -27,7 +27,7 @@
 
   function revealSections() {
     const elements = document.querySelectorAll(
-      '.intro-card, .number-card, .timeline-item, .driver-card, .area-card, .premium-image'
+      '.intro-card, .number-card, .timeline-item, .driver-card, .area-card, .premium-image, .bc-senna-media'
     );
     if (!elements.length) return;
     elements.forEach((element) => { element.classList.add('reveal-item'); });

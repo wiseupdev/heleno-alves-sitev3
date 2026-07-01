@@ -43,9 +43,27 @@
   }
 
   /* ─── Card helpers ─────────────────────────────────────────────── */
+  function isValidUrl(value) {
+    const url = String(value || '').trim();
+    return url !== '' && !['#', 'null', 'undefined'].includes(url.toLowerCase());
+  }
+
+  function mediaUrl(media) {
+    if (!media) return '';
+    if (typeof media === 'string') return media.trim();
+    return String(media.url || media.media_url || media.image_url || media.previewUrl || media.src || '').trim();
+  }
+
   function getImage(item) {
-    return item.cover || item.img || item.image ||
-      'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=900&q=82&auto=format&fit=crop';
+    const firstImage = Array.isArray(item.images) ? item.images[0] : null;
+    return [mediaUrl(firstImage), mediaUrl(item.cover), mediaUrl(item.img), mediaUrl(item.image)]
+      .find(isValidUrl) || '';
+  }
+
+  function renderCardImage(item) {
+    const image = getImage(item);
+    if (!image) return '<div class="property-image-placeholder"><span>Sem imagem</span></div>';
+    return `<img loading="lazy" decoding="async" src="${esc(image)}" alt="${esc(item.title || 'Imóvel')}" width="600" height="400">`;
   }
 
   function tFeat(value) {
@@ -76,7 +94,8 @@
   }
 
   function getDetailUrl(item) {
-    return `imoveis/detalhe.html?slug=${item.slug || slugify(item.title)}`;
+    const slug = item.slug || slugify(item.title);
+    return item.id ? `imoveis/detalhe.html?id=${encodeURIComponent(item.id)}&slug=${encodeURIComponent(slug)}` : `imoveis/detalhe.html?slug=${encodeURIComponent(slug)}`;
   }
 
   /* ─── Compartilhamento via WhatsApp ──────────────────────────────── */
@@ -86,7 +105,7 @@
 
   function getShareUrl(item) {
     const slug = item.slug || slugify(item.title);
-    return absoluteUrl(`compartilhar/${slug}/`);
+    return item.id ? absoluteUrl(`compartilhar/${encodeURIComponent(slug)}/?id=${encodeURIComponent(item.id)}`) : absoluteUrl(`compartilhar/${encodeURIComponent(slug)}/`);
   }
 
   function buildWhatsAppShareText(item) {
@@ -463,7 +482,7 @@
   function buildCard(item) {
     return `<article class="property-card">
       <div class="property-image">
-        <img loading="lazy" decoding="async" src="${esc(getImage(item))}" alt="${esc(item.title)}" width="600" height="400">
+        ${renderCardImage(item)}
         <span class="property-tag">${esc(tFeat(item.tag) || 'Destaque')}</span>
         <button class="favorite-btn ${isFav(item) ? 'active' : ''}" type="button"
           data-action="favorite" data-id="${item.id}" aria-label="Favoritar">

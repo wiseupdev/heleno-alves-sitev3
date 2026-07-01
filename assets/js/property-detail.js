@@ -8,30 +8,8 @@
   let properties = [];
   let currentProperty = null;
 
-  const fallbackProperties = [
-    {
-      id: 1,
-      slug: 'vitra-by-pininfarina',
-      title: 'Vitra by Pininfarina',
-      region: 'BC',
-      district: 'Barra Sul',
-      type: 'Apartamento',
-      status: 'Exclusivo',
-      tag: 'Frente Mar',
-      price: 'Sob consulta',
-      description: 'Empreendimento de assinatura internacional com vista permanente para o Atlântico e leitura arquitetônica icônica.',
-      img: 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1400&q=84&auto=format&fit=crop',
-      gallery: [
-        'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1400&q=84&auto=format&fit=crop',
-        'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=1400&q=84&auto=format&fit=crop',
-        'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=1400&q=84&auto=format&fit=crop'
-      ],
-      specs: ['320 m²', '4 suítes', '4 vagas', 'Vista mar'],
-      features: ['Frente mar', 'Alto andar', 'Arquitetura assinada', 'Lazer premium'],
-      lat: -26.9929,
-      lng: -48.6352
-    }
-  ];
+  // Fallback mock removido — fonte única é HA_API.fetchProperties (backend N8n real).
+  const fallbackProperties = [];
 
   function slugify(value) {
     return String(value || '')
@@ -80,18 +58,33 @@
   }
 
   function getImage(item) {
-    return item.cover?.previewUrl ||
-      item.cover ||
-      item.img ||
-      item.image ||
-      'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1400&q=84&auto=format&fit=crop';
+    const firstImage = Array.isArray(item.images) ? item.images[0] : null;
+    return [mediaUrl(firstImage), mediaUrl(item.cover), mediaUrl(item.img), mediaUrl(item.image)]
+      .find(isValidUrl) || '';
   }
 
   function getGallery(item) {
-    const gallery = Array.isArray(item.gallery) ? item.gallery : [];
-    const images = gallery.length ? gallery : [getImage(item)];
+    const gallery = Array.isArray(item.gallery) ? item.gallery.map(mediaUrl).filter(isValidUrl) : [];
+    const cover = getImage(item);
+    const images = gallery.length ? gallery : (cover ? [cover] : []);
 
-    return images.filter(Boolean);
+    return images.filter(isValidUrl);
+  }
+
+  function isValidUrl(value) {
+    const url = String(value || '').trim();
+    return url !== '' && !['#', 'null', 'undefined'].includes(url.toLowerCase());
+  }
+
+  function mediaUrl(media) {
+    if (!media) return '';
+    if (typeof media === 'string') return media.trim();
+    return String(media.url || media.media_url || media.image_url || media.previewUrl || media.src || '').trim();
+  }
+
+  function renderImageOrPlaceholder(image, alt) {
+    if (!image) return '<div class="property-image-placeholder"><span>Sem imagem</span></div>';
+    return `<img loading="lazy" decoding="async" width="320" height="220" src="${escapeText(image)}" alt="${escapeText(alt)}">`;
   }
 
   function getLocation(item) {
@@ -213,7 +206,8 @@
     // Link de preview estático — é ele que o WhatsApp lê para montar o
     // card com foto/título/descrição (a página de detalhe real renderiza
     // via JS, então o WhatsApp nunca veria as meta tags certas nela).
-    const shareUrl = new URL(`compartilhar/${encodeURIComponent(slug)}/`, window.location.origin + '/').href;
+    const sharePath = ref ? `compartilhar/${encodeURIComponent(slug)}/?id=${encodeURIComponent(ref)}` : `compartilhar/${encodeURIComponent(slug)}/`;
+    const shareUrl = new URL(sharePath, window.location.origin + '/').href;
 
     const T = {
       pt: { greet: 'Olá, Heleno! Tenho interesse neste imóvel:', ref: 'Referência', link: 'Link do imóvel:' },
@@ -243,8 +237,30 @@
   }
 
   async function loadProperties() {
+    // Caminho principal: se a URL tem ?id=, busca apenas esse imóvel
+    // via webhook/uniqueITEM (rota recomendada na auditoria — evita
+    // depender da paginação completa).
+    const idParam = getParam('id');
+    if (idParam && typeof HA_API.fetchById === 'function') {
+      try {
+        const single = await HA_API.fetchById(idParam);
+        if (single) {
+          properties = [{
+            ...single,
+            id:     single.id   || idParam,
+            slug:   single.slug || slugify(single.title),
+            status: single.status || 'Ativo',
+          }];
+          return;
+        }
+      } catch (error) {
+        console.error('[HA] property-detail.js — uniqueITEM falhou, caindo para listagem:', error);
+      }
+    }
+
+    // Fallback (sem id, ou uniqueITEM indisponível): usa a listagem
+    // pública e filtra por slug.
     try {
-      // Busca real no Postgres via webhook N8n
       const data = await HA_API.fetchProperties();
       properties = Array.isArray(data) ? data : [];
     } catch (error) {
@@ -252,7 +268,6 @@
       properties = fallbackProperties;
     }
 
-    // Garante id e slug em todos os itens
     properties = properties.map((item, index) => ({
       ...item,
       id:     item.id     || index + 1,
@@ -265,12 +280,15 @@
     const slugParam = getParam('slug');
     const idParam = getParam('id');
 
-    if (slugParam) {
-      return properties.find((item) => String(item.slug || slugify(item.title)) === String(slugParam));
+    // Prioriza ID — se loadProperties() conseguiu o uniqueITEM, há
+    // exatamente 1 item na lista e ele já bate.
+    if (idParam) {
+      const byId = properties.find((item) => String(item.id) === String(idParam));
+      if (byId) return byId;
     }
 
-    if (idParam) {
-      return properties.find((item) => String(item.id) === String(idParam));
+    if (slugParam) {
+      return properties.find((item) => String(item.slug || slugify(item.title)) === String(slugParam));
     }
 
     return properties[0];
@@ -287,9 +305,12 @@
 
   function renderHero(item) {
     const hero = $('detailHero');
+    const image = getImage(item);
 
-    if (hero) {
-      hero.style.setProperty('--detail-bg', `url("${getImage(item)}")`);
+    if (hero && image) {
+      hero.style.setProperty('--detail-bg', `url("${image}")`);
+    } else if (hero) {
+      hero.classList.add('no-image');
     }
 
     if ($('detailTitle')) $('detailTitle').textContent = item.title || 'Imóvel';
@@ -682,7 +703,7 @@
       return `
         <article class="similar-card">
           <div class="similar-img">
-            <img loading="lazy" decoding="async" width="320" height="220" src="${getImage(property)}" alt="${escapeText(property.title)}">
+            ${renderImageOrPlaceholder(getImage(property), property.title || 'Imóvel')}
           </div>
 
           <div class="similar-body">
@@ -695,7 +716,7 @@
                   ? HA_I18N.formatPrice(property.price, HA_I18N.getLang())
                   : escapeText(property.price || 'Sob consulta')
               }</div>
-              <a class="btn small" href="detalhe.html?slug=${slug}" data-i18n="card_details">Detalhes</a>
+              <a class="btn small" href="${property.id ? `detalhe.html?id=${encodeURIComponent(property.id)}&slug=${encodeURIComponent(slug)}` : `detalhe.html?slug=${encodeURIComponent(slug)}`}" data-i18n="card_details">Detalhes</a>
             </div>
           </div>
         </article>

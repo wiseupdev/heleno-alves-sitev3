@@ -6,6 +6,7 @@
 const HA_API = (function () {
 
   const WEBHOOK_URL = 'https://webhook.wiseuptech.com.br/webhook/apipaginationha';
+  const UNIQUE_URL  = 'https://webhook.wiseuptech.com.br/webhook/uniqueITEM';
   const TENANT_ID   = '1911202511';
   const PAGE_SIZE   = 20;
   // v7: contrato de requisição trocado para inglês (event_name/page/
@@ -20,15 +21,89 @@ const HA_API = (function () {
       .replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
   }
 
+  function isCoverValue(value) {
+    return value === true || value === 'true' || value === 1 || value === '1';
+  }
+
+  function getMediaUrl(media) {
+    if (!media || typeof media !== 'object') return '';
+
+    return (
+      media.url ||
+      media.media_url ||
+      media.image_url ||
+      media.video_url ||
+      media.src ||
+      media.path ||
+      ''
+    );
+  }
+
+  function pickFirstObjectFromResponse(data) {
+    if (!data) return null;
+
+    const wrapper = Array.isArray(data) ? data[0] : data;
+
+    if (!wrapper) return null;
+
+    if (Array.isArray(wrapper.listProperty) && wrapper.listProperty.length > 0) {
+      return wrapper.listProperty[0];
+    }
+
+    if (Array.isArray(wrapper.properties) && wrapper.properties.length > 0) {
+      return wrapper.properties[0];
+    }
+
+    if (Array.isArray(wrapper.property) && wrapper.property.length > 0) {
+      return wrapper.property[0];
+    }
+
+    if (wrapper.property && typeof wrapper.property === 'object') {
+      return wrapper.property;
+    }
+
+    if (Array.isArray(wrapper.data) && wrapper.data.length > 0) {
+      return wrapper.data[0];
+    }
+
+    if (wrapper.data && typeof wrapper.data === 'object') {
+      return wrapper.data;
+    }
+
+    if (wrapper.id || wrapper.property_id || wrapper.property_title || wrapper.property_detail || wrapper.property_description) {
+      return wrapper;
+    }
+
+    return null;
+  }
+
   /* ─── Normaliza 1 imóvel ──────────────────────────────────────── */
   function normalize(raw) {
-    const images   = Array.isArray(raw.images) ? raw.images : [];
-    const coverObj = images.find(img => img.is_cover) || images[0] || null;
+    const images = Array.isArray(raw.images) ? raw.images : [];
+
+    const normalizedImages = images
+      .map((img, index) => ({
+        ...img,
+        url: getMediaUrl(img),
+        position: img?.position ?? img?.media_index ?? img?.index ?? index,
+      }))
+      .filter(img => Boolean(img.url))
+      .sort((a, b) => {
+        const ac = isCoverValue(a.is_cover);
+        const bc = isCoverValue(b.is_cover);
+
+        if (ac && !bc) return -1;
+        if (bc && !ac) return 1;
+
+        return Number(a.position || 0) - Number(b.position || 0);
+      });
+
+    const coverObj = normalizedImages.find(img => isCoverValue(img.is_cover)) || normalizedImages[0] || null;
     const cover    = coverObj ? coverObj.url : '';
-    const gallery  = images.map(img => img.url).filter(Boolean);
+    const gallery  = normalizedImages.map(img => img.url).filter(Boolean);
 
     const videos = Array.isArray(raw.videos) ? raw.videos : [];
-    const video  = videos[0] ? videos[0].url : '';
+    const video  = videos[0] ? getMediaUrl(videos[0]) : '';
 
     const types = Array.isArray(raw.property_types) ? raw.property_types : [];
     const type  = types[0] ? types[0].property_type_name : '';
@@ -59,7 +134,7 @@ const HA_API = (function () {
       price = rawPrice.startsWith('R$') ? rawPrice : `R$ ${rawPrice}`;
     }
 
-    const title = raw.property_title || '';
+    const title = String(raw.property_title || raw.title || '').trim();
     const slug  = raw.slug || (slugify(title) + '-' + raw.id);
     const area  = raw.property_area_sqm ? `${raw.property_area_sqm} m²` : '';
 
@@ -69,7 +144,7 @@ const HA_API = (function () {
       title,
       region,
       regionSlug,
-      district:    raw.property_district || '',
+      district:    String(raw.property_district || raw.property_neighborhood || raw.neighborhood || '').trim(),
       type,
       tag:         tag || type,
       status:      raw.property_status || 'active',
@@ -83,7 +158,7 @@ const HA_API = (function () {
       gallery,
       video,
       features,
-      description: raw.property_description || '',
+      description: raw.property_description || raw.property_detail || '',
       lat:         raw.property_lat ? Number(raw.property_lat) : null,
       lng:         raw.property_lng ? Number(raw.property_lng) : null,
     };
@@ -103,6 +178,11 @@ const HA_API = (function () {
   function setCache(data) {
     try { localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), data })); }
     catch { /* ignora quota exceeded */ }
+  }
+
+  function clearCache() {
+    try { localStorage.removeItem(CACHE_KEY); }
+    catch { /* ignora localStorage bloqueado */ }
   }
 
   /* ─── Agrupamento por identidade real ──────────────────────────────
@@ -307,8 +387,8 @@ const HA_API = (function () {
   }
 
   /* ─── API principal ───────────────────────────────────────────── */
-  async function fetchProperties() {
-    const cached = getCached();
+  async function fetchProperties(options = {}) {
+    const cached = options.force ? null : getCached();
     if (cached) return cached;
 
     // Se já existe um fetch em andamento, todos esperam o mesmo resultado
@@ -349,15 +429,48 @@ const HA_API = (function () {
     }
   }
 
+  /* ─── Buscar imóvel único por ID (uniqueITEM) ─────────────────── */
+  async function fetchById(propertyId) {
+    if (!propertyId) return null;
+
+    const id = Number(propertyId) || propertyId;
+    const payload = { id, property_id: id, tenant_id: TENANT_ID };
+
+    console.log('[UNIQUE] request:', payload);
+
+    const res = await fetch(UNIQUE_URL, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify(payload),
+    });
+
+    if (!res.ok) throw new Error(`uniqueITEM ${res.status}`);
+
+    const data = await res.json();
+    console.log('[UNIQUE] response:', data);
+
+    const raw = pickFirstObjectFromResponse(data);
+
+    if (!raw) {
+      console.warn('[UNIQUE] resposta vazia para id', id);
+      return null;
+    }
+
+    return normalize(raw);
+  }
+
   return {
     fetchProperties,
+    fetchById,
     normalize,
     dedupeProperties,
+    clearCache,
     // Alias com o nome usado na auditoria — mesma função
     groupPropertiesByRealEstate: dedupeProperties,
     summarizeByCity,
     TENANT_ID,
     WEBHOOK_URL,
+    UNIQUE_URL,
   };
 
 })(); 
