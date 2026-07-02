@@ -1,65 +1,44 @@
+/**
+ * usuario-login.js — Heleno Alves
+ * Login do usuário final via webhook real (haimoveisDATABASE).
+ */
 (function () {
   const $ = (id) => document.getElementById(id);
 
   function showFeedback(message, type) {
     const feedback = $('loginFeedback');
-
     if (!feedback) return;
-
     feedback.textContent = message;
     feedback.className = `login-feedback ${type}`;
   }
+  function isValidEmail(email) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); }
 
-  function isValidEmail(email) {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  }
-
-  function handleLogin(event) {
+  async function handleLogin(event) {
     event.preventDefault();
+    const email    = $('userEmail')?.value.trim() || '';
+    const password = $('userPassword')?.value || '';
 
-    const email = $('userEmail')?.value.trim() || '';
-    const password = $('userPassword')?.value.trim() || '';
+    if (!email || !password) return showFeedback('Preencha e-mail e senha para continuar.', 'error');
+    if (!isValidEmail(email)) return showFeedback('Digite um e-mail válido.', 'error');
+    if (password.length < 4)  return showFeedback('A senha precisa ter pelo menos 4 caracteres.', 'error');
+    if (typeof HA_AUTH === 'undefined') return showFeedback('Falha ao carregar autenticação.', 'error');
 
-    if (!email || !password) {
-      showFeedback('Preencha e-mail e senha para continuar.', 'error');
-      return;
+    showFeedback('Verificando...', 'info');
+    try {
+      const user = await HA_AUTH.checkLogin(email, password);
+      if (!user) { await new Promise(r => setTimeout(r, 400)); return showFeedback('E-mail ou senha inválidos.', 'error'); }
+      HA_AUTH.saveUserSession(user);
+      showFeedback('Login realizado. Redirecionando para sua conta...', 'success');
+      setTimeout(() => { window.location.href = 'minha-conta.html'; }, 700);
+    } catch (err) {
+      console.error('[USER LOGIN] erro:', err);
+      showFeedback('Não foi possível validar agora. Tente novamente.', 'error');
     }
-
-    if (!isValidEmail(email)) {
-      showFeedback('Digite um e-mail válido.', 'error');
-      return;
-    }
-
-    if (password.length < 4) {
-      showFeedback('A senha precisa ter pelo menos 4 caracteres.', 'error');
-      return;
-    }
-
-    localStorage.setItem('heleno_user_logged', 'true');
-    localStorage.setItem('heleno_user_email', email);
-
-    const savedProfile = JSON.parse(localStorage.getItem('heleno_user_profile') || '{}');
-
-    localStorage.setItem('heleno_user_profile', JSON.stringify({
-      ...savedProfile,
-      email,
-      lastLogin: new Date().toISOString()
-    }));
-
-    showFeedback('Login realizado. Redirecionando para sua conta...', 'success');
-
-    setTimeout(() => {
-      window.location.href = 'minha-conta.html';
-    }, 700);
   }
 
-  function initLogin() {
+  function init() {
     const form = $('userLoginForm');
-
-    if (!form) return;
-
-    form.addEventListener('submit', handleLogin);
+    if (form) form.addEventListener('submit', handleLogin);
   }
-
-  document.addEventListener('DOMContentLoaded', initLogin);
+  document.addEventListener('DOMContentLoaded', init);
 })();

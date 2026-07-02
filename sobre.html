@@ -5,8 +5,7 @@
   <meta http-equiv="Cross-Origin-Opener-Policy" content="same-origin-allow-popups">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://webhook.wiseuptech.com.br https://open.er-api.com https://*.supabase.co; frame-src https://www.google.com;">
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
-  <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
-  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+<meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
   <meta name="robots" content="index, follow">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sobre Heleno Alves — Corretor de Alto Luxo</title>
@@ -50,7 +49,8 @@
     </a>
     <button class="menu" onclick="toggleMenu()" aria-label="Abrir menu"><span></span></button>
   </header>
-    <div id="mobilePanel" class="mobile-panel" role="dialog" aria-modal="true" aria-label="Menu">
+
+  <div id="mobilePanel" class="mobile-panel" role="dialog" aria-modal="true" aria-label="Menu">
     <div class="mobile-panel-head">
       <a href="index.html" class="logo logo-img" onclick="toggleMenu()">
         <img src="assets/images/logo/logo-icon.webp" alt="Heleno Alves" class="logo-icon" width="28" height="34">
@@ -71,6 +71,7 @@
       </a>
     </div>
   </div>
+
   <main>
     <section class="about-hero">
       <div class="about-hero-content">
@@ -87,10 +88,11 @@
         <p data-i18n="sobre_hero_card_p">Uma atuação construída sobre ética, transparência, visão estratégica e relacionamento de confiança.</p>
       </aside>
     </section>
+
     <section class="about-biography" id="trajetoria">
       <div class="bio-layout">
         <div class="bio-image">
-          <img src="../assets/images/heleno/helenofotos/heleno-01.jpg" alt="Heleno Alves — Corretor de Alto Luxo" loading="eager" width="600" height="836">
+          <img src="assets/images/heleno/helenofotos/heleno-01.jpg" alt="Heleno Alves — Corretor de Alto Luxo" loading="eager" width="600" height="836">
         </div>
         <div class="bio-content">
           <p class="eyebrow">Heleno Alves</p>
@@ -101,6 +103,7 @@
         </div>
       </div>
     </section>
+
     <section class="about-values dark-panel">
       <div class="section-head">
         <div>
@@ -115,6 +118,7 @@
         <article class="value-card"><span>03</span><h3 data-i18n="sobre_v3_title">Respeito</h3><p data-i18n="sobre_v3_desc">Atendimento personalizado para compradores, famílias e investidores com diferentes perfis e momentos de vida.</p></article>
       </div>
     </section>
+
     <section class="about-work">
       <div class="work-copy">
         <p class="eyebrow" data-i18n="sobre_work_eyebrow">O trabalho de Heleno Alves</p>
@@ -130,57 +134,7 @@
         <article><strong data-i18n="sobre_val4_title">Relacionamento</strong><span data-i18n="sobre_val4_desc">Atendimento próximo, discreto e orientado à confiança.</span></article>
       </div>
     </section>
-    <section class="about-senna dark-panel">
-      <div class="senna-content">
-        <p class="eyebrow" data-i18n="sobre_senna_eyebrow">Atuação em projetos icônicos</p>
-        <h2 class="section-title" data-i18n="sobre_senna_h2">Presença entre os profissionais de altíssimo padrão no Brasil.</h2>
-        <p data-i18n="sobre_senna_p1">Ampliando ainda mais sua atuação, Heleno passa a integrar o seleto grupo de profissionais responsáveis pela comercialização do Senna Tower, empreendimento reconhecido por seu porte, relevância e posicionamento no mercado de luxo.</p>
-        <p data-i18n="sobre_senna_p2">Participar de um projeto dessa magnitude reforça seu posicionamento como um dos nomes fortes do setor e consolida seu papel entre especialistas preparados para lidar com imóveis de altíssimo valor.</p>
-        <a class="btn gold" href="contato.html" data-i18n="sobre_senna_btn">Falar com Heleno</a>
-      </div>
-      <div class="senna-highlight">
-        <span data-i18n="sobre_senna_badge">Projeto icônico</span>
-        <strong>Senna Tower</strong>
-        <p data-i18n="sobre_senna_highlight_p">Autoridade, relacionamento e atuação em empreendimentos de alto impacto.</p>
-      </div>
-    </section>
 
-    <!-- Carrossel Senna Tower -->
-    <section class="senna-carousel-section">
-      <div class="senna-carousel-head">
-        <div>
-          <p class="eyebrow" data-i18n="sobre_senna_gallery_eyebrow">Galeria do empreendimento</p>
-          <h2 class="section-title" data-i18n="sobre_senna_gallery_h2">Senna Tower — Um projeto de outra dimensão.</h2>
-        </div>
-        <div class="arrows">
-          <button class="arrow" id="sennaPrev" type="button" aria-label="Anterior">←</button>
-          <button class="arrow" id="sennaNext" type="button" aria-label="Próxima">→</button>
-        </div>
-      </div>
-      <div class="senna-carousel" id="sennaCarousel">
-        <a class="senna-slide" href="imoveis.html?search=Senna+Tower" title="Senna Tower">
-          <img src="assets/images/sennatower/Sennatower.jpeg" alt="Senna Tower" loading="lazy">
-        </a>
-        <a class="senna-slide" href="imoveis.html?search=Senna+Tower" title="Senna Tower">
-          <img src="assets/images/sennatower/Sennatower1.jpeg" alt="Senna Tower" loading="lazy">
-        </a>
-        <a class="senna-slide" href="imoveis.html?search=Senna+Tower" title="Senna Tower">
-          <img src="assets/images/sennatower/Sennatower2.jpeg" alt="Senna Tower" loading="lazy">
-        </a>
-        <a class="senna-slide" href="imoveis.html?search=Senna+Tower" title="Senna Tower">
-          <img src="assets/images/sennatower/Sennatower3.jpeg" alt="Senna Tower" loading="lazy">
-        </a>
-        <a class="senna-slide" href="imoveis.html?search=Senna+Tower" title="Senna Tower">
-          <img src="assets/images/sennatower/Sennatower4.jpeg" alt="Senna Tower" loading="lazy">
-        </a>
-        <a class="senna-slide" href="imoveis.html?search=Senna+Tower" title="Senna Tower">
-          <img src="assets/images/sennatower/Sennatower5.jpeg" alt="Senna Tower" loading="lazy">
-        </a>
-        <a class="senna-slide" href="imoveis.html?search=Senna+Tower" title="Senna Tower">
-          <img src="assets/images/sennatower/Sennatower6.jpeg" alt="Senna Tower" loading="lazy">
-        </a>
-      </div>
-    </section>
     <section class="about-pillars">
       <div class="section-head">
         <div>
@@ -196,6 +150,7 @@
         <article class="pillar-card"><span>04</span><h3 data-i18n="sobre_p4_title">Atuação nacional</h3><p data-i18n="sobre_p4_desc">Presença forte no Eusébio, em Balneário Camboriú e em projetos exclusivos de alto padrão.</p></article>
       </div>
     </section>
+
     <section class="about-media dark-panel">
       <div class="section-head">
         <div>
@@ -207,7 +162,7 @@
       <div class="media-grid">
         <a class="media-card" href="https://juridico.news/heleno-alves-o-nome-que-redefine-o-mercado-imobiliario-de-luxo-em-balneario-camboriu-sc-brasil/" target="_blank" rel="noopener noreferrer">
           <div class="media-image">
-            <img src="../assets/images/heleno/helenofotos/heleno-03.jpg" alt="Heleno Alves expande sua expertise para o mercado de luxo catarinense" loading="lazy" width="600" height="900">
+            <img src="assets/images/heleno/helenofotos/heleno-03.jpg" alt="Heleno Alves expande sua expertise para o mercado de luxo catarinense" loading="lazy" width="600" height="900">
             <span>Jurídico News</span>
           </div>
           <div class="media-body">
@@ -222,6 +177,7 @@
         </article>
       </div>
     </section>
+
     <section class="about-final-cta">
       <p class="eyebrow" data-i18n="sobre_curation_eyebrow">Curadoria personalizada</p>
       <h2 class="section-title" data-i18n="sobre_cta_h2">Imóveis de alto padrão exigem mais do que busca. Exigem leitura estratégica.</h2>
@@ -232,6 +188,7 @@
       </div>
     </section>
   </main>
+
   <div class="lgpd-banner" id="lgpdBanner" hidden>
     <div>
       <strong data-i18n="lgpd_title">Privacidade e cookies</strong>
@@ -242,11 +199,20 @@
       <button type="button" id="acceptLgpd" data-i18n="lgpd_accept">Aceitar</button>
     </div>
   </div>
-  <a class="wa-float" data-wa="https://wa.me/5585988085349" href="https://wa.me/5585988085349" target="_blank" rel="noopener" aria-label="WhatsApp — Fale com Heleno" data-wa-tooltip><svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.149-.174.198-.298.297-.497.1-.198.05-.371-.025-.52-.074-.149-.668-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.197 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg><span class="wa-tooltip" data-i18n="wa_tooltip">Fale com Heleno</span></a>
+
+  <a class="wa-float" data-wa="https://wa.me/5585988085349" href="https://wa.me/5585988085349" target="_blank" rel="noopener" aria-label="WhatsApp — Fale com Heleno" data-wa-tooltip>
+    <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor" aria-hidden="true">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.149-.174.198-.298.297-.497.1-.198.05-.371-.025-.52-.074-.149-.668-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.197 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+    </svg>
+    <span class="wa-tooltip" data-i18n="wa_tooltip">Fale com Heleno</span>
+  </a>
+
   <footer class="site-footer">
     <div class="footer-main">
       <div>
-        <a class="footer-brand" href="index.html"><img src="assets/images/logo/logo-horizontal.webp" alt="Heleno Alves" class="footer-logo" width="220" height="60" loading="lazy"></a>
+        <a class="footer-brand" href="index.html">
+          <img src="assets/images/logo/logo-horizontal.webp" alt="Heleno Alves" class="footer-logo" width="220" height="60" loading="lazy">
+        </a>
         <p data-i18n="footer_desc">Curadoria imobiliária de alto luxo em Balneário Camboriú e Praia Brava.</p>
       </div>
       <div class="footer-col">
@@ -274,6 +240,7 @@
       <span data-i18n="footer_dev">Site desenvolvido para curadoria imobiliária premium.</span>
     </div>
   </footer>
+
   <script defer src="assets/js/i18n.js"></script>
   <script defer src="assets/js/api.js"></script>
   <script defer src="assets/js/app.js"></script>

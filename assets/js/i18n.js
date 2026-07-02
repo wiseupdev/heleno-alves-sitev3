@@ -295,6 +295,20 @@ const HA_I18N = (function () {
       bc_cta_eyebrow:     'Curadoria Heleno Alves',
       bc_cta_h2:          'O imóvel certo em Balneário Camboriú não é apenas encontrado. Ele é selecionado.',
       bc_cta_sub:         'Acesse a curadoria de imóveis disponíveis ou fale diretamente para receber uma seleção alinhada ao seu perfil.',
+
+      /* Senna Tower — Empreendimento em evidência */
+      bc_senna_eyebrow:     'Empreendimento em evidência',
+      bc_senna_location:    'Balneário Camboriú · Santa Catarina',
+      bc_senna_h2:          'Um ícone arquitetônico no skyline mais desejado do Brasil.',
+      bc_senna_desc:        'O Senna Tower representa uma nova escala para o mercado imobiliário de alto padrão em Balneário Camboriú: arquitetura icônica, vista privilegiada, exclusividade e uma proposta de moradia voltada para quem busca patrimônio, assinatura e posição.',
+      bc_senna_highlight_1: 'Projeto icônico',
+      bc_senna_highlight_2: 'Vista privilegiada',
+      bc_senna_highlight_3: 'Alto padrão',
+      bc_senna_highlight_4: 'Balneário Camboriú',
+      bc_senna_highlight_5: 'Exclusividade vertical',
+      bc_senna_btn_more:    'Saiba mais sobre o Senna Tower',
+      bc_senna_btn_whatsapp:'Falar com Heleno',
+
       /* Brava Page */
       brava_page_title:    'Luxo, natureza e escassez em um dos endereços mais desejados do litoral.',
       brava_page_lead:     'Entre Itajaí e Balneário Camboriú, a Praia Brava consolidou uma leitura própria de alto padrão: mais reservada, mais sensorial e cada vez mais disputada por quem busca vista mar, lifestyle e patrimônio.',
@@ -365,6 +379,19 @@ const HA_I18N = (function () {
       brava_cta_eyebrow:   'Curadoria Heleno Alves',
       brava_cta_h2:        'Na Praia Brava, escolher bem é entender a micro localização.',
       brava_cta_sub:       'Frente mar, quadra mar, Brava Norte, Brava Sul, segunda quadra e eixo de expansão possuem leituras diferentes de valor. A curadoria certa ajuda a separar desejo, liquidez e oportunidade.',
+
+      /* Tempo — Empreendimento em evidência */
+      brava_tempo_eyebrow:     'Empreendimento em evidência',
+      brava_tempo_location:    'Praia Brava · Itajaí',
+      brava_tempo_h2:          'Arquitetura orgânica, natureza e exclusividade na Praia Brava.',
+      brava_tempo_desc:        'Um empreendimento que traduz uma nova leitura do alto padrão: integração com o verde, vista para o mar, privacidade e uma experiência residencial pensada para quem busca mais do que localização — busca atmosfera, raridade e permanência.',
+      brava_tempo_highlight_1: 'Arquitetura orgânica',
+      brava_tempo_highlight_2: 'Vista mar',
+      brava_tempo_highlight_3: 'Paisagismo integrado',
+      brava_tempo_highlight_4: 'Praia Brava',
+      brava_tempo_highlight_5: 'Exclusividade residencial',
+      brava_tempo_btn_more:    'Saiba mais sobre o Tempo',
+      brava_tempo_btn_whatsapp:'Falar com Heleno',
 
       /* BC — valores do gráfico e insights */
       bc_n1_value:           'R$ 15 mil+',
@@ -722,6 +749,20 @@ const HA_I18N = (function () {
       bc_cta_eyebrow:     'Heleno Alves Curation',
       bc_cta_h2:          'The right property in Balneário Camboriú is not just found. It is selected.',
       bc_cta_sub:         'Browse available properties or contact us directly to receive a selection tailored to your profile.',
+
+      /* Senna Tower — Featured development */
+      bc_senna_eyebrow:     'Featured development',
+      bc_senna_location:    'Balneário Camboriú · Santa Catarina',
+      bc_senna_h2:          'An architectural icon on the most sought-after skyline in Brazil.',
+      bc_senna_desc:        'Senna Tower sets a new standard for luxury real estate in Balneário Camboriú: iconic architecture, privileged views, exclusivity and a residential concept designed for those seeking heritage, signature and prestige.',
+      bc_senna_highlight_1: 'Iconic project',
+      bc_senna_highlight_2: 'Privileged view',
+      bc_senna_highlight_3: 'Luxury standard',
+      bc_senna_highlight_4: 'Balneário Camboriú',
+      bc_senna_highlight_5: 'Vertical exclusivity',
+      bc_senna_btn_more:    'Learn more about Senna Tower',
+      bc_senna_btn_whatsapp:'Talk to Heleno',
+
       brava_page_title:    'Luxury, nature and scarcity at one of the most desired addresses on the coast.',
       brava_page_lead:     'Between Itajaí and Balneário Camboriú, Praia Brava has consolidated its own high-end vision: more reserved, more sensorial and increasingly sought after by those looking for sea views, lifestyle and heritage.',
       brava_page_btn_view: 'View properties at Praia Brava',
@@ -791,6 +832,19 @@ const HA_I18N = (function () {
       brava_cta_eyebrow:   'Heleno Alves Curation',
       brava_cta_h2:        'At Praia Brava, choosing well means understanding the micro-location.',
       brava_cta_sub:       'Oceanfront, second row, Brava Norte, Brava Sul, third row and expansion axis all have different value readings. The right curation helps separate desire, liquidity and opportunity.',
+
+      /* Tempo — Featured development */
+      brava_tempo_eyebrow:     'Featured development',
+      brava_tempo_location:    'Praia Brava · Itajaí',
+      brava_tempo_h2:          'Organic architecture, nature and exclusivity at Praia Brava.',
+      brava_tempo_desc:        'A development that delivers a new reading of luxury: integration with nature, sea views, privacy and a residential experience designed for those seeking more than a location — seeking atmosphere, rarity and permanence.',
+      brava_tempo_highlight_1: 'Organic architecture',
+      brava_tempo_highlight_2: 'Sea view',
+      brava_tempo_highlight_3: 'Integrated landscaping',
+      brava_tempo_highlight_4: 'Praia Brava',
+      brava_tempo_highlight_5: 'Residential exclusivity',
+      brava_tempo_btn_more:    'Learn more about Tempo',
+      brava_tempo_btn_whatsapp:'Talk to Heleno',
 
       bc_n1_value:           '$ 2.7k+ USD/sq.m.',
       bc_chart_badge_years:  '2020 → 2026',
@@ -1143,6 +1197,20 @@ const HA_I18N = (function () {
       bc_cta_eyebrow:     'Curaduría Heleno Alves',
       bc_cta_h2:          'La propiedad correcta en Balneário Camboriú no solo se encuentra. Se selecciona.',
       bc_cta_sub:         'Explore las propiedades disponibles o contáctenos directamente para recibir una selección alineada a su perfil.',
+
+      /* Senna Tower — Emprendimiento destacado */
+      bc_senna_eyebrow:     'Emprendimiento destacado',
+      bc_senna_location:    'Balneário Camboriú · Santa Catarina',
+      bc_senna_h2:          'Un ícono arquitectónico en el skyline más deseado de Brasil.',
+      bc_senna_desc:        'El Senna Tower representa una nueva escala para el mercado inmobiliario de alto estándar en Balneário Camboriú: arquitectura icónica, vistas privilegiadas, exclusividad y una propuesta de vivienda para quienes buscan patrimonio, firma y posición.',
+      bc_senna_highlight_1: 'Proyecto icónico',
+      bc_senna_highlight_2: 'Vista privilegiada',
+      bc_senna_highlight_3: 'Alto estándar',
+      bc_senna_highlight_4: 'Balneário Camboriú',
+      bc_senna_highlight_5: 'Exclusividad vertical',
+      bc_senna_btn_more:    'Más sobre el Senna Tower',
+      bc_senna_btn_whatsapp:'Hablar con Heleno',
+
       brava_page_title:    'Lujo, naturaleza y escasez en una de las direcciones más deseadas de la costa.',
       brava_page_lead:     'Entre Itajaí y Balneário Camboriú, Praia Brava consolidó su propia visión de alto estándar: más reservada, más sensorial y cada vez más disputada por quienes buscan vista al mar, lifestyle y patrimonio.',
       brava_page_btn_view: 'Ver propiedades en Praia Brava',
@@ -1212,6 +1280,19 @@ const HA_I18N = (function () {
       brava_cta_eyebrow:   'Curaduría Heleno Alves',
       brava_cta_h2:        'En Praia Brava, elegir bien es entender la micro-ubicación.',
       brava_cta_sub:       'Frente al mar, segunda línea, Brava Norte, Brava Sur, tercera línea y eje de expansión tienen lecturas de valor diferentes. La curaduría correcta ayuda a separar deseo, liquidez y oportunidad.',
+
+      /* Tempo — Emprendimiento destacado */
+      brava_tempo_eyebrow:     'Emprendimiento destacado',
+      brava_tempo_location:    'Praia Brava · Itajaí',
+      brava_tempo_h2:          'Arquitectura orgánica, naturaleza y exclusividad en Praia Brava.',
+      brava_tempo_desc:        'Un emprendimiento que traduce una nueva lectura del alto estándar: integración con la naturaleza, vistas al mar, privacidad y una experiencia residencial pensada para quienes buscan más que una ubicación — buscan atmósfera, rareza y permanencia.',
+      brava_tempo_highlight_1: 'Arquitectura orgánica',
+      brava_tempo_highlight_2: 'Vista al mar',
+      brava_tempo_highlight_3: 'Paisajismo integrado',
+      brava_tempo_highlight_4: 'Praia Brava',
+      brava_tempo_highlight_5: 'Exclusividad residencial',
+      brava_tempo_btn_more:    'Más sobre el Tempo',
+      brava_tempo_btn_whatsapp:'Hablar con Heleno',
 
       bc_n1_value:           '€ 2.500+/m²',
       bc_chart_badge_years:  '2020 → 2026',
@@ -1564,6 +1645,20 @@ const HA_I18N = (function () {
       bc_cta_eyebrow:     'Curation Heleno Alves',
       bc_cta_h2:          'La bonne propriété à Balneário Camboriú ne se trouve pas seulement. Elle se sélectionne.',
       bc_cta_sub:         'Parcourez les propriétés disponibles ou contactez-nous directement pour recevoir une sélection adaptée à votre profil.',
+
+      /* Senna Tower — Projet phare */
+      bc_senna_eyebrow:     'Projet phare',
+      bc_senna_location:    'Balneário Camboriú · Santa Catarina',
+      bc_senna_h2:          'Une icône architecturale sur le skyline le plus convoité du Brésil.',
+      bc_senna_desc:        'Le Senna Tower représente une nouvelle échelle pour l\'immobilier haut de gamme à Balneário Camboriú : architecture iconique, vue privilégiée, exclusivité et une proposition résidentielle pour ceux qui recherchent patrimoine, signature et prestige.',
+      bc_senna_highlight_1: 'Projet iconique',
+      bc_senna_highlight_2: 'Vue privilégiée',
+      bc_senna_highlight_3: 'Haut de gamme',
+      bc_senna_highlight_4: 'Balneário Camboriú',
+      bc_senna_highlight_5: 'Exclusivité verticale',
+      bc_senna_btn_more:    'En savoir plus sur le Senna Tower',
+      bc_senna_btn_whatsapp:'Parler à Heleno',
+
       brava_page_title:    'Luxe, nature et rareté à l\'une des adresses les plus convoitées du littoral.',
       brava_page_lead:     'Entre Itajaí et Balneário Camboriú, Praia Brava a consolidé sa propre vision haut de gamme : plus réservée, plus sensorielle et de plus en plus recherchée par ceux qui cherchent vue mer, lifestyle et patrimoine.',
       brava_page_btn_view: 'Voir les propriétés à Praia Brava',
@@ -1633,6 +1728,19 @@ const HA_I18N = (function () {
       brava_cta_eyebrow:   'Curation Heleno Alves',
       brava_cta_h2:        'À Praia Brava, bien choisir c\'est comprendre la micro-localisation.',
       brava_cta_sub:       'Front de mer, deuxième ligne, Brava Norte, Brava Sul, troisième ligne et axe d\'expansion ont des lectures de valeur différentes. La bonne curation aide à séparer désir, liquidité et opportunité.',
+
+      /* Tempo — Projet phare */
+      brava_tempo_eyebrow:     'Projet phare',
+      brava_tempo_location:    'Praia Brava · Itajaí',
+      brava_tempo_h2:          'Architecture organique, nature et exclusivité à Praia Brava.',
+      brava_tempo_desc:        'Un projet qui offre une nouvelle lecture du haut de gamme : intégration avec la nature, vue mer, intimité et une expérience résidentielle pensée pour ceux qui cherchent plus qu\'un emplacement — ils cherchent atmosphère, rareté et permanence.',
+      brava_tempo_highlight_1: 'Architecture organique',
+      brava_tempo_highlight_2: 'Vue mer',
+      brava_tempo_highlight_3: 'Paysagisme intégré',
+      brava_tempo_highlight_4: 'Praia Brava',
+      brava_tempo_highlight_5: 'Exclusivité résidentielle',
+      brava_tempo_btn_more:    'En savoir plus sur le Tempo',
+      brava_tempo_btn_whatsapp:'Parler à Heleno',
 
       bc_n1_value:           '€ 2 500+/m²',
       bc_chart_badge_years:  '2020 → 2026',

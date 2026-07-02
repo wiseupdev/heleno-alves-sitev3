@@ -15,6 +15,13 @@ body[data-page="detail"] {
     var(--detail-bg, url("https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1800&q=84&auto=format&fit=crop")) center/cover;
 }
 
+.detail-hero.no-image {
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.94), rgba(0,0,0,.48)),
+    linear-gradient(145deg, rgba(233,197,103,.09), rgba(255,255,255,.025)),
+    #0f0f0d;
+}
+
 .detail-hero::after {
   content: "";
   position: absolute;
@@ -328,6 +335,24 @@ body[data-page="detail"] {
   object-fit: cover;
   filter: brightness(.82);
   transition: .7s;
+}
+
+.property-image-placeholder {
+  width: 100%;
+  height: 100%;
+  min-height: inherit;
+  display: grid;
+  place-items: center;
+  background:
+    linear-gradient(145deg, rgba(233,197,103,.10), rgba(255,255,255,.025)),
+    #0f0f0d;
+  border: 1px solid rgba(233,197,103,.14);
+  color: rgba(255,255,255,.56);
+  font-family: var(--sans);
+  font-size: 9px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  text-align: center;
 }
 
 .similar-card:hover img {

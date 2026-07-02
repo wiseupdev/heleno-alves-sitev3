@@ -73,16 +73,204 @@ function getDescription(p) {
   return p.description || p.desc || '';
 }
 
+function getCoverSources(p) {
+  const images = Array.isArray(p.images) ? p.images.map(mediaUrl).filter(isValidUrl) : [];
+  const fallbacks = [mediaUrl(p.cover), mediaUrl(p.img), mediaUrl(p.image)].filter(isValidUrl);
+  return [...new Set([...images, ...fallbacks])];
+}
+
 function getCover(p) {
-  return p.cover || p.img || '';
+  return getCoverSources(p)[0] || '';
 }
 
 function getGallery(p) {
-  if (Array.isArray(p.gallery) && p.gallery.length) return p.gallery;
-  if (hasValue(p.cover)) return [p.cover];
-  if (hasValue(p.img)) return [p.img];
-  return [];
+  const gallery = Array.isArray(p.gallery) ? p.gallery.map(mediaUrl).filter(isValidUrl) : [];
+  const cover = getCover(p);
+  const images = gallery.length ? gallery : (cover ? [cover] : []);
+
+  return images.filter(isValidUrl);
 }
+
+function isValidUrl(value) {
+  const url = String(value || '').trim();
+  return url !== '' && !['#', 'null', 'undefined'].includes(url.toLowerCase());
+}
+
+function mediaUrl(media) {
+  if (!media) return '';
+  if (typeof media === 'string') return media.trim();
+  return String(media.url || media.media_url || media.image_url || media.previewUrl || media.src || '').trim();
+}
+
+// --- Image fallback / placeholder -------------------------------------------------
+// SVG data URI used as a premium placeholder when external images fail to load.
+const HA_IMAGE_FALLBACK_SVG = (() => {
+  const svg = `
+    <svg xmlns='http://www.w3.org/2000/svg' width='1200' height='800' viewBox='0 0 1200 800'>
+      <rect width='100%' height='100%' fill='#111'/>
+      <rect x='0' y='0' width='100%' height='10' fill='#c9a646' />
+      <g font-family='Montserrat, Arial, Helvetica, sans-serif' text-anchor='middle'>
+        <text x='50%' y='46%' fill='#c9a646' font-size='44' font-weight='700'>HELENO ALVES</text>
+        <text x='50%' y='56%' fill='#ffffff' font-size='28'>Imagem em atualização</text>
+      </g>
+    </svg>
+  `;
+
+  return 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg);
+})();
+
+function setImageFallback(img) {
+  try {
+    if (!img) return;
+    if (img.dataset.haFallback === '1') return;
+    img.dataset.haFallback = '1';
+    img.dataset.haSourceIndex = '0';
+    img.src = HA_IMAGE_FALLBACK_SVG;
+    img.alt = img.alt || 'Imagem em atualização';
+  } catch (e) {
+    console.error('[HA] setImageFallback error', e);
+  }
+}
+
+function parseImageSources(img) {
+  if (!img) return [];
+
+  const raw = img.dataset.haSrcs || '';
+  if (raw) {
+    try {
+      const list = JSON.parse(raw);
+      if (Array.isArray(list)) {
+        return list.map(String).map(src => src.trim()).filter(isValidUrl);
+      }
+    } catch (e) {
+      return String(raw)
+        .split(',')
+        .map(src => src.trim())
+        .filter(isValidUrl);
+    }
+  }
+
+  const src = String(img.src || '').trim();
+  return isValidUrl(src) ? [src] : [];
+}
+
+function getCurrentSourceIndex(img, sources) {
+  if (!img || !Array.isArray(sources) || !sources.length) return -1;
+
+  const stored = Number(img.dataset.haSourceIndex);
+  if (Number.isInteger(stored) && stored >= 0 && stored < sources.length) {
+    return stored;
+  }
+
+  const current = String(img.src || '').trim();
+  const idx = sources.indexOf(current);
+  return idx >= 0 ? idx : 0;
+}
+
+function tryLoadNextImage(img) {
+  const sources = parseImageSources(img);
+  if (!sources.length) return false;
+
+  const currentIndex = getCurrentSourceIndex(img, sources);
+  for (let next = currentIndex + 1; next < sources.length; next += 1) {
+    const nextSrc = sources[next];
+    if (!isValidUrl(nextSrc) || nextSrc === String(img.src || '').trim()) continue;
+
+    img.dataset.haSourceIndex = String(next);
+    img.dataset.haFallback = '0';
+    img.src = nextSrc;
+    return true;
+  }
+
+  return false;
+}
+
+function hasValidImage(img) {
+  return img.complete && img.naturalWidth > 0;
+}
+
+function attachFallbackToImg(img, timeout = 5000) {
+  if (!img || img.dataset.haAttached === '1') return;
+  img.dataset.haAttached = '1';
+
+  const sources = parseImageSources(img);
+  if (sources.length) {
+    const sourceIndex = getCurrentSourceIndex(img, sources);
+    img.dataset.haSourceIndex = String(sourceIndex);
+    if (!img.src || String(img.src || '').trim() !== sources[sourceIndex]) {
+      img.src = sources[sourceIndex];
+    }
+  }
+
+  let timerId = null;
+
+  const clearTimer = () => {
+    if (timerId !== null) {
+      clearTimeout(timerId);
+      timerId = null;
+    }
+  };
+
+  const startTimer = () => {
+    clearTimer();
+    timerId = setTimeout(() => {
+      if (!hasValidImage(img)) {
+        if (!tryLoadNextImage(img)) {
+          setImageFallback(img);
+        }
+      }
+    }, timeout);
+  };
+
+  const handleFailure = () => {
+    clearTimer();
+    if (!hasValidImage(img)) {
+      if (!tryLoadNextImage(img)) {
+        setImageFallback(img);
+      } else {
+        startTimer();
+      }
+    }
+  };
+
+  img.addEventListener('error', handleFailure);
+  img.addEventListener('load', () => {
+    clearTimer();
+    if (!hasValidImage(img)) {
+      handleFailure();
+    }
+  });
+
+  startTimer();
+
+  if (img.complete && !hasValidImage(img)) {
+    handleFailure();
+  }
+}
+
+function applyFallbacksToContainer(container) {
+  if (!container) return;
+  const imgs = container.querySelectorAll('img');
+  imgs.forEach(img => {
+    // Only apply to property images and detail galleries to avoid global changes
+    if (img.closest('.property-image') || img.closest('#detailGallery') || img.closest('.property-img')) {
+      attachFallbackToImg(img);
+    }
+  });
+}
+
+// Global delegated listener: catch images added dynamically that error before we attached handlers
+document.addEventListener('error', (ev) => {
+  const el = ev.target;
+  if (el && el.tagName === 'IMG') {
+    if (el.closest('.property-image') || el.closest('#detailGallery') || el.closest('.property-img')) {
+      if (el.dataset.haAttached !== '1') {
+        attachFallbackToImg(el);
+      }
+    }
+  }
+}, true);
+// --- end image fallback ----------------------------------------------------------
 
 function getSpecs(p) {
   const specs = [];
@@ -195,9 +383,14 @@ function toggleFavorite(id, event) {
 window.toggleFavorite = toggleFavorite;
 
 function card(p, root = '') {
-  const detailUrl = `${root}imoveis/detalhe.html?slug=${p.slug}`;
-  const cover = getCover(p);
+  const detailUrl = p.id ? `${root}imoveis/detalhe.html?id=${encodeURIComponent(p.id)}&slug=${encodeURIComponent(p.slug || '')}` : `${root}imoveis/detalhe.html?slug=${encodeURIComponent(p.slug || '')}`;
+  const coverSources = getCoverSources(p);
+  const cover = coverSources[0] || '';
   const specs = getSpecs(p);
+
+  const coverImg = coverSources.length
+    ? `<img src="${cover}" alt="${p.title || 'Imóvel'}" loading="lazy" decoding="async" width="600" height="400" data-ha-srcs="${JSON.stringify(coverSources).replace(/"/g, '&quot;')}">`
+    : '<div class="property-image-placeholder"><span>Sem imagem</span></div>';
 
   return `
     <article class="property" onclick="location.href='${detailUrl}'">
@@ -209,14 +402,12 @@ function card(p, root = '') {
         ♡
       </button>
 
-      ${hasValue(cover) ? `
-        <div class="property-img">
-          <img src="${cover}" alt="${p.title || 'Imóvel'}" loading="lazy" decoding="async" width="600" height="400">
+      <div class="property-img">
+        ${coverImg}
 
-          ${hasValue(p.tag) ? `<span class="tag">${p.tag}</span>` : ''}
-          ${hasValue(p.region) ? `<span class="region-badge">${p.region}</span>` : ''}
-        </div>
-      ` : ''}
+        ${hasValue(p.tag) ? `<span class="tag">${p.tag}</span>` : ''}
+        ${hasValue(p.region) ? `<span class="region-badge">${p.region}</span>` : ''}
+      </div>
 
       <div class="property-body">
         ${hasValue(p.title) ? `<h3>${p.title}</h3>` : ''}
@@ -267,6 +458,8 @@ function renderCarousel(id, items, root = '') {
   }
 
   el.innerHTML = items.map(p => card(p, root)).join('');
+  // Apply image fallback handlers to images rendered inside this carousel
+  try { applyFallbacksToContainer(el); } catch (e) { /* silent */ }
 }
 
 function renderMapList(props) {
@@ -330,10 +523,6 @@ async function initHome() {
   // Mapa: mesmo recorte do destaque, para não gerar centenas de pins/itens
   renderMapList([...bcFeatured, ...bravaFeatured]);
 
-  // Alimenta os region cards com fotos reais dos imóveis do banco
-  applyRegionCardImages(bcProps,    'bc');
-  applyRegionCardImages(bravaProps, 'brava');
-
   // Métricas usam o total real (não o recorte de destaque)
   if ($('metricProperties')) {
     $('metricProperties').textContent = String(props.length).padStart(2, '0');
@@ -344,37 +533,6 @@ async function initHome() {
       [...new Set(props.map(p => p.area).filter(Boolean))].length
     ).padStart(2, '0');
   }
-}
-
-// Pega a foto de capa do primeiro imóvel com imagem e aplica no region card
-function applyRegionCardImages(regionProps, cardId) {
-  // Busca os primeiros imóveis com foto
-  const withPhoto = regionProps.filter(p => p.cover || p.img);
-  if (!withPhoto.length) return;
-
-  // Pega até 3 fotos para criar um background dinâmico
-  const photos = withPhoto.slice(0, 3).map(p => p.cover || p.img);
-
-  // Encontra o region card pelo data-region ou pelo h3 dentro
-  const cards = document.querySelectorAll('.region-card');
-  let targetCard = null;
-
-  cards.forEach(card => {
-    const h3 = card.querySelector('h3');
-    if (!h3) return;
-    const text = h3.textContent.toLowerCase();
-    if (cardId === 'bc' && (text.includes('balneário') || text.includes('balneario'))) {
-      targetCard = card;
-    }
-    if (cardId === 'brava' && text.includes('praia brava')) {
-      targetCard = card;
-    }
-  });
-
-  if (!targetCard) return;
-
-  // Aplica a foto — usa a primeira com melhor qualidade
-  targetCard.style.setProperty('--bg', `url(${photos[0]})`);
 }
 
 async function initList(regionSlug = null) {
@@ -391,6 +549,7 @@ async function initList(regionSlug = null) {
       grid.innerHTML = items.length
         ? items.map(p => card(p, '')).join('')
         : '<p class="section-sub">Nenhum imóvel encontrado.</p>';
+      try { applyFallbacksToContainer(grid); } catch (e) { /* silent */ }
     }
 
     if ($('resultCount')) {
@@ -483,6 +642,7 @@ async function initDetail() {
       'detailGallery',
       gallery.map(img => `<img src="${img}" alt="${p.title || 'Imóvel'}">`).join('')
     );
+    try { applyFallbacksToContainer($('detailGallery')); } catch (e) { /* silent */ }
   } else {
     hideElement('detailGallery');
   }
@@ -681,6 +841,7 @@ async function initFav() {
     grid.innerHTML = filtered.length
       ? filtered.map(p => card(p, '../')).join('')
       : '<p class="section-sub">Você ainda não favoritou nenhum imóvel.</p>';
+    try { applyFallbacksToContainer(grid); } catch (e) { /* silent */ }
   };
 
   window.renderFavorites();

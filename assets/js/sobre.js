@@ -5,7 +5,7 @@
 
   function revealSections() {
     const elements = document.querySelectorAll(
-      '.bio-image, .bio-content, .value-card, .work-panel article, .senna-highlight, .pillar-card, .media-card, .media-note'
+      '.bio-image, .bio-content, .value-card, .work-panel article, .pillar-card, .media-card, .media-note'
     );
 
     if (!elements.length) return;
@@ -49,26 +49,9 @@
     });
   }
 
-  function initSennaCarousel() {
-    const carousel = document.getElementById('sennaCarousel');
-    const prev = document.getElementById('sennaPrev');
-    const next = document.getElementById('sennaNext');
-    if (!carousel || !prev || !next) return;
-
-    const scrollBy = () => carousel.querySelector('.senna-slide')?.offsetWidth + 14 || 360;
-
-    prev.addEventListener('click', () => {
-      carousel.scrollBy({ left: -scrollBy(), behavior: 'smooth' });
-    });
-    next.addEventListener('click', () => {
-      carousel.scrollBy({ left: scrollBy(), behavior: 'smooth' });
-    });
-  }
-
   function init() {
     revealSections();
     initSmoothAnchors();
-    initSennaCarousel();
   }
 
   document.addEventListener('DOMContentLoaded', init);
