@@ -96,6 +96,75 @@ function mediaUrl(media) {
   return String(media.url || media.media_url || media.image_url || media.previewUrl || media.src || '').trim();
 }
 
+// --- Image fallback / placeholder -------------------------------------------------
+// SVG data URI used as a premium placeholder when external images fail to load.
+const HA_IMAGE_FALLBACK_SVG = (() => {
+  const svg = `
+    <svg xmlns='http://www.w3.org/2000/svg' width='1200' height='800' viewBox='0 0 1200 800'>
+      <rect width='100%' height='100%' fill='#111'/>
+      <rect x='0' y='0' width='100%' height='10' fill='#c9a646' />
+      <g font-family='Montserrat, Arial, Helvetica, sans-serif' text-anchor='middle'>
+        <text x='50%' y='46%' fill='#c9a646' font-size='44' font-weight='700'>HELENO ALVES</text>
+        <text x='50%' y='56%' fill='#ffffff' font-size='28'>Imagem em atualização</text>
+      </g>
+    </svg>
+  `;
+
+  return 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg);
+})();
+
+function setImageFallback(img) {
+  try {
+    if (!img) return;
+    if (img.dataset.haFallback === '1') return;
+    img.dataset.haFallback = '1';
+    img.src = HA_IMAGE_FALLBACK_SVG;
+    img.alt = img.alt || 'Imagem em atualização';
+  } catch (e) {
+    console.error('[HA] setImageFallback error', e);
+  }
+}
+
+function attachFallbackToImg(img, timeout = 5000) {
+  if (!img || img.dataset.haAttached === '1') return;
+  img.dataset.haAttached = '1';
+
+  // If the image errors, replace with fallback
+  img.addEventListener('error', () => setImageFallback(img), { once: true });
+
+  // If the image doesn't finish loading within `timeout` ms, apply fallback
+  const tId = setTimeout(() => {
+    if (!img.complete || (img.naturalWidth === 0 && img.naturalHeight === 0)) {
+      setImageFallback(img);
+    }
+  }, timeout);
+
+  // Clear timer on successful load
+  img.addEventListener('load', () => clearTimeout(tId), { once: true });
+}
+
+function applyFallbacksToContainer(container) {
+  if (!container) return;
+  const imgs = container.querySelectorAll('img');
+  imgs.forEach(img => {
+    // Only apply to property images and detail galleries to avoid global changes
+    if (img.closest('.property-image') || img.closest('#detailGallery') || img.closest('.property-img')) {
+      attachFallbackToImg(img);
+    }
+  });
+}
+
+// Global delegated listener: catch images added dynamically that error before we attached handlers
+document.addEventListener('error', (ev) => {
+  const el = ev.target;
+  if (el && el.tagName === 'IMG') {
+    if (el.closest('.property-image') || el.closest('#detailGallery') || el.closest('.property-img')) {
+      setImageFallback(el);
+    }
+  }
+}, true);
+// --- end image fallback ----------------------------------------------------------
+
 function getSpecs(p) {
   const specs = [];
   const tSuites  = (typeof HA_I18N !== 'undefined') ? HA_I18N.t('card_suites') : 'suítes';
@@ -279,6 +348,8 @@ function renderCarousel(id, items, root = '') {
   }
 
   el.innerHTML = items.map(p => card(p, root)).join('');
+  // Apply image fallback handlers to images rendered inside this carousel
+  try { applyFallbacksToContainer(el); } catch (e) { /* silent */ }
 }
 
 function renderMapList(props) {
@@ -368,6 +439,7 @@ async function initList(regionSlug = null) {
       grid.innerHTML = items.length
         ? items.map(p => card(p, '')).join('')
         : '<p class="section-sub">Nenhum imóvel encontrado.</p>';
+      try { applyFallbacksToContainer(grid); } catch (e) { /* silent */ }
     }
 
     if ($('resultCount')) {
@@ -460,6 +532,7 @@ async function initDetail() {
       'detailGallery',
       gallery.map(img => `<img src="${img}" alt="${p.title || 'Imóvel'}">`).join('')
     );
+    try { applyFallbacksToContainer($('detailGallery')); } catch (e) { /* silent */ }
   } else {
     hideElement('detailGallery');
   }
@@ -658,6 +731,7 @@ async function initFav() {
     grid.innerHTML = filtered.length
       ? filtered.map(p => card(p, '../')).join('')
       : '<p class="section-sub">Você ainda não favoritou nenhum imóvel.</p>';
+    try { applyFallbacksToContainer(grid); } catch (e) { /* silent */ }
   };
 
   window.renderFavorites();
