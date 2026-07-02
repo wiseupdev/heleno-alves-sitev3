@@ -54,16 +54,25 @@
     return String(media.url || media.media_url || media.image_url || media.previewUrl || media.src || '').trim();
   }
 
+  function getImageSources(item) {
+    const images = Array.isArray(item.images)
+      ? item.images.map(mediaUrl).filter(isValidUrl)
+      : [];
+
+    const fallbacks = [mediaUrl(item.cover), mediaUrl(item.img), mediaUrl(item.image)]
+      .filter(isValidUrl);
+
+    return [...new Set([...images, ...fallbacks])];
+  }
+
   function getImage(item) {
-    const firstImage = Array.isArray(item.images) ? item.images[0] : null;
-    return [mediaUrl(firstImage), mediaUrl(item.cover), mediaUrl(item.img), mediaUrl(item.image)]
-      .find(isValidUrl) || '';
+    return getImageSources(item)[0] || '';
   }
 
   function renderCardImage(item) {
-    const image = getImage(item);
-    if (!image) return '<div class="property-image-placeholder"><span>Sem imagem</span></div>';
-    return `<img loading="lazy" decoding="async" src="${esc(image)}" alt="${esc(item.title || 'Imóvel')}" width="600" height="400">`;
+    const sources = getImageSources(item);
+    if (!sources.length) return '<div class="property-image-placeholder"><span>Sem imagem</span></div>';
+    return `<img loading="lazy" decoding="async" src="${esc(sources[0])}" data-ha-srcs="${esc(JSON.stringify(sources))}" alt="${esc(item.title || 'Imóvel')}" width="600" height="400">`;
   }
 
   function tFeat(value) {

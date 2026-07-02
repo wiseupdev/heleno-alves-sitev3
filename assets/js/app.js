@@ -73,16 +73,22 @@ function getDescription(p) {
   return p.description || p.desc || '';
 }
 
+function getCoverSources(p) {
+  const images = Array.isArray(p.images) ? p.images.map(mediaUrl).filter(isValidUrl) : [];
+  const fallbacks = [mediaUrl(p.cover), mediaUrl(p.img), mediaUrl(p.image)].filter(isValidUrl);
+  return [...new Set([...images, ...fallbacks])];
+}
+
 function getCover(p) {
-  const firstImage = Array.isArray(p.images) ? p.images[0] : null;
-  return [mediaUrl(firstImage), mediaUrl(p.cover), mediaUrl(p.img), mediaUrl(p.image)].find(isValidUrl) || '';
+  return getCoverSources(p)[0] || '';
 }
 
 function getGallery(p) {
   const gallery = Array.isArray(p.gallery) ? p.gallery.map(mediaUrl).filter(isValidUrl) : [];
-  if (gallery.length) return gallery;
   const cover = getCover(p);
-  return cover ? [cover] : [];
+  const images = gallery.length ? gallery : (cover ? [cover] : []);
+
+  return images.filter(isValidUrl);
 }
 
 function isValidUrl(value) {
@@ -118,6 +124,7 @@ function setImageFallback(img) {
     if (!img) return;
     if (img.dataset.haFallback === '1') return;
     img.dataset.haFallback = '1';
+    img.dataset.haSourceIndex = '0';
     img.src = HA_IMAGE_FALLBACK_SVG;
     img.alt = img.alt || 'Imagem em atualização';
   } catch (e) {
@@ -125,22 +132,120 @@ function setImageFallback(img) {
   }
 }
 
+function parseImageSources(img) {
+  if (!img) return [];
+
+  const raw = img.dataset.haSrcs || '';
+  if (raw) {
+    try {
+      const list = JSON.parse(raw);
+      if (Array.isArray(list)) {
+        return list.map(String).map(src => src.trim()).filter(isValidUrl);
+      }
+    } catch (e) {
+      return String(raw)
+        .split(',')
+        .map(src => src.trim())
+        .filter(isValidUrl);
+    }
+  }
+
+  const src = String(img.src || '').trim();
+  return isValidUrl(src) ? [src] : [];
+}
+
+function getCurrentSourceIndex(img, sources) {
+  if (!img || !Array.isArray(sources) || !sources.length) return -1;
+
+  const stored = Number(img.dataset.haSourceIndex);
+  if (Number.isInteger(stored) && stored >= 0 && stored < sources.length) {
+    return stored;
+  }
+
+  const current = String(img.src || '').trim();
+  const idx = sources.indexOf(current);
+  return idx >= 0 ? idx : 0;
+}
+
+function tryLoadNextImage(img) {
+  const sources = parseImageSources(img);
+  if (!sources.length) return false;
+
+  const currentIndex = getCurrentSourceIndex(img, sources);
+  for (let next = currentIndex + 1; next < sources.length; next += 1) {
+    const nextSrc = sources[next];
+    if (!isValidUrl(nextSrc) || nextSrc === String(img.src || '').trim()) continue;
+
+    img.dataset.haSourceIndex = String(next);
+    img.dataset.haFallback = '0';
+    img.src = nextSrc;
+    return true;
+  }
+
+  return false;
+}
+
+function hasValidImage(img) {
+  return img.complete && img.naturalWidth > 0;
+}
+
 function attachFallbackToImg(img, timeout = 5000) {
   if (!img || img.dataset.haAttached === '1') return;
   img.dataset.haAttached = '1';
 
-  // If the image errors, replace with fallback
-  img.addEventListener('error', () => setImageFallback(img), { once: true });
-
-  // If the image doesn't finish loading within `timeout` ms, apply fallback
-  const tId = setTimeout(() => {
-    if (!img.complete || (img.naturalWidth === 0 && img.naturalHeight === 0)) {
-      setImageFallback(img);
+  const sources = parseImageSources(img);
+  if (sources.length) {
+    const sourceIndex = getCurrentSourceIndex(img, sources);
+    img.dataset.haSourceIndex = String(sourceIndex);
+    if (!img.src || String(img.src || '').trim() !== sources[sourceIndex]) {
+      img.src = sources[sourceIndex];
     }
-  }, timeout);
+  }
 
-  // Clear timer on successful load
-  img.addEventListener('load', () => clearTimeout(tId), { once: true });
+  let timerId = null;
+
+  const clearTimer = () => {
+    if (timerId !== null) {
+      clearTimeout(timerId);
+      timerId = null;
+    }
+  };
+
+  const startTimer = () => {
+    clearTimer();
+    timerId = setTimeout(() => {
+      if (!hasValidImage(img)) {
+        if (!tryLoadNextImage(img)) {
+          setImageFallback(img);
+        }
+      }
+    }, timeout);
+  };
+
+  const handleFailure = () => {
+    clearTimer();
+    if (!hasValidImage(img)) {
+      if (!tryLoadNextImage(img)) {
+        setImageFallback(img);
+      } else {
+        startTimer();
+      }
+    }
+  };
+
+  img.addEventListener('error', handleFailure);
+  img.addEventListener('load', () => {
+    clearTimer();
+    if (!hasValidImage(img)) {
+      handleFailure();
+    }
+  });
+
+  startTimer();
+
+  if (img.complete && !hasValidImage(img)) {
+    handleFailure();
+  }
 }
 
 function applyFallbacksToContainer(container) {
@@ -159,7 +264,9 @@ document.addEventListener('error', (ev) => {
   const el = ev.target;
   if (el && el.tagName === 'IMG') {
     if (el.closest('.property-image') || el.closest('#detailGallery') || el.closest('.property-img')) {
-      setImageFallback(el);
+      if (el.dataset.haAttached !== '1') {
+        attachFallbackToImg(el);
+      }
     }
   }
 }, true);
@@ -277,8 +384,13 @@ window.toggleFavorite = toggleFavorite;
 
 function card(p, root = '') {
   const detailUrl = p.id ? `${root}imoveis/detalhe.html?id=${encodeURIComponent(p.id)}&slug=${encodeURIComponent(p.slug || '')}` : `${root}imoveis/detalhe.html?slug=${encodeURIComponent(p.slug || '')}`;
-  const cover = getCover(p);
+  const coverSources = getCoverSources(p);
+  const cover = coverSources[0] || '';
   const specs = getSpecs(p);
+
+  const coverImg = coverSources.length
+    ? `<img src="${cover}" alt="${p.title || 'Imóvel'}" loading="lazy" decoding="async" width="600" height="400" data-ha-srcs="${JSON.stringify(coverSources).replace(/"/g, '&quot;')}">`
+    : '<div class="property-image-placeholder"><span>Sem imagem</span></div>';
 
   return `
     <article class="property" onclick="location.href='${detailUrl}'">
@@ -291,9 +403,7 @@ function card(p, root = '') {
       </button>
 
       <div class="property-img">
-        ${cover
-          ? `<img src="${cover}" alt="${p.title || 'Imóvel'}" loading="lazy" decoding="async" width="600" height="400">`
-          : '<div class="property-image-placeholder"><span>Sem imagem</span></div>'}
+        ${coverImg}
 
         ${hasValue(p.tag) ? `<span class="tag">${p.tag}</span>` : ''}
         ${hasValue(p.region) ? `<span class="region-badge">${p.region}</span>` : ''}
